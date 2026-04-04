@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     public bool isOccupied = false;
     public GameObject currentUnit;
     public bool isDeployableZone = true;
+    public int placedUnitIndex = -1;
     // --- [시각 효과를 위한 변수들 추가] ---
     private Color originalColor;
     private SpriteRenderer spriteRenderer;
