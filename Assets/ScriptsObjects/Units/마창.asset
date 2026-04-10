@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12f680efcb91f5343b4b32d56abbd5a1, type: 3}
+  m_Name: "\uB9C8\uCC3D"
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: "\uB9C8\uCC3D"
+  panicType: 0
+  maxHp: 30
+  maxSt: 90
+  minSp: 2
+  maxSp: 6
+  minAtk: 11
+  maxAtk: 11
+  def: 12
+  physicalResist: 1
+  mentalResist: 1.2
+  specialResist: 0.8
+  sinResist: 1.5
+  affiliation: "\uC18C\uC18D\uBD88\uBA85"
+  unitTypeKeyword: "\uCCB4\uC2A4"
+  traitKeywords:
+  - "\uC6A9\uC0AC"
+  - "\uC5EC\uC131"
+  - "\uC778\uAC04\uD615"
+  - "\uBAB0\uB77D\uC2E0\uC131"
+  - "\uC131\uBCC4\uBD88\uBA85"
+  traits: []
+  skills: []
+  deck: []
