@@ -32,6 +32,11 @@ public class TurnManager : MonoBehaviour
 
         foreach (var info in BattleData.placedUnits)
         {
+            if (info.unitIndex < 0 || info.unitIndex >= unitPrefabs.Length)
+            {
+            Debug.LogWarning($"⚠️ unitIndex {info.unitIndex}이 범위를 벗어남 (배열 크기: {unitPrefabs.Length})");
+            continue;
+            }
             // 1. 프리팹 소환
             GameObject go = Instantiate(unitPrefabs[info.unitIndex], info.position, Quaternion.identity);
 

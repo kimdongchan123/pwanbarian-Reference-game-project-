@@ -259,7 +259,7 @@ public class PlacementManager : MonoBehaviour
         Tile[] allTiles = FindObjectsOfType<Tile>();
         foreach (Tile tile in allTiles)
         {
-            if (tile.isOccupied)
+            if (tile.isOccupied && tile.placedUnitIndex >= 0)
             {
                 // 기물이 있다면 정보를 묶어서 바구니(BattleData)에 담습니다.
                 BattleData.UnitInfo info = new BattleData.UnitInfo();

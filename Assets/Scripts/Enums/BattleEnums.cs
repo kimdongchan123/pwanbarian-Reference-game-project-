@@ -1,4 +1,5 @@
 // ▶ 레퍼런스 프로젝트 경로: Assets/Scripts/Enums/BattleEnums.cs 교체
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public enum DamageType
@@ -8,7 +9,13 @@ public enum DamageType
     Special,
     Sin
 }
-
+public enum SinType
+{
+    None,
+    Greed,
+    Lust,
+    Warth
+}
 public enum PanicType
 {
     None,

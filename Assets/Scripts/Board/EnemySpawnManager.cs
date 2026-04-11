@@ -54,13 +54,21 @@ public class EnemySpawnManager : MonoBehaviour
         }
 
         Vector2Int spawnPos = new Vector2Int(spawnTile.x, spawnTile.y);
-        Enemy spawned = Instantiate(entry.prefab);
-        EnemyUnit unit = spawned.GetComponent<EnemyUnit>();
-        if (unit != null)
-            unit.SetGridPosition(spawnPos);
-        else
-            spawned.transform.position = new Vector3(spawnPos.x, spawnPos.y, 0f);
+        Vector3 worldPos = spawnTile.transform.position;
+        worldPos.z = 0f;
 
+    Enemy spawned = Instantiate(entry.prefab);
+    EnemyUnit unit = spawned.GetComponent<EnemyUnit>();
+    if (unit != null)
+    {
+        unit.gridPosition = spawnPos;
+        unit.transform.position = worldPos;
+        unit.hasMoved = true;
+    }
+    else
+    {
+        spawned.transform.position = worldPos;
+    }
         // Tile 점유 상태 업데이트
         spawnTile.isOccupied = true;
         spawnTile.currentUnit = spawned.gameObject;
