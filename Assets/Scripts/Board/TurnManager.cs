@@ -16,6 +16,7 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         SpawnUnitsFromBattleData();
+        EnemyBattleSetup.Instance?.SpawnEnemies();
         GenerateTurnOrder(); // 유닛 소환 후 바로 순서 결정!
     }
 
