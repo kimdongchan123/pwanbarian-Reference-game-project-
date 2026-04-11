@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b7563120e3cd13e4ba1cc33f7f0acb9c
+guid: a263736f452f2514e9cebec26d0e5802
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2160569251002084937
-    second: Gemini_Generated_Image_p181fgp181fgp181_0
+      213: 2533179969505074583
+    second: Pawn_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_p181fgp181fgp181_0
+      name: Pawn_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1078
-        height: 976
+        width: 380
+        height: 553
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 94e6c9e5942ebfd10800000000000000
-      internalID: 2160569251002084937
+      spriteID: 79d1c7ac2c9a72320800000000000000
+      internalID: 2533179969505074583
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gemini_Generated_Image_p181fgp181fgp181_0: 2160569251002084937
+      Pawn_0: 2533179969505074583
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

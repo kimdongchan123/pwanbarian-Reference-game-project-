@@ -28,6 +28,7 @@ public class PlacementManager : MonoBehaviour
     private Tile hoveredTile; // 현재 마우스가 올라가 있는 타일 기억용
     void Start()
     {
+        BattleData.placedUnits.Clear();
         if (selectionPanel != null) selectionPanel.SetActive(false);
         if (confirmPanel != null) confirmPanel.SetActive(false);
         if (recallPanel != null) recallPanel.SetActive(false);

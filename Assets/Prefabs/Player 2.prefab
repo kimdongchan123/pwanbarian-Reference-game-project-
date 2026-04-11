@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 945257607867475653}
   - component: {fileID: 324586707125647356}
+  - component: {fileID: 5692903017772156030}
+  - component: {fileID: 6158015059643591148}
+  - component: {fileID: 8070586511306718240}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Untagged
@@ -91,3 +94,48 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &5692903017772156030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6233576781834785788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6bfcdd9fcefb9f4a9774fb0223bf36f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unit
+  unitName: "\uD14C\uC2A4\uD2B8 \uC720\uB2DB"
+  isAlly: 1
+  formationIndex: 0
+  movement: {fileID: 6158015059643591148}
+  stats: {fileID: 8070586511306718240}
+--- !u!114 &6158015059643591148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6233576781834785788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a3a76b2ad88a1a4bad354402da0ac41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitMovement
+  currentTile: {fileID: 0}
+--- !u!114 &8070586511306718240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6233576781834785788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074c390ba8d3ab44b632152cc2bdad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitStats
+  minSpeed: 1
+  maxSpeed: 5
+  currentTurnSpeed: 0

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c749de03578266244865cb19cd82b33d
+guid: 404837bcf0c3db24abef5a4f90b1825f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3481237235710007318
-    second: Gemini_Generated_Image_vfn5ievfn5ievfn5 (1)_0
+      213: 1379780806020190625
+    second: Bishop_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_vfn5ievfn5ievfn5 (1)_0
+      name: Bishop_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1408
-        height: 768
+        width: 385
+        height: 558
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6189b5d42d6df4030800000000000000
-      internalID: 3481237235710007318
+      spriteID: 1a15cba2557f52310800000000000000
+      internalID: 1379780806020190625
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gemini_Generated_Image_vfn5ievfn5ievfn5 (1)_0: 3481237235710007318
+      Bishop_0: 1379780806020190625
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
