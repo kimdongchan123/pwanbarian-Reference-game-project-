@@ -1,123 +1,224 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+// 아군/적 통합 턴 단위
+public class TurnActor
+{
+    public Unit unit;           // 아군이면 채워짐, 적이면 null
+    public EnemyUnit enemyUnit; // 적이면 채워짐, 아군이면 null
+    public int speed;
+    public bool isAlly => unit != null;
+    public string displayName => isAlly ? unit.unitName : enemyUnit?.name ?? "?";
+}
+
 public class TurnManager : MonoBehaviour
 {
-    public static TurnManager Instance; // 어디서든 접근 가능하게 싱글톤 설정
+    public static TurnManager Instance;
+
     [Header("기물 프리팹 리스트")]
     public GameObject[] unitPrefabs;
-    public List<Unit> allUnits = new List<Unit>();
-    public List<Unit> finalTurnOrder = new List<Unit>();
 
-    private int currentTurnIndex = 0; // 현재 누구 차례인지 가리키는 번호
+    public List<Unit> allUnits = new List<Unit>();
+    private List<TurnActor> finalTurnOrder = new List<TurnActor>();
+    private int currentTurnIndex = 0;
 
     void Awake() => Instance = this;
+
     void Start()
     {
         SpawnUnitsFromBattleData();
-        GenerateTurnOrder(); // 유닛 소환 후 바로 순서 결정!
+        EnemyBattleSetup.Instance?.SpawnEnemies();
+        GenerateTurnOrder();
     }
 
     void SpawnUnitsFromBattleData()
     {
         allUnits.Clear();
-
         if (BattleData.placedUnits.Count == 0)
         {
             Debug.LogWarning("⚠️ BattleData에 배치된 유닛이 없습니다!");
             return;
         }
-
         foreach (var info in BattleData.placedUnits)
         {
-            // 1. 프리팹 소환
+            if (info.unitIndex < 0 || info.unitIndex >= unitPrefabs.Length)
+            {
+                Debug.LogWarning($"⚠️ unitIndex {info.unitIndex}이 범위를 벗어남 (배열 크기: {unitPrefabs.Length})");
+                continue;
+            }
             GameObject go = Instantiate(unitPrefabs[info.unitIndex], info.position, Quaternion.identity);
-
-            // 2. Unit 컴포넌트 가져오기
             Unit unit = go.GetComponent<Unit>();
-            if (unit != null)
-            {
-                allUnits.Add(unit); // 🎯 드디어 allUnits 명단에 실제 유닛이 등록됩니다!
-            }
+            if (unit != null) allUnits.Add(unit);
         }
     }
-    // 턴 시작 시 호출: 전체 순서를 결정함
+
     public void GenerateTurnOrder()
+{
+    currentTurnIndex = 0;
+    finalTurnOrder.Clear();
+    allUnits.RemoveAll(u => u == null);
+
+    // 아군 SP 굴림
+    List<TurnActor> allies = new List<TurnActor>();
+    foreach (var unit in allUnits)
     {
-        currentTurnIndex = 0;
-        finalTurnOrder.Clear();
+        int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
+        unit.stats.currentTurnSpeed = speed;
+        allies.Add(new TurnActor { unit = unit, speed = speed });
+    }
+    allies = allies.OrderByDescending(a => a.speed).ToList();
 
-        // 1. 모든 유닛 속도 주사위 굴림
-        foreach (var unit in allUnits)
-        {
-            unit.stats.currentTurnSpeed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
-        }
+    // 적 SP 굴림
+    List<TurnActor> enemies = new List<TurnActor>();
+    foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+    {
+        Enemy enemy = eu.GetComponent<Enemy>();
+        if (enemy?.EnemyData == null) continue;
+        int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
+        enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
+    }
+    enemies = enemies.OrderByDescending(a => a.speed).ToList();
 
-        // 2. 속도별 그룹화 및 정렬
-        var speedGroups = allUnits
-            .GroupBy(u => u.stats.currentTurnSpeed)
-            .OrderByDescending(g => g.Key);
-
-        foreach (var group in speedGroups)
-        {
-            List<Unit> allies = group.Where(u => u.isAlly).OrderBy(u => u.formationIndex).ToList();
-            List<Unit> enemies = group.Where(u => !u.isAlly).ToList();
-
-            if (allies.Count > 0 && enemies.Count > 0)
-            {
-                // 🎲 50% 확률로 진영 우선순위 결정
-                if (Random.value > 0.5f) { finalTurnOrder.AddRange(allies); finalTurnOrder.AddRange(enemies); }
-                else { finalTurnOrder.AddRange(enemies); finalTurnOrder.AddRange(allies); }
-            }
-            else
-            {
-                finalTurnOrder.AddRange(allies);
-                finalTurnOrder.AddRange(enemies);
-            }
-        }
-
-        Debug.Log("🏁 이번 턴 행동 순서가 확정되었습니다.");
+    // 아군-적-아군-적 순으로 번갈아 배치
+    int max = Mathf.Max(allies.Count, enemies.Count);
+    for (int i = 0; i < max; i++)
+    {
+        if (i < allies.Count)  finalTurnOrder.Add(allies[i]);
+        if (i < enemies.Count) finalTurnOrder.Add(enemies[i]);
     }
 
-    // 현재 차례인 유닛을 반환하는 함수
-    public Unit GetCurrentUnit()
+    Debug.Log("🏁 이번 라운드 행동 순서:");
+    foreach (var a in finalTurnOrder)
+        Debug.Log($"  {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
+
+    ProcessCurrentTurn();
+}
+
+    private TurnActor GetCurrentActor()
     {
         if (currentTurnIndex < finalTurnOrder.Count)
             return finalTurnOrder[currentTurnIndex];
         return null;
     }
 
-    // 다음 사람으로 넘기기
-    public void NextTurn()
+    // PlayerActionController에서 사용 — 아군 턴일 때만 Unit 반환
+    public Unit GetCurrentUnit()
     {
-        // 1. 다음 기물로 인덱스 증가 (개별 기물의 턴 종료)
-        currentTurnIndex++;
+        return GetCurrentActor()?.unit;
+    }
 
-        // 2. 모든 기물이 한 번씩 행동했는지 체크 (사용자님이 정의한 '1턴'의 끝)
-        if (currentTurnIndex >= finalTurnOrder.Count)
+    private void ProcessCurrentTurn()
+    {
+        TurnActor actor = GetCurrentActor();
+        if (actor == null) { StartNewRound(); return; }
+
+        // 죽은 유닛 건너뜀
+        if (actor.isAlly && actor.unit == null)  { NextTurn(); return; }
+        if (!actor.isAlly && actor.enemyUnit == null) { NextTurn(); return; }
+
+        if (actor.isAlly)
         {
-            Debug.Log("🚩 [라운드 종료] 모든 기물이 행동을 마쳤습니다. 새로운 라운드를 준비합니다.");
-            StartNewRound();
+            Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
         }
         else
         {
-            // 아직 행동할 기물이 남았다면 다음 기물에게 기회를 줍니다.
-            Unit nextUnit = GetCurrentUnit();
-            Debug.Log($"➡️ [다음 턴] 이제 {nextUnit.unitName}의 차례입니다.");
-
-            // UI 업데이트나 카메라 포커스 이동 등을 여기서 처리할 수 있습니다.
+            Debug.Log($"👹 [적 턴] {actor.displayName} 행동 시작");
+            StartCoroutine(EnemyActAndNext(actor.enemyUnit));
         }
+    }
+
+    public void NextTurn()
+    {
+        currentTurnIndex++;
+        if (currentTurnIndex >= finalTurnOrder.Count)
+        {
+            StartNewRound();
+            return;
+        }
+        ProcessCurrentTurn();
+    }
+
+    // ============================
+    // 적 행동
+    // ============================
+    private IEnumerator EnemyActAndNext(EnemyUnit enemyUnit)
+    {
+        if (enemyUnit == null) { NextTurn(); yield break; }
+
+        enemyUnit.GetComponent<Enemy>()?.OnTurnStart();
+        yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
+        yield return new WaitForSeconds(0.5f);
+        enemyUnit.GetComponent<Enemy>()?.OnTurnEnd();
+
+        NextTurn();
+    }
+
+    private IEnumerator MoveEnemyTowardAlly(EnemyUnit enemyUnit)
+    {
+        Unit nearestAlly = FindNearestAlly(enemyUnit.gridPosition);
+        if (nearestAlly == null) yield break;
+
+        Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, nearestAlly);
+        if (targetTile == null) yield break;
+
+        if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile oldTile))
+        {
+            oldTile.isOccupied = false;
+            oldTile.currentUnit = null;
+        }
+
+        Vector2Int newPos = new Vector2Int(targetTile.x, targetTile.y);
+        enemyUnit.gridPosition = newPos;
+        enemyUnit.transform.position = targetTile.transform.position;
+        targetTile.isOccupied = true;
+        targetTile.currentUnit = enemyUnit.gameObject;
+
+        enemyUnit.UseNextSkillInSequence();
+        Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
+        yield return null;
+    }
+
+    private Unit FindNearestAlly(Vector2Int fromPos)
+    {
+        Unit nearest = null;
+        float minDist = float.MaxValue;
+        foreach (var unit in allUnits)
+        {
+            if (unit == null) continue;
+            int ux = Mathf.RoundToInt(unit.transform.position.x + 3.5f);
+            int uy = Mathf.RoundToInt(unit.transform.position.y + 3.5f);
+            float dist = Vector2Int.Distance(fromPos, new Vector2Int(ux, uy));
+            if (dist < minDist) { minDist = dist; nearest = unit; }
+        }
+        return nearest;
+    }
+
+    private Tile FindStepTowardAlly(Vector2Int enemyPos, Unit ally)
+    {
+        int ax = Mathf.RoundToInt(ally.transform.position.x + 3.5f);
+        int ay = Mathf.RoundToInt(ally.transform.position.y + 3.5f);
+        Vector2Int allyPos = new Vector2Int(ax, ay);
+
+        Tile bestTile = null;
+        float bestDist = Vector2Int.Distance(enemyPos, allyPos);
+
+        Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        foreach (var dir in dirs)
+        {
+            Vector2Int candidate = enemyPos + dir;
+            if (!MapManager.Instance.tiles.TryGetValue(candidate, out Tile tile)) continue;
+            if (tile.isOccupied) continue;
+            float dist = Vector2Int.Distance(candidate, allyPos);
+            if (dist < bestDist) { bestDist = dist; bestTile = tile; }
+        }
+        return bestTile;
     }
 
     private void StartNewRound()
     {
-        // 라운드(1턴 전체)가 끝났으므로 인덱스를 초기화합니다.
-        currentTurnIndex = 0;
-
-        // 다시 속도 주사위를 굴려 새로운 행동 순서를 결정합니다.
+        Debug.Log("🚩 [라운드 종료] 새 라운드 시작");
         GenerateTurnOrder();
-
-        Debug.Log("✨ [새 라운드 시작] 속도 주사위를 다시 굴려 새로운 순서가 결정되었습니다!");
     }
 }

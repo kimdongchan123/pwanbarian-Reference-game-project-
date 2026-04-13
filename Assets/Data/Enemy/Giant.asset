@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
+  m_Name: Giant
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  unitName: "\uAC70\uC778"
+  maxHp: 300
+  maxSt: 150
+  minSp: 1
+  maxSp: 3
+  atk: 7
+  def: 15
+  panic: 00000000
+  affiliation: "\uAC70\uC778\uC5F0\uB9F9"
+  unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
+  traitKeywords:
+  - "\uC591\uC131"
+  - "\uAC70\uC778"
+  - "\uC778\uAC04\uD615"
+  - "\uCD08\uAC70\uB300"
+  - "\uC778\uB958\uC758 \uCC9C\uC801"
+  physicalResist: 1
+  mentalResist: 1.5
+  specialResist: 0.8
+  sinResist: 1.5
+  defensiveCharacteristic: 
+  universalCharacteristic: 
+  pieceCharacteristic: 
+  skills: []
+  traits: []
+  deck:
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: 7a88c59744b0f174ba3a9d47d6b146be, type: 2}
+  - {fileID: 11400000, guid: 7a88c59744b0f174ba3a9d47d6b146be, type: 2}
+  - {fileID: 11400000, guid: 7a88c59744b0f174ba3a9d47d6b146be, type: 2}
+  - {fileID: 11400000, guid: 7a88c59744b0f174ba3a9d47d6b146be, type: 2}
+  - {fileID: 11400000, guid: 37cb5cac974267d43bfe4139942e1e3a, type: 2}
+  - {fileID: 11400000, guid: 37cb5cac974267d43bfe4139942e1e3a, type: 2}
