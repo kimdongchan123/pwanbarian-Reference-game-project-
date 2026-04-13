@@ -1855,9 +1855,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Game Title
-
-'
+  m_text: Re:Birth Chess
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 57e5bf81162995a4f8084fc52768e335, type: 2}
   m_sharedMaterial: {fileID: -2720897210296860565, guid: 57e5bf81162995a4f8084fc52768e335, type: 2}
