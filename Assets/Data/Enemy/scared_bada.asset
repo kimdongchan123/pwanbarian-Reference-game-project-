@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb5783eb8778324285733d71900c085, type: 3}
+  m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
   m_Name: scared_bada
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uAC81\uC7C1\uC774 \uBC14\uB2E4\uBBFC\uC871"
@@ -17,8 +17,8 @@ MonoBehaviour:
   maxSt: 8
   minSp: 2
   maxSp: 2
-  atk: 0
-  def: 0
+  atk: 1
+  def: 3
   panic: 19000000
   affiliation: "\uBC14\uB2E4\uBBFC\uC871"
   unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
@@ -35,19 +35,4 @@ MonoBehaviour:
   pieceCharacteristic: 
   skills: []
   traits: []
-  deck:
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
-  - {fileID: 11400000, guid: d582028aaa5a57341b87cb6cea17b6d1, type: 2}
-  - {fileID: 11400000, guid: 84fe636ebb620744cb47cb5c61c78546, type: 2}
-  - {fileID: 11400000, guid: 508f101bc50799440b702f52d62ee31a, type: 2}
-  - {fileID: 11400000, guid: 51874301e8ba55f49b73e1bc192d32c0, type: 2}
-  - {fileID: 11400000, guid: bd79b689f9cfe8449b0ced5f03c6b3c0, type: 2}
-  - {fileID: 11400000, guid: 338fa506457716146b02a8b065229c85, type: 2}
-  - {fileID: 11400000, guid: fe193045c9e452d409faebc01ac1849a, type: 2}
+  deck: []

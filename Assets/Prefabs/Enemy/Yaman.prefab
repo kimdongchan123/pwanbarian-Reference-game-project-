@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3fc28e726a39ce40be587f30f34438f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  EnemyData: {fileID: 11400000, guid: 8ed338f3133e8a947bfa7ca0b9edc599, type: 2}
+  EnemyData: {fileID: 11400000, guid: b01b505c74cbed54785da9b05115ec60, type: 2}
   CurrentHp: 0
   CurrentSt: 0
   Sp: 0
@@ -128,7 +128,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnit
   gridPosition: {x: 0, y: 0}
   hasMoved: 0
-  cards: []
+  cards:
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: b7a5fd060ce811f4bac4022edda42081, type: 2}
+  - {fileID: 11400000, guid: d582028aaa5a57341b87cb6cea17b6d1, type: 2}
+  - {fileID: 11400000, guid: 84fe636ebb620744cb47cb5c61c78546, type: 2}
+  - {fileID: 11400000, guid: 508f101bc50799440b702f52d62ee31a, type: 2}
+  - {fileID: 11400000, guid: 51874301e8ba55f49b73e1bc192d32c0, type: 2}
+  - {fileID: 11400000, guid: 338fa506457716146b02a8b065229c85, type: 2}
+  - {fileID: 11400000, guid: bd79b689f9cfe8449b0ced5f03c6b3c0, type: 2}
+  - {fileID: 11400000, guid: fe193045c9e452d409faebc01ac1849a, type: 2}
   skillData: []
   skillSlots: []
   skillSequenceIndex: 0

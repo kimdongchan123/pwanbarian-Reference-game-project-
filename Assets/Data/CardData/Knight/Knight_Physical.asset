@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
   m_Name: Knight_Physical
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 
-  pieceType: 0
+  cardName: "\uB098\uC774\uD2B8-\uC6D0\uAC70\uB9AC"
+  pieceType: 1
   sinType: 0
   damageType: 0
   targetType: 0

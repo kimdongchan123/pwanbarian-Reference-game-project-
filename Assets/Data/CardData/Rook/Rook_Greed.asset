@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
   m_Name: Rook_Greed
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 
+  cardName: "\uB8E9-\uD0D0\uB3C4"
   pieceType: 3
   sinType: 1
   damageType: 3

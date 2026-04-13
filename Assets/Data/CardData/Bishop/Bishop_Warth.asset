@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
   m_Name: Bishop_Warth
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 
+  cardName: "\uBE44\uC20D-\uBD84\uB178"
   pieceType: 2
   sinType: 3
   damageType: 3

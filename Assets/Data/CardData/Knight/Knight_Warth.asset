@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
   m_Name: Knight_Warth
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 
-  pieceType: 0
-  damageType: 0
+  cardName: "\uB098\uC774\uD2B8-\uBD84\uB178"
+  pieceType: 1
+  sinType: 3
+  damageType: 3
   targetType: 0
   isRanged: 0
   attackRange: 1

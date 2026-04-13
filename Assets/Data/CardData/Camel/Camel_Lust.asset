@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
   m_Name: Camel_Lust
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 
+  cardName: "\uCE90\uBA40-\uBBF8\uC0C9"
   pieceType: 8
   sinType: 2
   damageType: 3

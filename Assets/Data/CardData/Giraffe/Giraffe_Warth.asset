@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
   m_Name: Giraffe_Warth
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 
+  cardName: "\uC9C0\uB77C\uD504-\uBD84\uB178"
   pieceType: 0
+  sinType: 0
   damageType: 0
   targetType: 0
   isRanged: 0
