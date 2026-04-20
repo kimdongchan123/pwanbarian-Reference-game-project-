@@ -5,24 +5,26 @@ public class PlayerActionController : MonoBehaviour
 {
     public static PlayerActionController Instance;
 
-    private TestCardData selectedCard; // 지금 마우스에 쥐고 있는 카드
+    private CardData selectedCard; // 지금 마우스에 쥐고 있는 카드
     private Unit currentUnit;          // 지금 턴을 진행 중인 내 기물
 
     void Awake() => Instance = this;
 
     // (UI에서) 카드를 클릭했을 때 실행됨
-    public void OnCardSelected(TestCardData card)
+    public void OnCardSelected(CardData card)
     {
         currentUnit = TurnManager.Instance.GetCurrentUnit();
 
         if (currentUnit != null && currentUnit.isAlly)
         {
-            selectedCard = card; // 카드 쥐기
-            Debug.Log($"[{selectedCard.cardName}] 선택됨! 이동할 타일을 클릭하세요. (우클릭: 취소)");
+            selectedCard = card;
+            Debug.Log($"[{selectedCard.cardName}] 선택됨! 이동할 타일을 클릭");
 
-            // 타일에 파란 불 켜기
             if (currentUnit.movement != null)
-                currentUnit.movement.ShowMoveRange(selectedCard.pattern);
+            {
+                MovePattern movePattern = ConvertPieceTypeToMovePattern(selectedCard.pieceType);
+                currentUnit.movement.ShowMoveRange(movePattern);
+            }
         }
     }
 
@@ -74,5 +76,30 @@ public class PlayerActionController : MonoBehaviour
             selectedCard = null;
             MapManager.Instance.ClearHighlights();
         }
+
+
     }
+
+    private MovePattern ConvertPieceTypeToMovePattern(PieceType pieceType)
+    {
+        switch (pieceType)
+        {
+            case PieceType.Pawn:
+                return MovePattern.Pawn;
+            case PieceType.Knight:
+                return MovePattern.Knight;
+            case PieceType.Bishop:
+                return MovePattern.Bishop;
+            case PieceType.Rook:
+                return MovePattern.Rook;
+            case PieceType.Queen:
+                return MovePattern.Queen;
+            case PieceType.King:
+                return MovePattern.King;
+            default:
+                return MovePattern.Pawn;
+        }
+    }
+
+
 }

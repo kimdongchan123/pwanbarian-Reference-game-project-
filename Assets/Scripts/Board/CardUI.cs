@@ -9,14 +9,23 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     public TextMeshProUGUI costText;
     public TextMeshProUGUI patternText;
 
-    private TestCardData myData;
+    private CardData myData;
 
-    public void SetupCard(TestCardData data)
+    public void SetupCard(CardData data)
     {
         myData = data;
+
+        if (data == null)
+        {
+            Debug.LogWarning("CardUI: CardData가 null입니다.");
+            return;
+        }
+
+        Debug.Log($"카드 세팅됨 | 이름: {data.cardName}, 파워: {data.power}, 타입: {data.pieceType}");
+
         nameText.text = data.cardName;
-        costText.text = data.cost.ToString();
-        patternText.text = data.pattern.ToString();
+        costText.text = data.power.ToString();
+        patternText.text = data.pieceType.ToString();
     }
 
     // 💡 [핵심] 기존의 OnCardClicked()는 지우고, 이 녀석이 대신 클릭을 받습니다!

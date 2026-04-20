@@ -553,7 +553,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  finalTurnOrder: []
 --- !u!4 &96337767
 Transform:
   m_ObjectHideFlags: 0
@@ -7150,20 +7149,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d1548691cb3c6d47bc87e9b481c22fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandUIManager
-  cardPrefab: {fileID: 4811897092414514401, guid: 5d5e8db3e44317a4fb2cc4fb321525cd, type: 3}
+  pawnCardPrefab: {fileID: 4811897092414514401, guid: 5d5e8db3e44317a4fb2cc4fb321525cd, type: 3}
+  knightCardPrefab: {fileID: 7047393308585186693, guid: f370b685e3888da4cb0169b9c8253ade, type: 3}
+  bishopCardPrefab: {fileID: 6450081657140244437, guid: a4f81a9003f7f2c41a4c881a13e27516, type: 3}
   handArea: {fileID: 547875349}
   deck:
-  - {fileID: 11400000, guid: 8c5b06e1c301ff6479e37bd21f2783ee, type: 2}
-  - {fileID: 11400000, guid: a23ccbc987f3dc4468be4b5df1200d4d, type: 2}
-  - {fileID: 11400000, guid: db894ed035a88a345b06fe822b6f94a3, type: 2}
-  - {fileID: 11400000, guid: a23ccbc987f3dc4468be4b5df1200d4d, type: 2}
-  - {fileID: 11400000, guid: a23ccbc987f3dc4468be4b5df1200d4d, type: 2}
-  - {fileID: 11400000, guid: 8c5b06e1c301ff6479e37bd21f2783ee, type: 2}
-  - {fileID: 11400000, guid: a23ccbc987f3dc4468be4b5df1200d4d, type: 2}
-  - {fileID: 11400000, guid: 8c5b06e1c301ff6479e37bd21f2783ee, type: 2}
-  - {fileID: 11400000, guid: 8c5b06e1c301ff6479e37bd21f2783ee, type: 2}
-  - {fileID: 11400000, guid: db894ed035a88a345b06fe822b6f94a3, type: 2}
-  - {fileID: 11400000, guid: db894ed035a88a345b06fe822b6f94a3, type: 2}
+  - {fileID: 11400000, guid: 7f5ccbd80710530479dac0de94abf5fd, type: 2}
+  - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
+  - {fileID: 11400000, guid: f93346bc73221514bad302aaacb10b9c, type: 2}
+  - {fileID: 11400000, guid: 87ccb58b7965f2f4486cb235a7871591, type: 2}
+  - {fileID: 11400000, guid: 87ccb58b7965f2f4486cb235a7871591, type: 2}
+  - {fileID: 11400000, guid: 87ccb58b7965f2f4486cb235a7871591, type: 2}
+  - {fileID: 11400000, guid: 7f5ccbd80710530479dac0de94abf5fd, type: 2}
+  - {fileID: 11400000, guid: 7f5ccbd80710530479dac0de94abf5fd, type: 2}
+  - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
+  - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
+  - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
   hiddenY: -150
   visibleY: 100
   slideSpeed: 10

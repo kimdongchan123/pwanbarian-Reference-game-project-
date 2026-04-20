@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardName: "\uC81C\uB85C\uD3F0"
   pieceType: 0
+  sinType: 0
   damageType: 0
   targetType: 1
-  power: 0
+  isRanged: 0
+  attackRange: 1
+  power: 1
   useEffect: 1
   effectType: 3
   effectAmount: 3
