@@ -7,20 +7,22 @@ public enum DamageType
     Physical,
     Mental,
     Special,
-    Sin
+    Sin,
 }
+
 public enum SinType
 {
     None,
     Greed,
     Lust,
-    Warth
+    Warth,
 }
+
 public enum PanicType
 {
     None,
     Weakness,
-    BerserkerSoul
+    BerserkerSoul,
 }
 
 // Zebra, Camel, Giraffe 추가
@@ -34,20 +36,38 @@ public enum PieceType
     King,
     Giraffe,
     Zebra,
-    Camel
+    Camel,
 }
 
 public enum StatusEffectType
 {
     None,
-    Quick, Breath, Agitation, Charge, Shield,
-    HuntHumanType, Rupture, Hallucination, Frenzy,
-    GoldenTime, GoldenGuarantee, AtkUp, DefUp, DamageUp,
-    Slow, Mark, Corrosion, Poison, Fear, Truth, Logic, Prey
+    Quick,
+    Breath,
+    Agitation,
+    Charge,
+    Shield,
+    HuntHumanType,
+    Rupture,
+    Hallucination,
+    Frenzy,
+    GoldenTime,
+    GoldenGuarantee,
+    AtkUp,
+    DefUp,
+    DamageUp,
+    Slow,
+    Mark,
+    Corrosion,
+    Poison,
+    Fear,
+    Truth,
+    Logic,
+    Prey,
 }
 
 public enum CardTargetType
 {
     Enemy,
-    Self
+    Self,
 }
