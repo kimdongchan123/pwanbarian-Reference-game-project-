@@ -1,9 +1,10 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 public class PlacementManager : MonoBehaviour
 {
     [Header("기물 프리팹 리스트")]
@@ -13,35 +14,64 @@ public class PlacementManager : MonoBehaviour
     public GameObject selectionPanel;
     public GameObject confirmPanel;
     public GameObject recallPanel;
+
     [Header("배치 제한")]
     public int maxUnits = 3; // 최대 배치 가능 수
     public int currentUnitCount = 0; // 현재 배치된 기물 수 (인스펙터에서 보기 위해 public)
     private Tile selectedTileComponent;
     private Vector3 selectedTilePosition;
     private int selectedUnitIndex = -1;
+
     [Header("시각 효과 색상")]
     public Color hoverColor = new Color(0.5f, 1f, 0.5f, 1f); // 연한 녹색 (배치 가능)
     public Color errorColor = new Color(1f, 0.5f, 0.5f, 1f); // 연한 붉은색 (배치 불가)
+
     [Header("페이드 연출")]
     public Image fadeImage; // 캔버스에 만든 페이드용 검은 이미지
     public float fadeDuration = 1.0f; // 페이드 아웃에 걸리는 시간 (1초)
     private Tile hoveredTile; // 현재 마우스가 올라가 있는 타일 기억용
+
     void Start()
     {
         BattleData.placedUnits.Clear();
-        if (selectionPanel != null) selectionPanel.SetActive(false);
-        if (confirmPanel != null) confirmPanel.SetActive(false);
-        if (recallPanel != null) recallPanel.SetActive(false);
+        if (selectionPanel != null)
+            selectionPanel.SetActive(false);
+        if (confirmPanel != null)
+            confirmPanel.SetActive(false);
+        if (recallPanel != null)
+            recallPanel.SetActive(false);
+
+        if (StageManager.SelectedStage == null)
+        {
+            Debug.LogWarning(
+                "⚠️ StageManager.SelectedStage가 설정되지 않았습니다! StageSelectButton에서 스테이지를 선택하고 넘어왔는지 확인하세요."
+            );
+        }
+        else
+        {
+            foreach (var enemyEntry in StageManager.SelectedStage.enemyEntries)
+            {
+                Tile spawnTile = MapManager.Instance.tiles[new Vector2Int((int)enemyEntry.column - 1, enemyEntry.row - 1)];
+                Vector3 spawnPos = spawnTile.GetComponent<Collider>().bounds.center;
+                spawnPos.z = 0f;
+                Enemy spawned = Instantiate(enemyEntry.prefab, spawnPos, Quaternion.identity);
+
+            }
+        }
     }
+
     void Update()
     {
-        if (Mouse.current == null) return;
+        if (Mouse.current == null)
+            return;
 
         //  방어 1단계: 3개의 패널 중 하나라도 켜져 있는지 확인 (recallPanel 포함)
-        bool isAnyPanelActive = selectionPanel.activeSelf || confirmPanel.activeSelf || recallPanel.activeSelf;
+        bool isAnyPanelActive =
+            selectionPanel.activeSelf || confirmPanel.activeSelf || recallPanel.activeSelf;
 
         //  방어 2단계: 마우스 포인터가 현재 UI 요소(버튼, 패널 등) 위에 있는지 확인 (클릭 관통 방지)
-        bool isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+        bool isPointerOverUI =
+            EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 
         //  1. 호버(마우스 오버) 처리: 마우스가 움직일 때마다 항상 체크
         if (!isAnyPanelActive && !isPointerOverUI)
@@ -114,7 +144,9 @@ public class PlacementManager : MonoBehaviour
                         //  [새로 추가] 배치 한도 검사!
                         if (currentUnitCount >= maxUnits)
                         {
-                            Debug.Log($" 배치 한도 초과! (현재 {currentUnitCount}/{maxUnits}) 더 이상 기물을 배치할 수 없습니다.");
+                            Debug.Log(
+                                $" 배치 한도 초과! (현재 {currentUnitCount}/{maxUnits}) 더 이상 기물을 배치할 수 없습니다."
+                            );
                             // 여기에 나중에 "배치 한도를 초과했습니다!" 라는 경고 텍스트를 화면에 띄우는 코드를 넣으면 좋습니다.
                             return;
                         }
@@ -157,7 +189,11 @@ public class PlacementManager : MonoBehaviour
             spawnPos.z = 0f; // 2D 렌더링을 위해 Z축을 0으로 통일
 
             // 1. 프리팹 생성
-            GameObject spawnedUnit = Instantiate(unitPrefabs[selectedUnitIndex], spawnPos, Quaternion.identity);
+            GameObject spawnedUnit = Instantiate(
+                unitPrefabs[selectedUnitIndex],
+                spawnPos,
+                Quaternion.identity
+            );
 
             // 2. 타일 스크립트에 정보 저장!
             selectedTileComponent.currentUnit = spawnedUnit;
@@ -168,6 +204,7 @@ public class PlacementManager : MonoBehaviour
             ResetPlacement();
         }
     }
+
     public void ConfirmRecall()
     {
         if (selectedTileComponent != null && selectedTileComponent.currentUnit != null)
@@ -184,14 +221,19 @@ public class PlacementManager : MonoBehaviour
             ResetPlacement();
         }
     }
+
     public void ResetPlacement()
     {
         selectedUnitIndex = -1;
         selectedTileComponent = null;
-        if (selectionPanel != null) selectionPanel.SetActive(false);
-        if (confirmPanel != null) confirmPanel.SetActive(false);
-        if (recallPanel != null) recallPanel.SetActive(false);
+        if (selectionPanel != null)
+            selectionPanel.SetActive(false);
+        if (confirmPanel != null)
+            confirmPanel.SetActive(false);
+        if (recallPanel != null)
+            recallPanel.SetActive(false);
     }
+
     void ProcessHover()
     {
         Vector2 mousePos = Mouse.current.position.ReadValue();
@@ -244,6 +286,7 @@ public class PlacementManager : MonoBehaviour
             hoveredTile = null;
         }
     }
+
     public void OnClickSortie()
     {
         if (currentUnitCount == 0)
@@ -273,11 +316,14 @@ public class PlacementManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"출격! 총 {BattleData.placedUnits.Count}개의 기물 데이터를 저장했습니다. 전투 씬으로 이동합니다.");
+        Debug.Log(
+            $"출격! 총 {BattleData.placedUnits.Count}개의 기물 데이터를 저장했습니다. 전투 씬으로 이동합니다."
+        );
 
         // 3. 전투 씬으로 넘어갑니다. ("BattleScene" 부분은 실제 만드실 스테이지 이름으로 바꿔주세요!)
         StartCoroutine(FadeOutAndLoadScene("BattleScene"));
     }
+
     private IEnumerator FadeOutAndLoadScene(string sceneName)
     {
         if (fadeImage != null)
@@ -309,5 +355,3 @@ public class PlacementManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 }
-
-

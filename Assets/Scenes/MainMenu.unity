@@ -1748,7 +1748,7 @@ MonoBehaviour:
   newGameButton: {fileID: 1589180465}
   settingsButton: {fileID: 13071492}
   quitButton: {fileID: 801538649}
-  gameSceneName: SettingPlaceScene
+  gameSceneName: StageSelectScene
 --- !u!1 &1870653237
 GameObject:
   m_ObjectHideFlags: 0

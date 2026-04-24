@@ -1,4 +1,3 @@
-// ▶ 레퍼런스 프로젝트 경로: Assets/Scripts/Board/ 신규 추가
 using System.Collections.Generic;
 using UnityEngine;
 
