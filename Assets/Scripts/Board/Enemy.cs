@@ -70,7 +70,25 @@ public class Enemy : MonoBehaviour
         Debug.Log($"{EnemyData.unitName} HP: {CurrentHp}/{EnemyData.maxHp} (-{dmg})");
         if (CurrentHp <= 0)
         {
+            foreach (var e in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+                if (e != this) e.OnAllyDied();
             Debug.Log($"{EnemyData.unitName} 사망");
+            Destroy(gameObject);
+        }
+    }
+
+    public void OnAllyDied()
+    {
+        if (!HasTrait(TraitEffect.struggling)) return;
+        float resist = EnemyData != null ? EnemyData.mentalResist : 1f;
+        int dmg = Mathf.Max(1, Mathf.RoundToInt(5f / resist));
+        CurrentHp -= dmg;
+        damage += 1;
+        Debug.Log($"{EnemyData?.unitName} [생존발악] 아군 사망 — 정신 피해 {dmg}, ATK +1 (현재 {damage})");
+        if (CurrentHp <= 0)
+        {
+            foreach (var e in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+                if (e != this) e.OnAllyDied();
             Destroy(gameObject);
         }
     }

@@ -147,10 +147,18 @@ public class TurnManager : MonoBehaviour
     {
         if (enemyUnit == null) { NextTurn(); yield break; }
 
-        enemyUnit.GetComponent<Enemy>()?.OnTurnStart();
+        Enemy enemy = enemyUnit.GetComponent<Enemy>();
+        enemy?.OnTurnStart();
         yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
+
+        if (enemy != null && (enemy.HasTrait(TraitEffect.swiftness) || enemy.hasSwiftnessBuff))
+        {
+            yield return new WaitForSeconds(0.3f);
+            yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
+        }
+
         yield return new WaitForSeconds(0.5f);
-        enemyUnit.GetComponent<Enemy>()?.OnTurnEnd();
+        enemy?.OnTurnEnd();
 
         NextTurn();
     }
@@ -159,6 +167,18 @@ public class TurnManager : MonoBehaviour
     {
         Unit nearestAlly = FindNearestAlly(enemyUnit.gridPosition);
         if (nearestAlly == null) yield break;
+
+        int ax = Mathf.RoundToInt(nearestAlly.transform.position.x + 3.5f);
+        int ay = Mathf.RoundToInt(nearestAlly.transform.position.y + 3.5f);
+        Vector2Int allyPos = new Vector2Int(ax, ay);
+
+        // 이미 인접해 있으면 이동 없이 바로 공격
+        if (IsAdjacent(enemyUnit.gridPosition, allyPos))
+        {
+            enemyUnit.UseNextSkillInSequence();
+            AttackAlly(enemyUnit, nearestAlly);
+            yield break;
+        }
 
         Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, nearestAlly);
         if (targetTile == null) yield break;
@@ -177,7 +197,67 @@ public class TurnManager : MonoBehaviour
 
         enemyUnit.UseNextSkillInSequence();
         Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
+
+        // 이동 후 인접하게 됐으면 공격
+        if (IsAdjacent(newPos, allyPos))
+            AttackAlly(enemyUnit, nearestAlly);
+
         yield return null;
+    }
+
+    private bool IsAdjacent(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
+    }
+
+    private void AttackAlly(EnemyUnit enemyUnit, Unit ally)
+    {
+        if (CombatManager.Instance == null) return;
+        BattleUnit battleUnit = ally.GetComponent<BattleUnit>();
+        if (battleUnit == null)
+        {
+            Debug.LogWarning($"[전투] {ally.unitName}에 BattleUnit 컴포넌트가 없습니다.");
+            return;
+        }
+        CombatManager.Instance.EnemyCollidePlayer(enemyUnit, battleUnit);
+        Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} 공격!");
+
+        KnockBack(ally.gameObject, enemyUnit.gridPosition);
+    }
+
+    public void KnockBack(GameObject target, Vector2Int attackerGridPos)
+    {
+        if (MapManager.Instance == null) return;
+
+        // 피격 유닛의 현재 그리드 좌표 계산
+        int tx = Mathf.RoundToInt(target.transform.position.x + 3.5f);
+        int ty = Mathf.RoundToInt(target.transform.position.y + 3.5f);
+        Vector2Int targetPos = new Vector2Int(tx, ty);
+
+        // 밀려나는 방향: 공격자 → 피격자 방향으로 1칸
+        Vector2Int diff = targetPos - attackerGridPos;
+        Vector2Int pushDir = Mathf.Abs(diff.x) >= Mathf.Abs(diff.y)
+            ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
+            : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+
+        Vector2Int pushPos = targetPos + pushDir;
+
+        if (!MapManager.Instance.tiles.TryGetValue(pushPos, out Tile pushTile)) return;
+        if (pushTile.isOccupied) return; // 뒤가 막혀있으면 밀리지 않음
+
+        // 기존 타일 점유 해제
+        if (MapManager.Instance.tiles.TryGetValue(targetPos, out Tile currentTile))
+        {
+            currentTile.isOccupied = false;
+            currentTile.currentUnit = null;
+        }
+
+        // 새 위치로 이동
+        target.transform.position = pushTile.transform.position;
+        pushTile.isOccupied = true;
+        pushTile.currentUnit = target;
+
+        Debug.Log($"💨 {target.name} 넉백 → ({pushPos.x}, {pushPos.y})");
     }
 
     private Unit FindNearestAlly(Vector2Int fromPos)

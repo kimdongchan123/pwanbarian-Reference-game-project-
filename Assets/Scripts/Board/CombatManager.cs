@@ -33,6 +33,12 @@ public class CombatManager : MonoBehaviour
         Enemy defender = defenderUnit.GetComponent<Enemy>();
         if (defender == null || defender.EnemyData == null) return;
 
+        if (defender.HasTrait(TraitEffect.boss) && HasOtherAllies(defenderUnit))
+        {
+            Debug.Log($"[보스] {defender.EnemyData.unitName}은 다른 아군이 생존 중이라 공격 불가");
+            return;
+        }
+
         // BattleUnit의 내부 계산 활용 (DamageType 포함)
         int finalDamage = attacker.CalculateCardDamage(card, null);
 
@@ -76,6 +82,16 @@ public class CombatManager : MonoBehaviour
         int baseDamage = enemyATK + attacker.GetDamageBonus();
         defender.TakeDamage(baseDamage, DamageType.Physical, null);
         Debug.Log($"[충돌] 적 → 플레이어: {baseDamage} 피해");
+    }
+
+    // ============================
+    // 보스 타겟 체크
+    // ============================
+    private bool HasOtherAllies(EnemyUnit target)
+    {
+        foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+            if (eu != target) return true;
+        return false;
     }
 
     // ============================

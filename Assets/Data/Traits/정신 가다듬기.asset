@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0375a1a161b7d1d49aa02bb86f5384a9, type: 3}
-  m_Name: "신속"
+  m_Name: "정신 가다듬기"
   m_EditorClassIdentifier: Assembly-CSharp::TraitData
-  traitName: "신속"
-  triggerType: 0
-  traitEffect: 7
-  description: "턴마다 1번 더 행마한다."
-  stAmount: 0
+  traitName: "정신 가다듬기"
+  triggerType: 1
+  traitEffect: 3
+  description: "턴 시작 시 St(2)를 회복한다."
+  stAmount: 2
   affiliationTarget:
