@@ -129,29 +129,21 @@ public class MapManager : MonoBehaviour
     }
 
     // 🚶 단거리 기물 (폰, 킹, 나이트) 충돌 체크
+    // 🚶 단거리 기물 (폰, 킹, 나이트) 충돌 체크
     private void CheckAndAddTile(int x, int y, List<Tile> validTiles, bool movingUnitIsAlly)
     {
         Vector2Int targetPos = new Vector2Int(x, y);
         if (tiles.ContainsKey(targetPos))
         {
             Tile t = tiles[targetPos];
-
-            // 타일에 누군가 있다면?
             if (t.isOccupied && t.currentUnit != null)
             {
                 Unit targetUnit = t.currentUnit.GetComponent<Unit>();
-                // 적군이라면 공격 가능 (불 켜기)
-                if (targetUnit.isAlly != movingUnitIsAlly)
-                {
-                    validTiles.Add(t);
-                }
-                // 아군이라면 이동 불가 (불 안 켬)
+                if (targetUnit == null) return; // 🚨 핵심 방어막
+
+                if (targetUnit.isAlly != movingUnitIsAlly) validTiles.Add(t);
             }
-            else
-            {
-                // 비어있으면 이동 가능
-                validTiles.Add(t);
-            }
+            else validTiles.Add(t);
         }
     }
 
@@ -162,31 +154,25 @@ public class MapManager : MonoBehaviour
         if (tiles.ContainsKey(targetPos))
         {
             Tile t = tiles[targetPos];
-
             if (t.isOccupied && t.currentUnit != null)
             {
                 Unit targetUnit = t.currentUnit.GetComponent<Unit>();
+                if (targetUnit == null) return false; // 🚨 핵심 방어막
 
                 if (targetUnit.isAlly != movingUnitIsAlly)
                 {
-                    // ⚔️ 적군 발견: 공격해야 하니까 이 타일까지만 불을 켜고, 뒤로는 전진 중단(return false)
                     validTiles.Add(t);
                     return false;
                 }
-                else
-                {
-                    // 🛡️ 아군 발견: 내 편을 밟을 수 없으니 불도 안 켜고, 전진도 중단(return false)
-                    return false;
-                }
+                return false;
             }
             else
             {
-                // 비어있음: 불을 켜고 계속 전진! (return true)
                 validTiles.Add(t);
                 return true;
             }
         }
-        return false; // 맵 밖으로 나감
+        return false;
     }
 
     // 모든 파란 불 끄기
