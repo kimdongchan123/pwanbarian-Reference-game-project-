@@ -39,14 +39,14 @@ public class TurnManager : MonoBehaviour
         allUnits.Clear();
         if (BattleData.placedUnits.Count == 0)
         {
-            Debug.LogWarning("⚠️ BattleData에 배치된 유닛이 없습니다!");
+            Debug.LogWarning(" BattleData에 배치된 유닛이 없습니다!");
             return;
         }
         foreach (var info in BattleData.placedUnits)
         {
             if (info.unitIndex < 0 || info.unitIndex >= unitPrefabs.Length)
             {
-                Debug.LogWarning($"⚠️ unitIndex {info.unitIndex}이 범위를 벗어남 (배열 크기: {unitPrefabs.Length})");
+                Debug.LogWarning($" unitIndex {info.unitIndex}이 범위를 벗어남 (배열 크기: {unitPrefabs.Length})");
                 continue;
             }
             GameObject go = Instantiate(unitPrefabs[info.unitIndex], info.position, Quaternion.identity);

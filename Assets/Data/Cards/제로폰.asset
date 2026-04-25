@@ -21,6 +21,7 @@ MonoBehaviour:
   attackRange: 1
   power: 1
   useEffect: 1
-  effectType: 3
+  effectType: 4
   effectAmount: 3
+  effectToSelf: 1
   description: 

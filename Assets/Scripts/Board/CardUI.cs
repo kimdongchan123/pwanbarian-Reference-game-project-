@@ -31,7 +31,7 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     // 💡 [핵심] 기존의 OnCardClicked()는 지우고, 이 녀석이 대신 클릭을 받습니다!
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log($"🎯 [{myData.cardName}] 카드 찰칵! (스크립트 클릭 성공)");
+        Debug.Log($" [{myData.cardName}] 카드 찰칵! (스크립트 클릭 성공)");
 
         if (PlayerActionController.Instance != null)
         {
@@ -39,7 +39,7 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         }
         else
         {
-            Debug.LogWarning("⚠️ PlayerActionController가 씬에 없습니다!");
+            Debug.LogWarning(" PlayerActionController가 씬에 없습니다!");
         }
     }
 

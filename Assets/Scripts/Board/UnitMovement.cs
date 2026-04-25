@@ -61,7 +61,7 @@ public class UnitMovement : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"⚠️ {gameObject.name}의 발밑({myX}, {myY})에 등록된 타일이 없습니다!");
+            Debug.LogWarning($" {gameObject.name}의 발밑({myX}, {myY})에 등록된 타일이 없습니다!");
         }
     }
 
@@ -162,7 +162,7 @@ public class UnitMovement : MonoBehaviour
         targetTile.isOccupied = true;
         targetTile.currentUnit = this.gameObject;
 
-        Debug.Log($"✅ {myUnit.unitName} 이동 완료!");
+        Debug.Log($" {myUnit.unitName} 이동 완료!");
 
         // 4) 파란 불 끄고 다음 사람 턴으로!
         MapManager.Instance.ClearHighlights();

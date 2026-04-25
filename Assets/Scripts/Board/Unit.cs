@@ -28,4 +28,14 @@ public class Unit : MonoBehaviour
     {
         currentHp = maxHp;
     }
+
+    public void TakeDamage(int damage)
+    {
+        Debug.Log($"{name}이 {damage} 피해를 받음");
+    }
+
+    public void AddStatus(StatusEffectType type, int amount)
+    {
+        Debug.Log($"{name}에게 {type} {amount} 적용");
+    }
 }
