@@ -15,5 +15,5 @@ MonoBehaviour:
   stageName: 
   enemyEntries:
   - prefab: {fileID: -1169103389675512039, guid: 2510991fc68342e4e895683a15071c04, type: 3}
-    row: 8
-    column: 4
+    rank: 8
+    file: 4

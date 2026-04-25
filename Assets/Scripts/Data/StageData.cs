@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Col
+public enum File
 {
     a = 1,
     b = 2,
@@ -19,8 +19,8 @@ public class EnemyEntry
     public Enemy prefab;
 
     [Range(1, 8)]
-    public int row;
-    public Col column;
+    public int rank;
+    public File file;
 }
 
 [CreateAssetMenu(menuName = "Game/Stage Data")]

@@ -51,7 +51,7 @@ public class PlacementManager : MonoBehaviour
         {
             foreach (var enemyEntry in StageManager.SelectedStage.enemyEntries)
             {
-                Tile spawnTile = MapManager.Instance.tiles[new Vector2Int((int)enemyEntry.column - 1, enemyEntry.row - 1)];
+                Tile spawnTile = MapManager.Instance.tiles[new Vector2Int((int)enemyEntry.file - 1, enemyEntry.rank - 1)];
                 Vector3 spawnPos = spawnTile.GetComponent<Collider>().bounds.center;
                 spawnPos.z = 0f;
                 Enemy spawned = Instantiate(enemyEntry.prefab, spawnPos, Quaternion.identity);

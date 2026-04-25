@@ -29,7 +29,7 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         SpawnUnitsFromBattleData();
-        EnemyBattleSetup.Instance?.SpawnEnemies();
+        // EnemyBattleSetup.Instance?.SpawnEnemies();
         GenerateTurnOrder();
     }
 
