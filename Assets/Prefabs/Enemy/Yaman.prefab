@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -8022664824711771142}
   - component: {fileID: 6074614529533329920}
   - component: {fileID: 7899334692885814727}
+  - component: {fileID: -606293714214234271}
   - component: {fileID: -6737323992569989229}
   m_Layer: 0
   m_Name: Yaman
@@ -146,6 +147,18 @@ MonoBehaviour:
   wetStacks: 0
   hasSwiftnessBuff: 0
   hasSpreadBuff: 0
+--- !u!114 &-606293714214234271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455855813406442783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68791c13486b59a4190ac1867869b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
 --- !u!114 &-6737323992569989229
 MonoBehaviour:
   m_ObjectHideFlags: 0

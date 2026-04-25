@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6566456425088521305}
   - component: {fileID: -3970521554910435385}
   - component: {fileID: 6670056530076392763}
+  - component: {fileID: 7717270829928051828}
   - component: {fileID: 6997241465535955184}
   m_Layer: 0
   m_Name: SeaGiant
@@ -146,6 +147,18 @@ MonoBehaviour:
   wetStacks: 0
   hasSwiftnessBuff: 0
   hasSpreadBuff: 0
+--- !u!114 &7717270829928051828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8419603827761867028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68791c13486b59a4190ac1867869b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
 --- !u!114 &6997241465535955184
 MonoBehaviour:
   m_ObjectHideFlags: 0

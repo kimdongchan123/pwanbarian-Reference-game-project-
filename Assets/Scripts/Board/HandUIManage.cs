@@ -29,8 +29,8 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void Start()
     {
-        // 1. 전투 시작 시 자동으로 카드 3장 뽑기
-        // (기물 소환 등이 끝날 시간을 벌기 위해 아주 잠깐 대기 후 실행)
+        // 🚨 덱 매니저한테 덱 세팅하라고 명령!
+        DeckManager.Instance.InitDeck();
         StartCoroutine(AutoDrawAtStart(3));
     }
 
@@ -64,17 +64,17 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void DrawCards(int amount)
     {
-        foreach (Transform child in handArea)
-        {
-            Destroy(child.gameObject);
-        }
-
         for (int i = 0; i < amount; i++)
         {
-            if (deck.Count == 0) break;
-            GameObject newCardObj = Instantiate(cardPrefab, handArea);
-            TestCardData randomData = deck[Random.Range(0, deck.Count)];
-            newCardObj.GetComponent<CardUI>().SetupCard(randomData);
+            // 🚨 덱 매니저에게 진짜 카드를 뽑아달라고 요청! (손패가 꽉 찼으면 null을 줍니다)
+            TestCardData drawnData = DeckManager.Instance.DrawCard();
+
+            if (drawnData != null)
+            {
+                // 화면에 카드 껍데기를 만들고 데이터를 예쁘게 넣어줍니다.
+                GameObject newCardObj = Instantiate(cardPrefab, handArea);
+                newCardObj.GetComponent<CardUI>().SetupCard(drawnData);
+            }
         }
     }
 

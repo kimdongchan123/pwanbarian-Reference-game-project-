@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7714970854031668519}
   - component: {fileID: 4551718561880925126}
   - component: {fileID: -1169103389675512039}
+  - component: {fileID: -5841334167608742668}
   - component: {fileID: 7421030197614336487}
   m_Layer: 0
   m_Name: Cold
@@ -146,6 +147,18 @@ MonoBehaviour:
   wetStacks: 0
   hasSwiftnessBuff: 0
   hasSpreadBuff: 0
+--- !u!114 &-5841334167608742668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8512583949522264569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68791c13486b59a4190ac1867869b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
 --- !u!114 &7421030197614336487
 MonoBehaviour:
   m_ObjectHideFlags: 0

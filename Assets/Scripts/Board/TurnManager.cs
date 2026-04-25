@@ -55,46 +55,43 @@ public class TurnManager : MonoBehaviour
     }
 
     public void GenerateTurnOrder()
-{
-    currentTurnIndex = 0;
-    finalTurnOrder.Clear();
-    allUnits.RemoveAll(u => u == null);
-
-    // 아군 SP 굴림
-    List<TurnActor> allies = new List<TurnActor>();
-    foreach (var unit in allUnits)
     {
-        int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
-        unit.stats.currentTurnSpeed = speed;
-        allies.Add(new TurnActor { unit = unit, speed = speed });
+        currentTurnIndex = 0;
+        finalTurnOrder.Clear();
+        allUnits.RemoveAll(u => u == null);
+
+        List<TurnActor> allActors = new List<TurnActor>();
+
+        foreach (var unit in allUnits)
+        {
+            int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
+            unit.stats.currentTurnSpeed = speed;
+            allActors.Add(new TurnActor { unit = unit, speed = speed });
+        }
+
+        foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+        {
+            Enemy enemy = eu.GetComponent<Enemy>();
+            if (enemy?.EnemyData == null) continue;
+
+            int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
+            allActors.Add(new TurnActor { enemyUnit = eu, speed = speed });
+        }
+
+        // 🚨 [규칙 적용] SP 내림차순 정렬 -> 동점일 경우 아군(true) 우선!
+        finalTurnOrder = allActors
+            .OrderByDescending(a => a.speed)
+            .ThenByDescending(a => a.isAlly)
+            .ToList();
+
+        Debug.Log("🏁 이번 라운드 행동 순서:");
+        for (int i = 0; i < finalTurnOrder.Count; i++)
+        {
+            var a = finalTurnOrder[i];
+            Debug.Log($"[{i + 1}등] {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
+        }
+        ProcessCurrentTurn();
     }
-    allies = allies.OrderByDescending(a => a.speed).ToList();
-
-    // 적 SP 굴림
-    List<TurnActor> enemies = new List<TurnActor>();
-    foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
-    {
-        Enemy enemy = eu.GetComponent<Enemy>();
-        if (enemy?.EnemyData == null) continue;
-        int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
-        enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
-    }
-    enemies = enemies.OrderByDescending(a => a.speed).ToList();
-
-    // 아군-적-아군-적 순으로 번갈아 배치
-    int max = Mathf.Max(allies.Count, enemies.Count);
-    for (int i = 0; i < max; i++)
-    {
-        if (i < allies.Count)  finalTurnOrder.Add(allies[i]);
-        if (i < enemies.Count) finalTurnOrder.Add(enemies[i]);
-    }
-
-    Debug.Log("🏁 이번 라운드 행동 순서:");
-    foreach (var a in finalTurnOrder)
-        Debug.Log($"  {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
-
-    ProcessCurrentTurn();
-}
 
     private TurnActor GetCurrentActor()
     {
@@ -109,23 +106,31 @@ public class TurnManager : MonoBehaviour
         return GetCurrentActor()?.unit;
     }
 
+    // (TurnManager.cs 내부)
     private void ProcessCurrentTurn()
     {
         TurnActor actor = GetCurrentActor();
         if (actor == null) { StartNewRound(); return; }
 
-        // 죽은 유닛 건너뜀
-        if (actor.isAlly && actor.unit == null)  { NextTurn(); return; }
+        if (actor.isAlly && actor.unit == null) { NextTurn(); return; }
         if (!actor.isAlly && actor.enemyUnit == null) { NextTurn(); return; }
 
         if (actor.isAlly)
         {
             Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
+
+            // 🚨 [추가된 부분] 내 턴이 돌아왔으니 카드를 1장 뽑습니다!
+            if (HandUIManager.Instance != null)
+            {
+                HandUIManager.Instance.DrawCards(1);
+            }
         }
         else
         {
             Debug.Log($"👹 [적 턴] {actor.displayName} 행동 시작");
-            StartCoroutine(EnemyActAndNext(actor.enemyUnit));
+            EnemyAI ai = actor.enemyUnit.GetComponent<EnemyAI>();
+            if (ai != null) ai.PlayTurn();
+            else NextTurn();
         }
     }
 
@@ -138,82 +143,6 @@ public class TurnManager : MonoBehaviour
             return;
         }
         ProcessCurrentTurn();
-    }
-
-    // ============================
-    // 적 행동
-    // ============================
-    private IEnumerator EnemyActAndNext(EnemyUnit enemyUnit)
-    {
-        if (enemyUnit == null) { NextTurn(); yield break; }
-
-        enemyUnit.GetComponent<Enemy>()?.OnTurnStart();
-        yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
-        yield return new WaitForSeconds(0.5f);
-        enemyUnit.GetComponent<Enemy>()?.OnTurnEnd();
-
-        NextTurn();
-    }
-
-    private IEnumerator MoveEnemyTowardAlly(EnemyUnit enemyUnit)
-    {
-        Unit nearestAlly = FindNearestAlly(enemyUnit.gridPosition);
-        if (nearestAlly == null) yield break;
-
-        Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, nearestAlly);
-        if (targetTile == null) yield break;
-
-        if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile oldTile))
-        {
-            oldTile.isOccupied = false;
-            oldTile.currentUnit = null;
-        }
-
-        Vector2Int newPos = new Vector2Int(targetTile.x, targetTile.y);
-        enemyUnit.gridPosition = newPos;
-        enemyUnit.transform.position = targetTile.transform.position;
-        targetTile.isOccupied = true;
-        targetTile.currentUnit = enemyUnit.gameObject;
-
-        enemyUnit.UseNextSkillInSequence();
-        Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
-        yield return null;
-    }
-
-    private Unit FindNearestAlly(Vector2Int fromPos)
-    {
-        Unit nearest = null;
-        float minDist = float.MaxValue;
-        foreach (var unit in allUnits)
-        {
-            if (unit == null) continue;
-            int ux = Mathf.RoundToInt(unit.transform.position.x + 3.5f);
-            int uy = Mathf.RoundToInt(unit.transform.position.y + 3.5f);
-            float dist = Vector2Int.Distance(fromPos, new Vector2Int(ux, uy));
-            if (dist < minDist) { minDist = dist; nearest = unit; }
-        }
-        return nearest;
-    }
-
-    private Tile FindStepTowardAlly(Vector2Int enemyPos, Unit ally)
-    {
-        int ax = Mathf.RoundToInt(ally.transform.position.x + 3.5f);
-        int ay = Mathf.RoundToInt(ally.transform.position.y + 3.5f);
-        Vector2Int allyPos = new Vector2Int(ax, ay);
-
-        Tile bestTile = null;
-        float bestDist = Vector2Int.Distance(enemyPos, allyPos);
-
-        Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-        foreach (var dir in dirs)
-        {
-            Vector2Int candidate = enemyPos + dir;
-            if (!MapManager.Instance.tiles.TryGetValue(candidate, out Tile tile)) continue;
-            if (tile.isOccupied) continue;
-            float dist = Vector2Int.Distance(candidate, allyPos);
-            if (dist < bestDist) { bestDist = dist; bestTile = tile; }
-        }
-        return bestTile;
     }
 
     private void StartNewRound()

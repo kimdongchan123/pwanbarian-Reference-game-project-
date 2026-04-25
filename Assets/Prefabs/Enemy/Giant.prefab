@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -7377639988335307398}
   - component: {fileID: -6653604842580969489}
   - component: {fileID: 985628079194854078}
+  - component: {fileID: -1393816032155067327}
   - component: {fileID: 1797645886555984057}
   m_Layer: 0
   m_Name: Giant
@@ -146,6 +147,18 @@ MonoBehaviour:
   wetStacks: 0
   hasSwiftnessBuff: 0
   hasSpreadBuff: 0
+--- !u!114 &-1393816032155067327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056332990317231002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68791c13486b59a4190ac1867869b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
 --- !u!114 &1797645886555984057
 MonoBehaviour:
   m_ObjectHideFlags: 0
