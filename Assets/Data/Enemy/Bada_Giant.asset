@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
   m_Name: Bada_Giant
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: "\uBC14\uB2E4\uBBFC\uC871 \uAC70\uC778"
+  unitName: "바다민족 거인"
   maxHp: 100
   maxSt: 25
   minSp: 5
@@ -20,23 +20,32 @@ MonoBehaviour:
   atk: 1
   def: 10
   panic: 00000000
-  affiliation: "\uBC14\uB2E4\uBBFC\uC871"
-  unitTypeKeyword: "\uCCB4\uC2A4"
+  affiliation: "바다민족"
+  unitTypeKeyword: "체스"
   traitKeywords:
-  - "\uC5EC\uC131"
-  - "\uC778\uAC04"
-  - "\uC778\uAC04\uD615"
-  - "\uCD08\uAC70\uB300"
+  - "여성"
+  - "인간"
+  - "인간형"
+  - "초거대"
   physicalResist: 1
   mentalResist: 1
   specialResist: 1
   sinResist: 1
-  defensiveCharacteristic: 
-  universalCharacteristic: 
-  pieceCharacteristic: 
+  defensiveCharacteristic:
+  universalCharacteristic:
+  pieceCharacteristic:
   skills:
   - {fileID: 11400000, guid: d2464a4255f37174da840c41a00275df, type: 2}
   - {fileID: 11400000, guid: 1701470cc77573d448c0f4d8cc92fbaa, type: 2}
-  traits: []
+  traits:
+  - {fileID: 11400000, guid: b10e000000000000000000000000001a, type: 2}
+  - {fileID: 11400000, guid: b20e000000000000000000000000002a, type: 2}
+  - {fileID: 11400000, guid: b30e000000000000000000000000003a, type: 2}
+  - {fileID: 11400000, guid: b40e000000000000000000000000004a, type: 2}
+  - {fileID: 11400000, guid: b50e000000000000000000000000005a, type: 2}
+  - {fileID: 11400000, guid: ac731b6e2d6ca27439d2ff0b1d4388a4, type: 2}
+  - {fileID: 11400000, guid: b60e000000000000000000000000006a, type: 2}
+  - {fileID: 11400000, guid: b70e000000000000000000000000007a, type: 2}
+  - {fileID: 11400000, guid: b80e000000000000000000000000008a, type: 2}
   deck:
   - {fileID: 0}

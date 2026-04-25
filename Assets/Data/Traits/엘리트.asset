@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0375a1a161b7d1d49aa02bb86f5384a9, type: 3}
-  m_Name: "신속"
+  m_Name: "엘리트"
   m_EditorClassIdentifier: Assembly-CSharp::TraitData
-  traitName: "신속"
+  traitName: "엘리트"
   triggerType: 0
-  traitEffect: 7
-  description: "턴마다 1번 더 행마한다."
+  traitEffect: 10
+  description: "[일반 전투 전용] HP가 기존 HP의 50%로 유지된다. 무효불가."
   stAmount: 0
   affiliationTarget:

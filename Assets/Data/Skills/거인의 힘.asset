@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
-  m_Name: "\uAC70\uC778\uC758 \uD798"
+  m_Name: "거인의 힘"
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  description: 
-  coolTime: 0
-  skillEffect: 0
-  effectValue: 0
+  skillName: "거인의 힘"
+  description: "<ATK 증가>(6)을 얻는다."
+  coolTime: 5
+  skillEffect: 2
+  effectValue: 6
   duration: 0

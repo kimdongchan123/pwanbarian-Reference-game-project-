@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
-  m_Name: "\uAE30\uD569"
+  m_Name: "기합"
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  description: 
+  skillName: "기합"
+  description: "다음 턴까지 가하는 피해량(5) 증가한다."
   coolTime: 0
-  skillEffect: 0
-  effectValue: 0
-  duration: 0
+  skillEffect: 1
+  effectValue: 5
+  duration: 1

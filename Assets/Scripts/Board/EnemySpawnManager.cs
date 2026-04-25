@@ -1,4 +1,3 @@
-// ▶ 레퍼런스 프로젝트 경로: Assets/Scripts/Board/ 신규 추가
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,11 +23,33 @@ public class EnemySpawnManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (var entry in spawnEntries)
+        // foreach (var entry in spawnEntries)
+        // {
+        //     if (!entry.spawnOnStart) continue;
+        //     for (int i = 0; i < entry.spawnCount; i++)
+        //         SpawnEnemyAt(entry);
+        // }
+
+        foreach (var enemyEntry in StageManager.SelectedStage.enemyEntries)
         {
-            if (!entry.spawnOnStart) continue;
-            for (int i = 0; i < entry.spawnCount; i++)
-                SpawnEnemyAt(entry);
+            Vector2Int spawnPos = new Vector2Int((int)enemyEntry.file - 1, enemyEntry.rank - 1);
+            Tile spawnTile = MapManager.Instance.tiles[spawnPos];
+            Vector3 worldPos = spawnTile.GetComponent<Collider>().bounds.center;
+            worldPos.z = 0f;
+            Enemy spawned = Instantiate(enemyEntry.prefab, worldPos, Quaternion.identity);
+            EnemyUnit unit = spawned.GetComponent<EnemyUnit>();
+            if (unit != null)
+            {
+                unit.gridPosition = spawnPos;
+                unit.transform.position = worldPos;
+                unit.hasMoved = true;
+            }
+            else
+            {
+                spawned.transform.position = worldPos;
+            }
+            spawnTile.isOccupied = true;
+            spawnTile.currentUnit = spawned.gameObject;
         }
     }
 
@@ -49,7 +70,9 @@ public class EnemySpawnManager : MonoBehaviour
         Tile spawnTile = FindFreeTileInColumn(entry.isTopSide, entry.spawnX);
         if (spawnTile == null)
         {
-            Debug.LogWarning($"[EnemySpawnManager] '{entry.enemyName}' 소환 실패 — x={entry.spawnX} 열에 빈 칸 없음");
+            Debug.LogWarning(
+                $"[EnemySpawnManager] '{entry.enemyName}' 소환 실패 — x={entry.spawnX} 열에 빈 칸 없음"
+            );
             return null;
         }
 
@@ -57,18 +80,18 @@ public class EnemySpawnManager : MonoBehaviour
         Vector3 worldPos = spawnTile.transform.position;
         worldPos.z = 0f;
 
-    Enemy spawned = Instantiate(entry.prefab);
-    EnemyUnit unit = spawned.GetComponent<EnemyUnit>();
-    if (unit != null)
-    {
-        unit.gridPosition = spawnPos;
-        unit.transform.position = worldPos;
-        unit.hasMoved = true;
-    }
-    else
-    {
-        spawned.transform.position = worldPos;
-    }
+        Enemy spawned = Instantiate(entry.prefab);
+        EnemyUnit unit = spawned.GetComponent<EnemyUnit>();
+        if (unit != null)
+        {
+            unit.gridPosition = spawnPos;
+            unit.transform.position = worldPos;
+            unit.hasMoved = true;
+        }
+        else
+        {
+            spawned.transform.position = worldPos;
+        }
         // Tile 점유 상태 업데이트
         spawnTile.isOccupied = true;
         spawnTile.currentUnit = spawned.gameObject;
@@ -80,19 +103,30 @@ public class EnemySpawnManager : MonoBehaviour
     // MapManager.tiles에서 지정 x열의 빈 타일을 찾아 반환
     private Tile FindFreeTileInColumn(bool topSide, int col)
     {
-        if (MapManager.Instance == null || MapManager.Instance.tiles == null) return null;
+        if (MapManager.Instance == null || MapManager.Instance.tiles == null)
+            return null;
 
         Tile result = null;
         int bestRow = topSide ? int.MinValue : int.MaxValue;
 
         foreach (var kv in MapManager.Instance.tiles)
         {
-            if (kv.Key.x != col) continue;
-            if (kv.Value.isOccupied) continue;
+            if (kv.Key.x != col)
+                continue;
+            if (kv.Value.isOccupied)
+                continue;
 
             int row = kv.Key.y;
-            if (topSide && row > bestRow) { bestRow = row; result = kv.Value; }
-            else if (!topSide && row < bestRow) { bestRow = row; result = kv.Value; }
+            if (topSide && row > bestRow)
+            {
+                bestRow = row;
+                result = kv.Value;
+            }
+            else if (!topSide && row < bestRow)
+            {
+                bestRow = row;
+                result = kv.Value;
+            }
         }
 
         return result;
