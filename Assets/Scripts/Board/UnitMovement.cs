@@ -74,20 +74,72 @@ public class UnitMovement : MonoBehaviour
         }
         else
         {
-            Unit targetUnit = targetTile.currentUnit.GetComponent<Unit>();
+            GameObject defenderGO = targetTile.currentUnit;
+            Enemy enemy = defenderGO.GetComponent<Enemy>();
+            Unit targetUnit = defenderGO.GetComponent<Unit>();
 
-            if (myUnit.isAlly != targetUnit.isAlly)
+            // 적 유닛은 Enemy 컴포넌트로 판별, 아군은 Unit.isAlly로 판별
+            bool isEnemy = myUnit.isAlly && enemy != null;
+            bool isFriendlyBlocking = !isEnemy && targetUnit != null && targetUnit.isAlly == myUnit.isAlly;
+
+            if (isEnemy)
             {
-                Debug.Log($"⚔ {myUnit.unitName}이(가) 적군 {targetUnit.unitName}을(를) 공격합니다!");
-                // 💡 나중에 공격 애니메이션과 체력 깎는 로직을 여기에 넣으시면 됩니다.
+                string defenderName = enemy.EnemyData != null ? enemy.EnemyData.unitName : defenderGO.name;
+                Debug.Log($"⚔ {myUnit.unitName}이(가) 적군 {defenderName}을(를) 공격합니다!");
 
-                // 공격을 마친 후에도 턴을 넘겨야 하니까 아래 2줄을 실행합니다.
-                // MapManager.Instance.ClearHighlights(); 
-                // TurnManager.Instance.NextTurn(); 
+                EnemyUnit eu = defenderGO.GetComponent<EnemyUnit>();
+
+                // 넉백 방향 계산
+                Vector2Int attackerGridPos = currentTile != null
+                    ? new Vector2Int(currentTile.x, currentTile.y)
+                    : new Vector2Int(Mathf.RoundToInt(transform.position.x + 3.5f), Mathf.RoundToInt(transform.position.y + 3.5f));
+                Vector2Int defenderGridPos = new Vector2Int(targetTile.x, targetTile.y);
+                Vector2Int diff = defenderGridPos - attackerGridPos;
+                Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
+                    ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
+                    : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+                Vector2Int knockBackPos = defenderGridPos + pushDir;
+
+                bool canKnockBack = MapManager.Instance.tiles.TryGetValue(knockBackPos, out Tile knockBackTile)
+                                    && !knockBackTile.isOccupied;
+
+                if (canKnockBack)
+                {
+                    // 방어자 → 넉백 위치
+                    targetTile.isOccupied = false;
+                    targetTile.currentUnit = null;
+                    defenderGO.transform.position = knockBackTile.transform.position;
+                    knockBackTile.isOccupied = true;
+                    knockBackTile.currentUnit = defenderGO;
+                    if (eu != null) eu.gridPosition = knockBackPos;
+
+                    // 공격자 → 방어자의 원래 위치
+                    if (currentTile != null)
+                    {
+                        currentTile.isOccupied = false;
+                        currentTile.currentUnit = null;
+                    }
+                    transform.position = targetTile.transform.position;
+                    currentTile = targetTile;
+                    targetTile.isOccupied = true;
+                    targetTile.currentUnit = this.gameObject;
+
+                    Debug.Log($"💨 {defenderName} 넉백 → ({knockBackPos.x}, {knockBackPos.y})");
+                }
+                else
+                {
+                    Debug.Log($"🧱 {defenderName} 넉백 불가 (벽 또는 유닛에 막힘)");
+                }
+
+                enemy.TakeDamage(myUnit.atk);
+
+                MapManager.Instance.ClearHighlights();
+                TurnManager.Instance.NextTurn();
             }
             else
             {
-                Debug.Log($"🛡️ 같은 편인 {targetUnit.unitName}이(가) 길을 막고 있습니다!");
+                string blockerName = targetUnit != null ? targetUnit.unitName : defenderGO.name;
+                Debug.Log($"🛡️ 같은 편인 {blockerName}이(가) 길을 막고 있습니다!");
             }
         }
     }

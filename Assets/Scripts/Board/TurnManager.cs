@@ -26,10 +26,11 @@ public class TurnManager : MonoBehaviour
 
     void Awake() => Instance = this;
 
-    void Start()
+    IEnumerator Start()
     {
         SpawnUnitsFromBattleData();
         // EnemyBattleSetup.Instance?.SpawnEnemies();
+        yield return null; // EnemySpawnManager.Start()가 먼저 실행되도록 1프레임 대기
         GenerateTurnOrder();
     }
 
@@ -212,17 +213,73 @@ public class TurnManager : MonoBehaviour
 
     private void AttackAlly(EnemyUnit enemyUnit, Unit ally)
     {
-        if (CombatManager.Instance == null) return;
-        BattleUnit battleUnit = ally.GetComponent<BattleUnit>();
-        if (battleUnit == null)
-        {
-            Debug.LogWarning($"[전투] {ally.unitName}에 BattleUnit 컴포넌트가 없습니다.");
-            return;
-        }
-        CombatManager.Instance.EnemyCollidePlayer(enemyUnit, battleUnit);
-        Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} 공격!");
+        Enemy enemy = enemyUnit.GetComponent<Enemy>();
+        int dmg = enemy != null ? enemy.damage : 1;
 
-        KnockBack(ally.gameObject, enemyUnit.gridPosition);
+        UnitMovement allyMovement = ally.movement;
+        if (allyMovement != null && allyMovement.currentTile != null)
+        {
+            Tile allyTile = allyMovement.currentTile;
+            Vector2Int allyGridPos   = new Vector2Int(allyTile.x, allyTile.y);
+            Vector2Int enemyGridPos  = enemyUnit.gridPosition;
+
+            // 넉백 방향: 적 → 아군 방향으로 1칸 더
+            Vector2Int diff    = allyGridPos - enemyGridPos;
+            Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
+                ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
+                : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+            Vector2Int knockBackGridPos = allyGridPos + pushDir;
+
+            Tile knockBackTile = null;
+            bool canKnockBack = MapManager.Instance != null
+                                && MapManager.Instance.tiles.TryGetValue(knockBackGridPos, out knockBackTile)
+                                && !knockBackTile.isOccupied;
+
+            if (canKnockBack)
+            {
+                // 아군 → 넉백 위치
+                allyTile.isOccupied = false;
+                allyTile.currentUnit = null;
+                ally.transform.position = knockBackTile.transform.position;
+                knockBackTile.isOccupied = true;
+                knockBackTile.currentUnit = ally.gameObject;
+                allyMovement.currentTile = knockBackTile;
+
+                // 적 → 아군의 원래 위치
+                if (MapManager.Instance.tiles.TryGetValue(enemyGridPos, out Tile enemyOldTile))
+                {
+                    enemyOldTile.isOccupied = false;
+                    enemyOldTile.currentUnit = null;
+                }
+                enemyUnit.transform.position = allyTile.transform.position;
+                enemyUnit.gridPosition = allyGridPos;
+                allyTile.isOccupied = true;
+                allyTile.currentUnit = enemyUnit.gameObject;
+
+                Debug.Log($"💨 {ally.unitName} 넉백 → ({knockBackGridPos.x}, {knockBackGridPos.y})");
+            }
+            else
+            {
+                Debug.Log($"🧱 {ally.unitName} 넉백 불가 (벽 또는 유닛에 막힘)");
+            }
+        }
+
+        // 데미지 + 로그
+        int prevHp = ally.currentHp;
+        ally.currentHp = Mathf.Max(0, ally.currentHp - dmg);
+        Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} | HP: {prevHp} → {ally.currentHp}/{ally.maxHp} (-{dmg})");
+
+        if (ally.currentHp <= 0)
+        {
+            Debug.Log($"💀 {ally.unitName} 사망");
+            if (allyMovement?.currentTile != null)
+            {
+                allyMovement.currentTile.isOccupied = false;
+                allyMovement.currentTile.currentUnit = null;
+            }
+            allUnits.Remove(ally);
+            Destroy(ally.gameObject);
+        }
     }
 
     public void KnockBack(GameObject target, Vector2Int attackerGridPos)
