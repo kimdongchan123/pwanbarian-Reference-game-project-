@@ -40,16 +40,16 @@ public class Tile : MonoBehaviour
     }
 
     // --- [신규 기능: 카드 클릭 시 (이동 범위 표시용)] ---
-    // 💡 기존에 만들어두신 색상 변경 함수들을 그대로 재활용합니다!
-    public void SetHighlight(bool isHighlighted)
+    public void SetHighlight(bool isHighlighted, bool isEnemyTile = false)
     {
         if (isHighlighted)
         {
-            SetHoverColor(Color.cyan); // 파란색(Cyan)으로 불 켜기
+            // 적이 있는 타일은 빨간색, 빈 타일은 시안색
+            SetHoverColor(isEnemyTile ? Color.red : Color.cyan);
         }
         else
         {
-            ResetColor(); // 원래 색으로 불 끄기
+            ResetColor();
         }
     }
 }

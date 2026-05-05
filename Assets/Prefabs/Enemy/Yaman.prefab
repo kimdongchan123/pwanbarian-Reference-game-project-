@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3616501106035179528}
   - component: {fileID: 5622595199619260393}
-  - component: {fileID: -8022664824711771142}
   - component: {fileID: 6074614529533329920}
   - component: {fileID: 7899334692885814727}
   - component: {fileID: -6737323992569989229}
@@ -85,8 +84,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1419130553184538979, guid: 3714d0006a44a6e4696471666fcadb4b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -95,23 +94,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &-8022664824711771142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2455855813406442783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6bfcdd9fcefb9f4a9774fb0223bf36f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Unit
-  unitName: "\uD14C\uC2A4\uD2B8 \uC720\uB2DB"
-  isAlly: 0
-  formationIndex: 0
-  movement: {fileID: 0}
-  stats: {fileID: 0}
 --- !u!114 &6074614529533329920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +158,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 338fa506457716146b02a8b065229c85, type: 2}
   - {fileID: 11400000, guid: bd79b689f9cfe8449b0ced5f03c6b3c0, type: 2}
   - {fileID: 11400000, guid: fe193045c9e452d409faebc01ac1849a, type: 2}
-  skillData: []
-  skillSlots: []
+  skillData:
+  - {fileID: 11400000, guid: d2464a4255f37174da840c41a00275df, type: 2}
+  skillSlots:
+  - skillName: "\uAE30\uD569"
+    currentCT: 3
+  - skillName: 
+    currentCT: 0
   skillSequenceIndex: 0
+  buffedSprite: {fileID: -7446640072344035755, guid: b85dd5fbb6462b849b2f76a8646a6caf, type: 3}

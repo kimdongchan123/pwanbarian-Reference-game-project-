@@ -123,12 +123,13 @@ public class MapManager : MonoBehaviour
 
         foreach (var t in validTiles)
         {
-            t.SetHighlight(true);
+            bool hasEnemy = t.isOccupied && t.currentUnit != null
+                            && t.currentUnit.GetComponent<Enemy>() != null;
+            t.SetHighlight(true, hasEnemy);
             highlightedTiles.Add(t);
         }
     }
 
-    // 🚶 단거리 기물 (폰, 킹, 나이트) 충돌 체크
     // 🚶 단거리 기물 (폰, 킹, 나이트) 충돌 체크
     private void CheckAndAddTile(int x, int y, List<Tile> validTiles, bool movingUnitIsAlly)
     {
@@ -138,9 +139,16 @@ public class MapManager : MonoBehaviour
             Tile t = tiles[targetPos];
             if (t.isOccupied && t.currentUnit != null)
             {
-                Unit targetUnit = t.currentUnit.GetComponent<Unit>();
-                if (targetUnit == null) return; // 🚨 핵심 방어막
+                Enemy enemyOnTile = t.currentUnit.GetComponent<Enemy>();
+                // 아군이 이동 중이고 적(Enemy)이 있으면 공격 가능
+                if (movingUnitIsAlly && enemyOnTile != null)
+                {
+                    validTiles.Add(t);
+                    return;
+                }
 
+                Unit targetUnit = t.currentUnit.GetComponent<Unit>();
+                if (targetUnit == null) return;
                 if (targetUnit.isAlly != movingUnitIsAlly) validTiles.Add(t);
             }
             else validTiles.Add(t);
@@ -156,8 +164,16 @@ public class MapManager : MonoBehaviour
             Tile t = tiles[targetPos];
             if (t.isOccupied && t.currentUnit != null)
             {
+                Enemy enemyOnTile = t.currentUnit.GetComponent<Enemy>();
+                // 아군이 이동 중이고 적(Enemy)이 있으면 공격 가능 (이후 타일은 막힘)
+                if (movingUnitIsAlly && enemyOnTile != null)
+                {
+                    validTiles.Add(t);
+                    return false;
+                }
+
                 Unit targetUnit = t.currentUnit.GetComponent<Unit>();
-                if (targetUnit == null) return false; // 🚨 핵심 방어막
+                if (targetUnit == null) return false;
 
                 if (targetUnit.isAlly != movingUnitIsAlly)
                 {

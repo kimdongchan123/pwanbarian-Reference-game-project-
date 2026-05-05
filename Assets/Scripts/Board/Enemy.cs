@@ -31,6 +31,11 @@ public class Enemy : MonoBehaviour
             Sp = Random.Range(EnemyData.minSp, EnemyData.maxSp);
             gameObject.name = EnemyData.unitName;
         }
+        if (EnemyData != null )
+        {
+            damage = Random.Range(EnemyData.minatk, EnemyData.maxatk);
+            gameObject.name = EnemyData.unitName;   
+        }
     }
 
     private void Start()
@@ -45,7 +50,7 @@ public class Enemy : MonoBehaviour
                 CurrentHp = EnemyData.maxHp;
 
             CurrentSt = EnemyData.maxSt;
-            damage = EnemyData.atk;
+            damage = EnemyData.maxatk;
         }
     }
 
@@ -201,7 +206,7 @@ public class Enemy : MonoBehaviour
 
         foreach (var ally in allies)
             ally.RecoverSt(trait.stAmount);
-        damage = EnemyData.atk + allies.Count * 2;
+        damage = EnemyData.maxatk + allies.Count * 2;
         Debug.Log($"{EnemyData.unitName} [바다민족의 영웅] 아군 {allies.Count}명, ATK={damage}, 아군 ST+{trait.stAmount}");
     }
 

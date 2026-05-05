@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageName: "\uD14C\uC2A4\uD2B8 \uC2A4\uD14C\uC774\uC9C0"
   enemyEntries:
-  - prefab: {fileID: -1169103389675512039, guid: 2510991fc68342e4e895683a15071c04, type: 3}
+  - prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
     rank: 8
-    file: 4
+    file: 3
+  - prefab: {fileID: 6223548905357297895, guid: 43e935d3fd3266e438893be3f09b68be, type: 3}
+    rank: 8
+    file: 6

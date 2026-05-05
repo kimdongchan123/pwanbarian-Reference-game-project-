@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: "기합"
   description: "다음 턴까지 가하는 피해량(5) 증가한다."
-  coolTime: 0
+  coolTime: 3
   skillEffect: 1
   effectValue: 5
   duration: 1
