@@ -2,6 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 🌟 추가: 팀원분의 기존 버프 시스템이 꼬이지 않도록 이름을 'LegacyEnemyBuff'로 분리했습니다!
+[System.Serializable]
+public class LegacyEnemyBuff
+{
+    public int damageBonus;
+    public int turnsRemaining;
+
+    public LegacyEnemyBuff(int bonus, int turns)
+    {
+        damageBonus = bonus;
+        turnsRemaining = turns;
+    }
+}
+
 [RequireComponent(typeof(Enemy))]
 public class EnemyUnit : MonoBehaviour
 {
@@ -14,7 +28,8 @@ public class EnemyUnit : MonoBehaviour
     public SkillRuntimeSlot[] skillSlots;
     [SerializeField] private int skillSequenceIndex = 0;
 
-    private List<ActiveBuff> activeBuffs = new List<ActiveBuff>();
+    // 🌟 수정: ActiveBuff 대신 LegacyEnemyBuff 사용
+    private List<LegacyEnemyBuff> activeBuffs = new List<LegacyEnemyBuff>();
     private Enemy enemy;
 
     private void Awake()
@@ -100,7 +115,8 @@ public class EnemyUnit : MonoBehaviour
         switch (skill.skillEffect)
         {
             case SkillEffect.damagebuff:
-                ApplyBuff(new ActiveBuff(skill.effectValue, skill.duration));
+                // 🌟 수정: LegacyEnemyBuff 로 생성
+                ApplyBuff(new LegacyEnemyBuff(skill.effectValue, skill.duration));
                 if (enemy != null)
                     enemy.damage = (enemy.EnemyData != null ? enemy.EnemyData.atk : 0) + GetDamageBonus();
                 Debug.Log($"[스킬] {gameObject.name} ▶ {skill.skillName} | 피해량 +{skill.effectValue} ({skill.duration}턴) | 현재 ATK = {(enemy != null ? enemy.damage : 0)}");
@@ -140,7 +156,8 @@ public class EnemyUnit : MonoBehaviour
         return bonus;
     }
 
-    public void ApplyBuff(ActiveBuff buff)
+    // 🌟 수정: 매개변수 타입 변경
+    public void ApplyBuff(LegacyEnemyBuff buff)
     {
         activeBuffs.Add(buff);
         Debug.Log($"{gameObject.name} 버프 적용: 피해량 +{buff.damageBonus} ({buff.turnsRemaining}턴)");

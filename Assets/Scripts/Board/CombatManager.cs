@@ -9,17 +9,7 @@ public class SkillRuntimeSlot
     public int currentCT;
 }
 
-public class ActiveBuff
-{
-    public int damageBonus;
-    public int turnsRemaining;
-
-    public ActiveBuff(int bonus, int turns)
-    {
-        damageBonus = bonus;
-        turnsRemaining = turns;
-    }
-}
+// 🚨 범인이었던 ActiveBuff 클래스는 BuffSystem.cs와 중복되므로 삭제했습니다!
 
 public class CombatManager : MonoBehaviour
 {
@@ -103,10 +93,10 @@ public class CombatManager : MonoBehaviour
         return type switch
         {
             DamageType.Physical => enemy.EnemyData.physicalResist,
-            DamageType.Mental   => enemy.EnemyData.mentalResist,
-            DamageType.Special  => enemy.EnemyData.specialResist,
-            DamageType.Sin      => enemy.EnemyData.sinResist,
-            _                   => 1f
+            DamageType.Mental => enemy.EnemyData.mentalResist,
+            DamageType.Special => enemy.EnemyData.specialResist,
+            DamageType.Sin => enemy.EnemyData.sinResist,
+            _ => 1f
         };
     }
 }

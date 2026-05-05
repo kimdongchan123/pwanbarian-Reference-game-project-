@@ -51,27 +51,23 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("마우스 들어옴! 쑤욱 올라갑니다!");
+        // Debug.Log("마우스 들어옴! 쑤욱 올라갑니다!");
         targetY = visibleY;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("마우스 나감! 다시 숨습니다.");
+        // Debug.Log("마우스 나감! 다시 숨습니다.");
         targetY = hiddenY;
     }
 
-    public void DrawCards(int amount)
+    // 👇 (수정) targetIndex = -1 이라는 '선택형 번호표'를 추가했습니다!
+    public void DrawCards(int amount, int targetIndex = -1)
     {
         if (handArea == null)
         {
             Debug.LogWarning("HandUIManager: handArea가 연결되지 않음");
             return;
-        }
-
-        foreach (Transform child in handArea)
-        {
-            Destroy(child.gameObject);
         }
 
         for (int i = 0; i < amount; i++)
@@ -83,32 +79,23 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
 
             CardData randomData = deck[Random.Range(0, deck.Count)];
-
-            if (randomData == null)
-            {
-                Debug.LogWarning("HandUIManager: deck 안에 null CardData가 있음");
-                continue;
-            }
+            if (randomData == null) continue;
 
             GameObject prefabToUse = GetCardPrefab(randomData.pieceType);
-
-            if (prefabToUse == null)
-            {
-                Debug.LogWarning($"HandUIManager: 프리팹이 없음 - {randomData.cardName}");
-                continue;
-            }
+            if (prefabToUse == null) continue;
 
             GameObject newCardObj = Instantiate(prefabToUse, handArea);
+
+            // 🌟 [핵심 마법] 만약 번호표를 받았다면, 새 카드를 무조건 맨 오른쪽이 아니라 '그 번호 자리'로 끼워 넣습니다!
+            if (targetIndex != -1)
+            {
+                newCardObj.transform.SetSiblingIndex(targetIndex);
+            }
 
             CardUI cardUI = newCardObj.GetComponent<CardUI>();
             if (cardUI != null)
             {
-                Debug.Log($"HandUIManager: 카드 세팅 - {randomData.cardName}");
                 cardUI.SetupCard(randomData);
-            }
-            else
-            {
-                Debug.LogWarning("HandUIManager: 생성된 카드 프리팹에 CardUI가 없음");
             }
         }
     }

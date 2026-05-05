@@ -6,6 +6,7 @@ public class PlayerActionController : MonoBehaviour
     public static PlayerActionController Instance;
 
     private CardData selectedCard;
+    private GameObject selectedCardObj; // 선택한 카드의 UI 몸통
     private Unit currentUnit;
 
     private void Awake()
@@ -13,30 +14,16 @@ public class PlayerActionController : MonoBehaviour
         Instance = this;
     }
 
-    // 카드 클릭 시
-    public void OnCardSelected(CardData card)
+    public void OnCardSelected(CardData card, GameObject cardObj)
     {
         currentUnit = TurnManager.Instance.GetCurrentUnit();
 
-        if (card == null)
-        {
-            Debug.LogWarning("선택한 카드가 null입니다.");
-            return;
-        }
-
-        if (currentUnit == null)
-        {
-            Debug.LogWarning("현재 턴 유닛이 없습니다.");
-            return;
-        }
-
-        if (!currentUnit.isAlly)
-        {
-            Debug.Log("현재 유닛이 아군이 아닙니다.");
-            return;
-        }
+        if (card == null) return;
+        if (currentUnit == null) return;
+        if (!currentUnit.isAlly) return;
 
         selectedCard = card;
+        selectedCardObj = cardObj;
 
         Debug.Log("카드 선택됨: " + selectedCard.cardName);
 
@@ -49,18 +36,10 @@ public class PlayerActionController : MonoBehaviour
 
     private void Update()
     {
-        if (selectedCard == null || currentUnit == null)
-            return;
+        if (selectedCard == null || currentUnit == null) return;
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            TryUseSelectedCard();
-        }
-
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            CancelSelectedCard();
-        }
+        if (Mouse.current.leftButton.wasPressedThisFrame) TryUseSelectedCard();
+        if (Mouse.current.rightButton.wasPressedThisFrame) CancelSelectedCard();
     }
 
     private void TryUseSelectedCard()
@@ -68,19 +47,11 @@ public class PlayerActionController : MonoBehaviour
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
-        if (!Physics.Raycast(ray, out RaycastHit hit))
-            return;
-
-        if (!hit.collider.CompareTag("Tile"))
-            return;
+        if (!Physics.Raycast(ray, out RaycastHit hit)) return;
+        if (!hit.collider.CompareTag("Tile")) return;
 
         Tile clickedTile = hit.collider.GetComponent<Tile>();
-
-        if (clickedTile == null)
-        {
-            Debug.LogWarning("Tile 컴포넌트 없음");
-            return;
-        }
+        if (clickedTile == null) return;
 
         if (!MapManager.Instance.IsValidMove(clickedTile))
         {
@@ -90,37 +61,46 @@ public class PlayerActionController : MonoBehaviour
 
         Unit targetUnit = clickedTile.GetComponentInChildren<Unit>();
 
-        // 이동
+        // 이동 실행
         currentUnit.movement.TryMoveTo(clickedTile);
 
-        // 효과 적용
+        // 카드 효과 적용 (데미지 및 버프)
         ApplySelectedCardEffect(targetUnit);
 
-        // 정리
+        // 보드판 정리
         MapManager.Instance.ClearHighlights();
-
         Debug.Log("카드 사용 완료: " + selectedCard.cardName);
+
+        // 🌟 [핵심] 카드를 쓴 바로 그 자리에 새 카드를 채워 넣습니다!
+        if (selectedCardObj != null)
+        {
+            int cardIndex = selectedCardObj.transform.GetSiblingIndex();
+
+            Destroy(selectedCardObj);
+            selectedCardObj = null;
+
+            if (HandUIManager.Instance != null)
+            {
+                HandUIManager.Instance.DrawCards(1, cardIndex);
+            }
+        }
 
         selectedCard = null;
     }
 
     private void ApplySelectedCardEffect(Unit targetUnit)
     {
-        if (selectedCard == null || currentUnit == null)
-            return;
+        if (selectedCard == null || currentUnit == null) return;
 
         // -----------------
-        // 데미지
+        // 1. 데미지 처리
         // -----------------
         if (selectedCard.power > 0)
         {
-            if (selectedCard.targetType == CardTargetType.Enemy)
+            if (selectedCard.targetType == CardTargetType.Enemy && targetUnit != null && !targetUnit.isAlly)
             {
-                if (targetUnit != null && !targetUnit.isAlly)
-                {
-                    targetUnit.TakeDamage(selectedCard.power);
-                    Debug.Log("데미지 적용: " + selectedCard.power);
-                }
+                targetUnit.TakeDamage(selectedCard.power);
+                Debug.Log("카드 데미지 적용: " + selectedCard.power);
             }
             else if (selectedCard.targetType == CardTargetType.Self)
             {
@@ -129,33 +109,25 @@ public class PlayerActionController : MonoBehaviour
         }
 
         // -----------------
-        // 상태 효과
+        // 2. 상태 효과 (팀원들의 카드 데이터 활용)
         // -----------------
-        if (!selectedCard.useEffect)
-            return;
+        if (!selectedCard.useEffect) return;
+        if (selectedCard.effectType == StatusEffectType.None) return;
 
-        if (selectedCard.effectType == StatusEffectType.None)
-            return;
-
+        // EffectToSelf 체크 여부에 따라 버프를 받을 대상을 정합니다.
         Unit effectTarget = selectedCard.effectToSelf ? currentUnit : targetUnit;
 
-        if (effectTarget == null)
+        if (effectTarget != null)
         {
-            Debug.Log("효과 대상 없음");
-            return;
+            // Unit.cs에게 "야, 이 효과(버프) 좀 적용해 줘!" 하고 던집니다.
+            effectTarget.AddStatus(selectedCard.effectType, selectedCard.effectAmount);
         }
-
-        effectTarget.AddStatus(selectedCard.effectType, selectedCard.effectAmount);
-
-        Debug.Log("상태 적용: " + selectedCard.effectType + " / " + selectedCard.effectAmount);
     }
 
     private void CancelSelectedCard()
     {
-        Debug.Log("카드 취소");
-
         selectedCard = null;
-
+        selectedCardObj = null;
         MapManager.Instance.ClearHighlights();
     }
 
