@@ -55,10 +55,16 @@ public class UnitInspector : MonoBehaviour
         gameObject.SetActive(true);
         unitNameText.text = enemyData.unitName;
         HPText.text = enemyData.maxHp.ToString();
-        ATKText.text = enemyData.atk.ToString();
+        if (enemyData.minatk == enemyData.maxatk)
+            ATKText.text = enemyData.maxatk.ToString();
+        else
+            ATKText.text = $"{enemyData.minatk}~{enemyData.maxatk}";
         DEFText.text = enemyData.def.ToString();
         STText.text = enemyData.maxSt.ToString();
-        SPText.text = enemyData.maxSp.ToString();
+        if (enemyData.minSp == enemyData.maxSp)
+            SPText.text = enemyData.maxSp.ToString();
+        else
+            SPText.text = $"{enemyData.minSp}~{enemyData.maxSp}";
     }
 
     public void ShowUnitInfo(UnitData unitData)
@@ -71,10 +77,17 @@ public class UnitInspector : MonoBehaviour
         gameObject.SetActive(true);
         unitNameText.text = unitData.unitName;
         HPText.text = unitData.maxHp.ToString();
-        ATKText.text = unitData.maxAtk.ToString();
+        if (unitData.minAtk == unitData.maxAtk)
+            ATKText.text = unitData.maxAtk.ToString();
+        else
+            ATKText.text = $"{unitData.minAtk}~{unitData.maxAtk}";
+
         DEFText.text = unitData.def.ToString();
         STText.text = unitData.maxSt.ToString();
-        SPText.text = unitData.maxSp.ToString();
+        if (unitData.minSp == unitData.maxSp)
+            SPText.text = unitData.maxSp.ToString();
+        else
+            SPText.text = $"{unitData.minSp}~{unitData.maxSp}";
     }
 
     public void HideInfo()
