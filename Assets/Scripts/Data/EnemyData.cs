@@ -101,7 +101,8 @@ public class EnemyData : ScriptableObject
     public int maxSt;
     public int minSp;
     public int maxSp;
-    public int atk;
+    public int minatk;
+    public int maxatk;
     public int def;
 
     [Header("패닉")]

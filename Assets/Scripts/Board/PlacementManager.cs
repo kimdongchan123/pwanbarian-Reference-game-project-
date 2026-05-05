@@ -47,17 +47,6 @@ public class PlacementManager : MonoBehaviour
                 "⚠️ StageManager.SelectedStage가 설정되지 않았습니다! StageSelectButton에서 스테이지를 선택하고 넘어왔는지 확인하세요."
             );
         }
-        else
-        {
-            foreach (var enemyEntry in StageManager.SelectedStage.enemyEntries)
-            {
-                Tile spawnTile = MapManager.Instance.tiles[new Vector2Int((int)enemyEntry.file - 1, enemyEntry.rank - 1)];
-                Vector3 spawnPos = spawnTile.GetComponent<Collider>().bounds.center;
-                spawnPos.z = 0f;
-                Enemy spawned = Instantiate(enemyEntry.prefab, spawnPos, Quaternion.identity);
-
-            }
-        }
     }
 
     void Update()

@@ -150,6 +150,10 @@ public class TurnManager : MonoBehaviour
 
         Enemy enemy = enemyUnit.GetComponent<Enemy>();
         enemy?.OnTurnStart();
+
+        // 턴 시작 시 스킬 쿨타임 감소
+        enemyUnit.TickSkillCT();
+
         yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
 
         if (enemy != null && (enemy.HasTrait(TraitEffect.swiftness) || enemy.hasSwiftnessBuff))
@@ -159,6 +163,10 @@ public class TurnManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
+
+        // 턴 종료 시 버프 만료 처리 + 발동한 스킬 CT 설정
+        enemyUnit.OnEnemyTurnEnd();
+
         enemy?.OnTurnEnd();
 
         NextTurn();

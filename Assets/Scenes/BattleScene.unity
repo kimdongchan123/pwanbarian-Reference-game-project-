@@ -3783,24 +3783,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnManager
   spawnEntries:
-  - enemyName: "\uAC81\uC7C1\uC774 \uBC14\uB2E4\uBBFC\uC871"
-    prefab: {fileID: -2044020942082558214, guid: 93e42f88cd6a1a4448ba8a1d2be3e324, type: 3}
-    isTopSide: 1
-    spawnOnStart: 0
-    spawnCount: 1
-    spawnX: 7
-  - enemyName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
-    prefab: {fileID: -1169103389675512039, guid: 2510991fc68342e4e895683a15071c04, type: 3}
-    isTopSide: 1
-    spawnOnStart: 0
-    spawnCount: 1
-    spawnX: 4
   - enemyName: "\uC57C\uB9CC\uC801\uC778 \uBC14\uB2E4\uBBFC\uC871"
     prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
     isTopSide: 1
     spawnOnStart: 0
     spawnCount: 1
-    spawnX: 2
+    spawnX: 7
+  - enemyName: "\uAFC0\uAEBD\uAD6C\uB9AC"
+    prefab: {fileID: 6223548905357297895, guid: 43e935d3fd3266e438893be3f09b68be, type: 3}
+    isTopSide: 1
+    spawnOnStart: 0
+    spawnCount: 1
+    spawnX: 4
 --- !u!4 &846833976
 Transform:
   m_ObjectHideFlags: 0
@@ -7905,13 +7899,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBattleSetup
   enemySetup:
-  - enemyName: "\uAC81\uC7C1\uC774 \uBC14\uB2E4\uBBFC\uC871"
-    spawnX: 1
-    isTopSide: 1
-  - enemyName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
-    spawnX: 1
-    isTopSide: 1
   - enemyName: "\uC57C\uB9CC\uC801\uC778 \uBC14\uB2E4\uBBFC\uC871"
+    spawnX: 1
+    isTopSide: 1
+  - enemyName: "\uAFC0\uAEBD\uAD6C\uB9AC"
     spawnX: 1
     isTopSide: 1
 --- !u!4 &1674884035
