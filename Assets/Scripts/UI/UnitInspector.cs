@@ -1,5 +1,7 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitInspector : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class UnitInspector : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI unitNameText;
+
+    [SerializeField]
+    private Image unitImage;
 
     [SerializeField]
     private TextMeshProUGUI HPText;
@@ -54,6 +59,7 @@ public class UnitInspector : MonoBehaviour
         }
         gameObject.SetActive(true);
         unitNameText.text = enemyData.unitName;
+        // unitImage.sprite = enemyData.prefab.GetComponent<SpriteRenderer>().sprite;
         HPText.text = enemyData.maxHp.ToString();
         if (enemyData.minatk == enemyData.maxatk)
             ATKText.text = enemyData.maxatk.ToString();

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerSelectManager : MonoBehaviour
 {
@@ -29,7 +30,8 @@ public class PlayerSelectManager : MonoBehaviour
 
     private UnitData[] partyMembers = new UnitData[3];
 
-
+    [SerializeField]
+    private StageData testStageData;
 
     private void Awake()
     {
@@ -39,6 +41,11 @@ public class PlayerSelectManager : MonoBehaviour
             return;
         }
         instance = this;
+
+        if (!StageManager.SelectedStage)
+        {
+            StageManager.SelectedStage = testStageData;
+        }
 
         if (StageManager.SelectedStage != null)
         {
@@ -53,6 +60,7 @@ public class PlayerSelectManager : MonoBehaviour
         {
             EnemySlot newSlot = Instantiate(enemySlotPrefab, enemyInfoPanel.transform).GetComponent<EnemySlot>();
             newSlot.SetEnemyPrefab(enemyData.prefab);
+            newSlot.gameObject.GetComponent<Image>().sprite = enemyData.prefab.GetComponent<SpriteRenderer>().sprite;
         }
     }
 
@@ -107,11 +115,7 @@ public class PlayerSelectManager : MonoBehaviour
 
     public void StartGame()
     {
-
-        // // 선택된 유닛 데이터를 StageManager에 저장
-        // StageManager.SelectedPartyMembers = partyMembers;
-
-        // 게임 씬으로 전환
+        StageManager.SelectedPartyMembers = partyMembers;
         SceneManager.LoadScene("SettingPlaceScene");
     }
 }
