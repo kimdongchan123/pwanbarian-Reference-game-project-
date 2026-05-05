@@ -8,6 +8,6 @@ public class StageSelectButton : MonoBehaviour
     public void StartStage()
     {
         StageManager.SelectedStage = stageData;
-        SceneManager.LoadScene("SettingPlaceScene");
+        SceneManager.LoadScene("PlayerSelectScene");
     }
 }

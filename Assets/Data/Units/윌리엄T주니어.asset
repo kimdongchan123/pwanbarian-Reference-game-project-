@@ -12,11 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12f680efcb91f5343b4b32d56abbd5a1, type: 3}
   m_Name: "\uC70C\uB9AC\uC5C4T\uC8FC\uB2C8\uC5B4"
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  unitName: "unitName: \uC70C\uB9AC\uC5C4 T \uC8FC\uB2C8\uC5B4 panicType: Default 
-    maxHp: 40 maxSt: 55 minSp: 1 maxSp: 14 minAtk: 15 maxAtk: 20 def: 1  physicalResist:
-    2.0 mentalResist: 1.0 specialResist: 0.5 sinResist: 1.0  affiliation: \uC6A9\uC0AC
-    unitTypeKeyword: \uCCB4\uC2A4 traitKeywords: \uC5EC\uC131 \uC778\uAC04\uD615
-    \uD568\uC5D0 \uBB34\uAC70\uC6C0"
+  unitName: "\uC70C\uB9AC\uC5C4 T \uC8FC\uB2C8\uC5B4"
   panicType: 0
   maxHp: 40
   maxSt: 55
