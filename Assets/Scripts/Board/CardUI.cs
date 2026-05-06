@@ -35,7 +35,8 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
 
         if (PlayerActionController.Instance != null)
         {
-            PlayerActionController.Instance.OnCardSelected(myData);
+            // 🚨 [수정됨] 카드 데이터와 함께, 이 UI 오브젝트(this.gameObject) 자체도 넘겨줍니다!
+            PlayerActionController.Instance.OnCardSelected(myData, this.gameObject);
         }
         else
         {

@@ -21,6 +21,7 @@ MonoBehaviour:
   attackRange: 1
   power: 2
   useEffect: 1
-  effectType: 0
+  effectType: 12
   effectAmount: 3
+  effectToSelf: 1
   description: "\uC790\uC2E0\uC5D0\uAC8C \uC7AC\uBE60\uB984 3 \uBD80\uC5EC"

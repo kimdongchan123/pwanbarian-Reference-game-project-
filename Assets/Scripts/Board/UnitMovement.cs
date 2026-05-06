@@ -131,7 +131,8 @@ public class UnitMovement : MonoBehaviour
                     Debug.Log($"🧱 {defenderName} 넉백 불가 (벽 또는 유닛에 막힘)");
                 }
 
-                enemy.TakeDamage(myUnit.atk);
+                // 🌟 [핵심 수정!] 공격할 때 옛날 변수인 atk 대신, 버프가 적용된 GetAttackPower()를 사용합니다!
+                enemy.TakeDamage(myUnit.GetAttackPower());
 
                 MapManager.Instance.ClearHighlights();
                 TurnManager.Instance.NextTurn();
