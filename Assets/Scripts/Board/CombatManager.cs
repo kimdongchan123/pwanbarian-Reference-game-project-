@@ -67,7 +67,23 @@ public class CombatManager : MonoBehaviour
         if (defender == null || defender.EnemyData == null) return;
 
         int baseDamage = (attacker.data != null ? attacker.data.minAtk : 0)
-                         + attacker.GetStatusAmount(StatusEffectType.DamageUp);
+                         + attacker.GetStatusAmount(StatusEffectType.AtkUp)
+                         - attacker.GetStatusAmount(StatusEffectType.AtkDown);
+        int tenacity = attacker.GetStatusAmount(StatusEffectType.Tenacity);
+        if (tenacity > 0)
+        {
+            baseDamage *= tenacity;
+        }
+
+        baseDamage += attacker.GetStatusAmount(StatusEffectType.DamageUp);
+        baseDamage -= attacker.GetStatusAmount(StatusEffectType.DamageDown);
+        int focus = attacker.GetStatusAmount(StatusEffectType.Focus);
+        if (focus > 0)
+        {
+            baseDamage += Mathf.RoundToInt(baseDamage * (focus / 100f));
+        }
+
+        baseDamage = Mathf.Max(0, baseDamage);
         float resist = defender.EnemyData.physicalResist > 0 ? defender.EnemyData.physicalResist : 1f;
         int finalDamage = Mathf.Max(1, Mathf.RoundToInt(baseDamage / resist));
 

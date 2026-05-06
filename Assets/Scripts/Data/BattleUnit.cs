@@ -216,26 +216,38 @@ public class BattleUnit : MonoBehaviour
     public int CalculateCardDamage(CardData card, BattleUnit target)
     {
         int atk = Random.Range(data.minAtk, data.maxAtk + 1);
-        int finalDamage = atk + card.power;
+        atk += GetStatusAmount(StatusEffectType.AtkUp);
+        atk -= GetStatusAmount(StatusEffectType.AtkDown);
+        atk = Mathf.Max(0, atk);
 
-        int quickBonus = GetStatusAmount(StatusEffectType.Quick);
-        finalDamage += quickBonus;
+        int tenacity = GetStatusAmount(StatusEffectType.Tenacity);
+        if (tenacity > 0)
+        {
+            atk *= tenacity;
+        }
+
+        int finalDamage = atk + card.power;
 
         if (target != null && target.HasKeyword("인간형"))
         {
             int huntBonus = GetStatusAmount(StatusEffectType.HuntHumanType);
-            finalDamage += huntBonus;
+            finalDamage += huntBonus * 2;
         }
 
-        int atkUp = GetStatusAmount(StatusEffectType.AtkUp);
-        finalDamage += atkUp;
+        finalDamage += GetStatusAmount(StatusEffectType.DamageUp);
+        finalDamage -= GetStatusAmount(StatusEffectType.DamageDown);
 
-        int damageUp = GetStatusAmount(StatusEffectType.DamageUp);
-        finalDamage += damageUp;
+        if (card.damageType == DamageType.Physical)
+        {
+            int focus = GetStatusAmount(StatusEffectType.Focus);
+            if (focus > 0)
+            {
+                finalDamage += Mathf.RoundToInt(finalDamage * (focus / 100f));
+            }
+        }
 
-        return finalDamage;
+        return Mathf.Max(0, finalDamage);
     }
-
     public void ApplyCardEffect(CardData card, BattleUnit target)
     {
         if (!card.useEffect) return;
@@ -271,9 +283,30 @@ public class BattleUnit : MonoBehaviour
             Debug.Log($"{data.unitName}의 보호막이 {reducedByShield} 피해를 막음");
         }
 
+        if (finalDamage > 0 && HasStatus(StatusEffectType.GoldenTime))
+        {
+            AddStatus(StatusEffectType.GoldenTime, 1);
+        }
+
+        bool lethalDamage = currentHp - finalDamage <= 0;
+        if (lethalDamage && HasStatus(StatusEffectType.GoldenTime))
+        {
+            currentHp = 1;
+            Debug.Log($"{data.unitName} 황금시간 발동: 사망 피해를 버팀");
+            return;
+        }
+
+        if (lethalDamage && HasKeyword("용사") && Random.value < 0.1f)
+        {
+            AddStatus(StatusEffectType.GoldenTime, 0);
+            currentHp = 1;
+            Debug.Log($"{data.unitName} 황금시간 획득: 사망 피해를 버팀");
+            return;
+        }
+
         if (data.unitName == "헬로 S. 모건" && HasTrait("황금시간-보험"))
         {
-            if (currentHp - finalDamage <= 0 && GetStatusAmount(StatusEffectType.GoldenTime) <= 0)
+            if (lethalDamage && !HasStatus(StatusEffectType.GoldenTime))
             {
                 AddStatus(StatusEffectType.GoldenTime, 1);
                 currentHp = 1;
@@ -284,7 +317,7 @@ public class BattleUnit : MonoBehaviour
 
         if (data.unitName == "제이슨")
         {
-            if (currentHp - finalDamage <= 0 && GetStatusAmount(StatusEffectType.Shield) > 0)
+            if (lethalDamage && GetStatusAmount(StatusEffectType.Shield) > 0)
             {
                 currentHp = 1;
                 RemoveStatus(StatusEffectType.Shield, 1);
@@ -293,7 +326,7 @@ public class BattleUnit : MonoBehaviour
             }
         }
 
-        if (HasTrait("불굴") && !hasUsedUnyielding && currentHp - finalDamage <= 0)
+        if (HasTrait("불굴") && !hasUsedUnyielding && lethalDamage)
         {
             hasUsedUnyielding = true;
             currentHp = 1;
@@ -318,7 +351,6 @@ public class BattleUnit : MonoBehaviour
             Die();
         }
     }
-
     public int CalculateFinalDamage(int damage, DamageType damageType)
     {
         int bonusDef = 0;
@@ -328,28 +360,21 @@ public class BattleUnit : MonoBehaviour
             bonusDef += GetStatusAmount(StatusEffectType.Quick);
         }
 
-        int defUp = GetStatusAmount(StatusEffectType.DefUp);
-        bonusDef += defUp;
+        bonusDef += GetStatusAmount(StatusEffectType.DefUp);
+        bonusDef -= GetStatusAmount(StatusEffectType.DefDown);
+        bonusDef = Mathf.Max(0, bonusDef);
 
-        int totalDef = data.def + bonusDef;
-        int reducedDamage = damage - totalDef;
-
-        if (reducedDamage < 0)
-        {
-            reducedDamage = 0;
-        }
+        int totalDef = Mathf.Max(0, data.def + bonusDef);
+        int reducedDamage = Mathf.Max(0, damage - totalDef);
 
         float resist = GetResistance(damageType);
         int finalDamage = Mathf.RoundToInt(reducedDamage * resist);
 
-        if (finalDamage < 0)
-        {
-            finalDamage = 0;
-        }
+        finalDamage -= GetStatusAmount(StatusEffectType.Protection);
+        finalDamage += GetStatusAmount(StatusEffectType.Weakness);
 
-        return finalDamage;
+        return Mathf.Max(0, finalDamage);
     }
-
     public float GetResistance(DamageType damageType)
     {
         switch (damageType)
@@ -389,6 +414,21 @@ public class BattleUnit : MonoBehaviour
         Debug.Log($"{data.unitName} ST {amount} 회복");
     }
 
+
+    public void TakeStDamage(int amount)
+    {
+        if (amount <= 0) return;
+
+        int finalDamage = amount;
+        finalDamage -= GetStatusAmount(StatusEffectType.MentalProtection);
+        finalDamage += GetStatusAmount(StatusEffectType.MentalWeakness);
+        finalDamage = Mathf.Max(0, finalDamage);
+
+        currentSt -= finalDamage;
+        if (currentSt < 0) currentSt = 0;
+
+        Debug.Log($"{data.unitName} ST {finalDamage} 피해");
+    }
     public bool IsPanicState()
     {
         return currentSt <= 0;
@@ -429,20 +469,33 @@ public class BattleUnit : MonoBehaviour
     // -------------------------
     public void AddStatus(StatusEffectType type, int amount)
     {
-        if (type == StatusEffectType.None || amount <= 0) return;
+        if (type == StatusEffectType.None) return;
+        if (amount <= 0 && type != StatusEffectType.GoldenTime) return;
+
+        int maxAmount = GetStatusMaxAmount(type);
+        int nextAmount = maxAmount > 0 ? Mathf.Min(maxAmount, amount) : amount;
+        int defaultCount = GetStatusDefaultCount(type);
 
         StatusEffect found = statusEffects.Find(x => x.type == type);
 
         if (found != null)
         {
             found.amount += amount;
+            if (maxAmount > 0)
+            {
+                found.amount = Mathf.Min(maxAmount, found.amount);
+            }
+
+            if (defaultCount > 0)
+            {
+                found.count = Mathf.Min(defaultCount, found.count + defaultCount);
+            }
         }
         else
         {
-            statusEffects.Add(new StatusEffect(type, amount));
+            statusEffects.Add(new StatusEffect(type, nextAmount, defaultCount));
         }
     }
-
     public void RemoveStatus(StatusEffectType type, int amount)
     {
         StatusEffect found = statusEffects.Find(x => x.type == type);
@@ -457,12 +510,62 @@ public class BattleUnit : MonoBehaviour
         }
     }
 
+
+    public bool HasStatus(StatusEffectType type)
+    {
+        return statusEffects.Exists(x => x.type == type);
+    }
     public int GetStatusAmount(StatusEffectType type)
     {
         StatusEffect found = statusEffects.Find(x => x.type == type);
         return found != null ? found.amount : 0;
     }
 
+    public int GetStatusCount(StatusEffectType type)
+    {
+        StatusEffect found = statusEffects.Find(x => x.type == type);
+        return found != null ? found.count : 0;
+    }
+
+    private int GetStatusMaxAmount(StatusEffectType type)
+    {
+        switch (type)
+        {
+            case StatusEffectType.AtkUp:
+            case StatusEffectType.DefUp:
+            case StatusEffectType.Quick:
+                return 100;
+            case StatusEffectType.Focus:
+                return 150;
+            case StatusEffectType.Breath:
+                return 60;
+            case StatusEffectType.GoldenTime:
+                return 3;
+            case StatusEffectType.DamageUp:
+            case StatusEffectType.DamageDown:
+            case StatusEffectType.Protection:
+            case StatusEffectType.MentalProtection:
+            case StatusEffectType.AtkDown:
+            case StatusEffectType.DefDown:
+            case StatusEffectType.Slow:
+            case StatusEffectType.Weakness:
+            case StatusEffectType.MentalWeakness:
+            case StatusEffectType.Tenacity:
+                return 10;
+            default:
+                return 0;
+        }
+    }
+    private int GetStatusDefaultCount(StatusEffectType type)
+    {
+        switch (type)
+        {
+            case StatusEffectType.Breath:
+                return 8;
+            default:
+                return 0;
+        }
+    }
     // -------------------------
     // 키워드 / 특성
     // -------------------------
@@ -621,9 +724,18 @@ public class BattleUnit : MonoBehaviour
     // -------------------------
     public void ApplyStatusEffectsOnTurnStart()
     {
+        if (GetStatusAmount(StatusEffectType.GoldenTime) >= 3)
+        {
+            StatusEffect goldenTime = statusEffects.Find(x => x.type == StatusEffectType.GoldenTime);
+            if (goldenTime != null)
+            {
+                goldenTime.count = 1;
+            }
+        }
+
         int breath = GetStatusAmount(StatusEffectType.Breath);
 
-        if (breath > 0)
+        if (breath > 0 && GetStatusAmount(StatusEffectType.Suffocation) <= 0)
         {
             currentSt += breath;
 
@@ -635,39 +747,68 @@ public class BattleUnit : MonoBehaviour
             Debug.Log($"{data.unitName} 호흡 효과로 ST {breath} 회복");
         }
     }
-
     public void ApplyStatusEffectsOnTurnEnd()
     {
         int quick = GetStatusAmount(StatusEffectType.Quick);
 
-        if (quick > 0)
+        if (quick > 0 && HasTrait("유동"))
         {
-            if (HasTrait("유동"))
+            int remainQuick = Mathf.FloorToInt(quick * 0.5f);
+            StatusEffect found = statusEffects.Find(x => x.type == StatusEffectType.Quick);
+            if (found != null)
             {
-                int remainQuick = Mathf.FloorToInt(quick * 0.5f);
-
-                if (remainQuick <= 0)
-                {
-                    statusEffects.RemoveAll(x => x.type == StatusEffectType.Quick);
-                }
-                else
-                {
-                    StatusEffect found = statusEffects.Find(x => x.type == StatusEffectType.Quick);
-                    if (found != null)
-                    {
-                        found.amount = remainQuick;
-                    }
-                }
-
-                Debug.Log($"{data.unitName} 유동 발동: 재빠름 50% 유지");
+                found.amount = remainQuick;
             }
-            else
+
+            Debug.Log($"{data.unitName} 유동 발동: 재빠름 50% 유지");
+        }
+
+        StatusEffect breath = statusEffects.Find(x => x.type == StatusEffectType.Breath);
+        if (breath != null && breath.count > 0)
+        {
+            breath.count -= 1;
+            if (breath.count <= 0)
             {
-                statusEffects.RemoveAll(x => x.type == StatusEffectType.Quick);
+                statusEffects.Remove(breath);
             }
         }
-    }
 
+        StatusEffect goldenTime = statusEffects.Find(x => x.type == StatusEffectType.GoldenTime);
+        bool shouldDieByGoldenTime = goldenTime != null && goldenTime.count > 0;
+        if (goldenTime != null)
+        {
+            goldenTime.amount = Mathf.Min(3, goldenTime.amount + 1);
+        }
+
+        RemoveTurnEndBuffsAndDebuffs();
+
+        if (shouldDieByGoldenTime)
+        {
+            Debug.Log($"{data.unitName} 황금시간 종료: 사망");
+            currentHp = 0;
+            Die();
+        }
+    }
+    private void RemoveTurnEndBuffsAndDebuffs()
+    {
+        statusEffects.RemoveAll(x =>
+            x.type == StatusEffectType.AtkUp ||
+            x.type == StatusEffectType.DefUp ||
+            x.type == StatusEffectType.Quick ||
+            x.type == StatusEffectType.DamageUp ||
+            x.type == StatusEffectType.Protection ||
+            x.type == StatusEffectType.MentalProtection ||
+            x.type == StatusEffectType.HuntHumanType ||
+            x.type == StatusEffectType.Focus ||
+            x.type == StatusEffectType.Tenacity ||
+            x.type == StatusEffectType.Shield ||
+            x.type == StatusEffectType.AtkDown ||
+            x.type == StatusEffectType.DefDown ||
+            x.type == StatusEffectType.Slow ||
+            x.type == StatusEffectType.DamageDown ||
+            x.type == StatusEffectType.Weakness ||
+            x.type == StatusEffectType.MentalWeakness);
+    }
     public void ReduceCooldowns()
     {
         List<string> keys = new List<string>(skillCooldowns.Keys);
