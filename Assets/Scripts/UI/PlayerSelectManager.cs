@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,19 +20,31 @@ public class PlayerSelectManager : MonoBehaviour
     }
 
     [SerializeField]
+    private GameObject partyUI;
+    [SerializeField]
     private TextMeshProUGUI stageNameText;
-
     [SerializeField]
     private PlayerSelectButton[] partyMemberSlots;
     [SerializeField]
     private GameObject enemyInfoPanel;
     [SerializeField]
-    private GameObject enemySlotPrefab;
+    private TextMeshProUGUI warningText;
 
+    [SerializeField]
+    private GameObject enemySlotPrefab;
     private UnitData[] partyMembers = new UnitData[3];
 
     [SerializeField]
     private StageData testStageData;
+
+    [SerializeField]
+    private GameObject positioningUI;
+    [SerializeField]
+    private Transform board;
+    [SerializeField]
+    private GameObject enemy;
+    [SerializeField]
+    private GameObject player;
 
     private void Awake()
     {
@@ -58,9 +71,18 @@ public class PlayerSelectManager : MonoBehaviour
     {
         foreach (EnemyEntry enemyData in StageManager.SelectedStage.enemyEntries)
         {
-            EnemySlot newSlot = Instantiate(enemySlotPrefab, enemyInfoPanel.transform).GetComponent<EnemySlot>();
+            EnemySlot newSlot = Instantiate(enemySlotPrefab, enemyInfoPanel.transform)
+                .GetComponent<EnemySlot>();
             newSlot.SetEnemyPrefab(enemyData.prefab);
-            newSlot.gameObject.GetComponent<Image>().sprite = enemyData.prefab.GetComponent<SpriteRenderer>().sprite;
+            newSlot.gameObject.GetComponent<Image>().sprite = enemyData
+                .prefab.GetComponent<SpriteRenderer>()
+                .sprite;
+
+            Transform tile = board.GetChild((8 - enemyData.rank) * 8 + (int)enemyData.file - 1);
+            GameObject instantiatedEnemy = Instantiate(enemy, tile);
+            instantiatedEnemy.GetComponent<Image>().sprite = enemyData
+                .prefab.GetComponent<SpriteRenderer>()
+                .sprite;
         }
     }
 
@@ -113,9 +135,42 @@ public class PlayerSelectManager : MonoBehaviour
         }
     }
 
+    public void OpenPositioningUI()
+    {
+        if (!System.Array.Exists(partyMembers, member => member != null))
+        {
+            StopCoroutine(nameof(ShowWarningMessage));
+            StartCoroutine(nameof(ShowWarningMessage));
+            return;
+        }
+
+        for (int i = 0; i < partyMembers.Length; i++)
+        {
+            if (partyMembers[i] != null)
+            {
+                Transform tile = board.GetChild(63 - i);
+                GameObject instantiatedPlayer = Instantiate(player, tile);
+                if (i == 0)
+                    instantiatedPlayer.GetComponent<Image>().color = Color.red;
+                else if (i == 1)
+                    instantiatedPlayer.GetComponent<Image>().color = Color.green;
+                else if (i == 2)
+                    instantiatedPlayer.GetComponent<Image>().color = Color.blue;
+            }
+        }
+        partyUI.SetActive(false);
+        positioningUI.SetActive(true);
+    }
+
     public void StartGame()
     {
-        StageManager.SelectedPartyMembers = partyMembers;
-        SceneManager.LoadScene("SettingPlaceScene");
+        SceneManager.LoadScene("BattleScene");
+    }
+
+    private IEnumerator ShowWarningMessage()
+    {
+        warningText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        warningText.gameObject.SetActive(false);
     }
 }

@@ -21,6 +21,7 @@ public class PlayerSelectButton : MonoBehaviour
 
     public void OnPointerEnter()
     {
+        if (unitData == null) return;
         rectTransform.localScale = Vector3.one * 1.1f;
         UnitInspector.Instance.ShowUnitInfo(unitData);
     }
@@ -39,6 +40,7 @@ public class PlayerSelectButton : MonoBehaviour
     public void RemoveFromParty()
     {
         PlayerSelectManager.Instance.RemovePartyMembers(unitData);
+        OnPointerExit();
     }
 
     public void SetUnitData(UnitData data)
@@ -50,7 +52,7 @@ public class PlayerSelectButton : MonoBehaviour
         }
         else
         {
-            nameText.text = "";
+            nameText.text = "--";
         }
     }
 }
