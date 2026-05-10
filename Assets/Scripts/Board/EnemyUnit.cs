@@ -2,6 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 🌟 추가: 팀원분의 기존 버프 시스템이 꼬이지 않도록 이름을 'LegacyEnemyBuff'로 분리했습니다!
+[System.Serializable]
+public class LegacyEnemyBuff
+{
+    public int damageBonus;
+    public int turnsRemaining;
+
+    public LegacyEnemyBuff(int bonus, int turns)
+    {
+        damageBonus = bonus;
+        turnsRemaining = turns;
+    }
+}
+
 [RequireComponent(typeof(Enemy))]
 public class EnemyUnit : MonoBehaviour
 {
@@ -20,7 +34,8 @@ public class EnemyUnit : MonoBehaviour
     private SpriteRenderer sr;
     private Sprite originalSprite;
 
-    private List<ActiveBuff> activeBuffs = new List<ActiveBuff>();
+    // 🌟 수정: ActiveBuff 대신 LegacyEnemyBuff 사용
+    private List<LegacyEnemyBuff> activeBuffs = new List<LegacyEnemyBuff>();
     private Enemy enemy;
 
     private void Awake()
@@ -132,9 +147,9 @@ public class EnemyUnit : MonoBehaviour
         switch (skill.skillEffect)
         {
             case SkillEffect.damagebuff:
-                // 중첩 방지: 기존 피해량 버프 제거 후 새 버프 적용
+                // 🌟 수정: LegacyEnemyBuff 로 생성
                 activeBuffs.RemoveAll(b => b.damageBonus > 0);
-                ApplyBuff(new ActiveBuff(skill.effectValue, skill.duration));
+                ApplyBuff(new LegacyEnemyBuff(skill.effectValue, skill.duration));
                 if (enemy != null)
                     enemy.damage = (enemy.EnemyData != null ? enemy.EnemyData.maxatk : 0) + GetDamageBonus();
                 if (sr != null && buffedSprite != null)
@@ -176,7 +191,8 @@ public class EnemyUnit : MonoBehaviour
         return bonus;
     }
 
-    public void ApplyBuff(ActiveBuff buff)
+    // 🌟 수정: 매개변수 타입 변경
+    public void ApplyBuff(LegacyEnemyBuff buff)
     {
         activeBuffs.Add(buff);
         Debug.Log($"{gameObject.name} 버프 적용: 피해량 +{buff.damageBonus} ({buff.turnsRemaining}턴)");
