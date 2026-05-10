@@ -46,6 +46,8 @@ public class PlayerSelectManager : MonoBehaviour
     [SerializeField]
     private GameObject player;
 
+    private DraggableUI[] instantiatedPlayers = new DraggableUI[3];
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -150,6 +152,8 @@ public class PlayerSelectManager : MonoBehaviour
             {
                 Transform tile = board.GetChild(63 - i);
                 GameObject instantiatedPlayer = Instantiate(player, tile);
+                instantiatedPlayers[i] = instantiatedPlayer.GetComponent<DraggableUI>();
+                instantiatedPlayers[i].SetUnitData(partyMembers[i]);
                 if (i == 0)
                     instantiatedPlayer.GetComponent<Image>().color = Color.red;
                 else if (i == 1)
@@ -158,12 +162,29 @@ public class PlayerSelectManager : MonoBehaviour
                     instantiatedPlayer.GetComponent<Image>().color = Color.blue;
             }
         }
+
         partyUI.SetActive(false);
         positioningUI.SetActive(true);
     }
 
     public void StartGame()
     {
+        StageManager.SelectedPartyMembers = new PlayerEntry[instantiatedPlayers.Length];
+        for (int i = 0; i < instantiatedPlayers.Length; i++)
+        {
+            if (instantiatedPlayers[i] != null)
+            {
+                int tileIndex = instantiatedPlayers[i].PreviousParent
+                    ? instantiatedPlayers[i].PreviousParent.GetSiblingIndex()
+                    : instantiatedPlayers[i].transform.parent.GetSiblingIndex();
+                StageManager.SelectedPartyMembers[i] = new PlayerEntry
+                {
+                    unitData = instantiatedPlayers[i].UnitData,
+                    rank = 8 - tileIndex / 8,
+                    file = (File)(tileIndex % 8 + 1),
+                };
+            }
+        }
         SceneManager.LoadScene("BattleScene");
     }
 

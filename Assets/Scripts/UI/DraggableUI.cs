@@ -8,13 +8,22 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private RectTransform rect;
     private CanvasGroup canvasGroup;
 
+    private UnitData unitData;
+
 	public Transform PreviousParent => previousParent;
+    public UnitData UnitData => unitData;
+
 
     private void Awake()
     {
         canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+    }
+
+    public void SetUnitData(UnitData data)
+    {
+        unitData = data;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
