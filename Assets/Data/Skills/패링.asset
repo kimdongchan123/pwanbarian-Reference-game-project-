@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
+  m_Name: "\uD328\uB9C1"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "\uD328\uB9C1"
+  description: "[\uD328\uB9C1]\n\u318D\u300A\uBC29\uC5B4 \uD2B9\uC131\u300B\n\n\u318D\uC790\uC2E0\uBCF4\uB2E4
+    ATK\uC640 DEF\uC758 \uD569\uC774 \uB0AE\uC740 \uC0C1\uB300\uC758 \n\uACF5\uACA9\uC73C\uB85C
+    \uD53C\uD574\uB97C \uC785\uC9C0 \uC54A\uB294\uB2E4.\n\n\u318D\uC774 \uD2B9\uC131\uC73C\uB85C
+    \uD53C\uD574\uB97C \uC785\uC9C0 \uC54A\uC740 \uACBD\uC6B0 \uC11C\uB85C\uC758
+    ATK\uC640 DEF\uC758 \uD569\uC758 \uCC28\uC774\uB9CC\uD07C ST \uD53C\uD574\uB97C
+    \uC900\uB2E4.\n\n[\uC790\uAC00 \uC218\uBCF5]\n\u318DHp\uB97C (\uD604\uC7AC Hp\uC758
+    20%)\uB9CC\uD07C \uD68C\uBCF5\uD55C\uB2E4.\n\n\u318D\u3161\uCDA9\uC804\u3161(2)\uB97C
+    \uCDA9\uC804\uD55C\uB2E4.\n\n\u318DCT1"
+  coolTime: 1
+  skillEffect: 0
+  effectValue: 0
+  duration: 0

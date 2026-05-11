@@ -103,7 +103,8 @@ public class EnemyData : ScriptableObject
     public int maxSp;
     public int minatk;
     public int maxatk;
-    public int def;
+    public int mindef;
+    public int maxdef;
 
     [Header("패닉")]
     public Panic[] panic;

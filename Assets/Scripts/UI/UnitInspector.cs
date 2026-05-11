@@ -65,7 +65,7 @@ public class UnitInspector : MonoBehaviour
             ATKText.text = enemyData.maxatk.ToString();
         else
             ATKText.text = $"{enemyData.minatk}~{enemyData.maxatk}";
-        DEFText.text = enemyData.def.ToString();
+        DEFText.text = enemyData.maxdef.ToString();
         STText.text = enemyData.maxSt.ToString();
         if (enemyData.minSp == enemyData.maxSp)
             SPText.text = enemyData.maxSp.ToString();

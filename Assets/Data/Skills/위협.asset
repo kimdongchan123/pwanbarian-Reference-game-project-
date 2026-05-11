@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
+  m_Name: "\uC704\uD611"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "\uC704\uD611"
+  description: "\u318D<\uBB3C\uB9AC \uD53C\uD574\uB7C9 \uC99D\uAC00>(3)\uC744 \uC5BB\uB294\uB2E4.\n\n\u318D+
+    CT4"
+  coolTime: 4
+  skillEffect: 1
+  effectValue: 3
+  duration: 1

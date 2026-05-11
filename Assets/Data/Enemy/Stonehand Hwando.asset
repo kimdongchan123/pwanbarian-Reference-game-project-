@@ -10,31 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Gulpfrog
+  m_Name: Stonehand Hwando
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: "\uAFC0\uAEBD\uAD6C\uB9AC"
-  maxHp: 80
+  unitName: Stonehand:Hwando
+  maxHp: 50
   maxSt: 30
   minSp: 4
-  maxSp: 6
-  minatk: 5
-  maxatk: 16
-  mindef: 3
-  maxdef: 3
+  maxSp: 8
+  minatk: 3
+  maxatk: 3
+  mindef: 5
+  maxdef: 5
   panic: 
-  affiliation: "\uBC14\uB2E4\uBBFC\uC871"
-  unitTypeKeyword: "\uCCB4\uC2A4"
+  affiliation: "\uAE38\uB3D9\uC758 \uC138\uACC4"
+  unitTypeKeyword: "\uC7A5\uAE30"
   traitKeywords:
-  - "\uC591\uC131"
-  - "\uC778\uB958\uC758 \uCC9C\uC801"
-  physicalResist: 0.8
-  mentalResist: 0.8
-  specialResist: 1.5
-  sinResist: 1.5
+  - "\uBB34\uC131"
+  - "\uAE30\uACC4"
+  - "\uC778\uAC04\uD615"
+  physicalResist: 0.5
+  mentalResist: 1.5
+  specialResist: 1
+  sinResist: 1
   defensiveCharacteristic: 
   universalCharacteristic: 
   pieceCharacteristic: 
   skills:
-  - {fileID: 11400000, guid: 46bac13e2fbed524aba8540833b16d2b, type: 2}
+  - {fileID: 11400000, guid: 8ac0ea7e67fcbf646b84b33591714019, type: 2}
+  - {fileID: 11400000, guid: 3fb482d6879de0a47ac2fe43a0ae84e0, type: 2}
   traits: []
   deck: []

@@ -10,31 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Gulpfrog
+  m_Name: Scavenger
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: "\uAFC0\uAEBD\uAD6C\uB9AC"
-  maxHp: 80
-  maxSt: 30
-  minSp: 4
-  maxSp: 6
-  minatk: 5
-  maxatk: 16
-  mindef: 3
-  maxdef: 3
+  unitName: Scavenger
+  maxHp: 25
+  maxSt: 4
+  minSp: 2
+  maxSp: 8
+  minatk: 6
+  maxatk: 6
+  mindef: 1
+  maxdef: 1
   panic: 
-  affiliation: "\uBC14\uB2E4\uBBFC\uC871"
-  unitTypeKeyword: "\uCCB4\uC2A4"
+  affiliation: "\uB514\uD504\uB808 \uB77C\uD50C\uB9AC\uC758 \uC138\uACC4"
+  unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
   traitKeywords:
-  - "\uC591\uC131"
+  - "\uC5EC\uC131"
+  - "\uC778\uAC04"
+  - "\uC778\uAC04\uD615"
   - "\uC778\uB958\uC758 \uCC9C\uC801"
-  physicalResist: 0.8
-  mentalResist: 0.8
+  physicalResist: 1
+  mentalResist: 1.5
   specialResist: 1.5
   sinResist: 1.5
   defensiveCharacteristic: 
   universalCharacteristic: 
   pieceCharacteristic: 
   skills:
-  - {fileID: 11400000, guid: 46bac13e2fbed524aba8540833b16d2b, type: 2}
+  - {fileID: 11400000, guid: 859dbe9eae2a9df409bbdc77ebf949ad, type: 2}
   traits: []
   deck: []

@@ -7,7 +7,9 @@ public enum SkillEffect
     none,
     damagebuff,  // 피해량 버프 (duration 동안 지속)
     atkbuff,     // ATK 영구 증가
-    deepbreath   // ST 회복
+    deepbreath,   // ST 회복
+
+    hpbuff
 }
 
 [CreateAssetMenu(menuName = "Game/Skill Data")]
