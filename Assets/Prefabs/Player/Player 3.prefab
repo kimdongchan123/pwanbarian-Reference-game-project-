@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 324586707125647356}
   - component: {fileID: 8205060972760566300}
   - component: {fileID: 2506522423878568681}
-  - component: {fileID: 8048383800840770767}
+  - component: {fileID: 3517066385222265871}
   m_Layer: 0
   m_Name: Player 3
   m_TagString: Untagged
@@ -108,9 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Unit
   unitName: "\uD14C\uC2A4\uD2B8 \uC720\uB2DB"
   isAlly: 1
-  formationIndex: 0
   movement: {fileID: 2506522423878568681}
-  stats: {fileID: 8048383800840770767}
+  battleUnit: {fileID: 3517066385222265871}
 --- !u!114 &2506522423878568681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitMovement
   currentTile: {fileID: 0}
---- !u!114 &8048383800840770767
+--- !u!114 &3517066385222265871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,9 +132,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6233576781834785788}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f074c390ba8d3ab44b632152cc2bdad0, type: 3}
+  m_Script: {fileID: 11500000, guid: 935635984597b73458f19e2a37e612cd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnitStats
-  minSpeed: 1
-  maxSpeed: 5
-  currentTurnSpeed: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BattleUnit
+  data: {fileID: 11400000, guid: ea3cc2e49dd2ad848a0ed58787739b6f, type: 2}
+  currentHp: 0
+  currentSt: 0
+  remainingActions: 1
+  extraMoveCount: 0
+  drawDeck: []
+  hand: []
+  discardDeck: []
+  hasUsedUnyielding: 0
+  team: 0

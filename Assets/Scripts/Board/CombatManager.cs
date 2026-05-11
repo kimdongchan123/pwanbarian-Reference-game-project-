@@ -9,12 +9,13 @@ public class SkillRuntimeSlot
     public int currentCT;
 }
 
-public class ActiveBuff
+// 🌟 수정됨: ActiveBuff -> EnemyActiveBuff 로 변경!
+public class EnemyActiveBuff
 {
     public int damageBonus;
     public int turnsRemaining;
 
-    public ActiveBuff(int bonus, int turns)
+    public EnemyActiveBuff(int bonus, int turns)
     {
         damageBonus = bonus;
         turnsRemaining = turns;
@@ -103,10 +104,10 @@ public class CombatManager : MonoBehaviour
         return type switch
         {
             DamageType.Physical => enemy.EnemyData.physicalResist,
-            DamageType.Mental   => enemy.EnemyData.mentalResist,
-            DamageType.Special  => enemy.EnemyData.specialResist,
-            DamageType.Sin      => enemy.EnemyData.sinResist,
-            _                   => 1f
+            DamageType.Mental => enemy.EnemyData.mentalResist,
+            DamageType.Special => enemy.EnemyData.specialResist,
+            DamageType.Sin => enemy.EnemyData.sinResist,
+            _ => 1f
         };
     }
 }

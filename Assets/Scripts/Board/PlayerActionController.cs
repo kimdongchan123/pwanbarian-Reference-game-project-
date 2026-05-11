@@ -4,172 +4,99 @@ using UnityEngine.InputSystem;
 public class PlayerActionController : MonoBehaviour
 {
     public static PlayerActionController Instance;
-
     private CardData selectedCard;
     private Unit currentUnit;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private void Awake() => Instance = this;
 
-    // 카드 클릭 시
     public void OnCardSelected(CardData card)
     {
         currentUnit = TurnManager.Instance.GetCurrentUnit();
-
-        if (card == null)
-        {
-            Debug.LogWarning("선택한 카드가 null입니다.");
-            return;
-        }
-
-        if (currentUnit == null)
-        {
-            Debug.LogWarning("현재 턴 유닛이 없습니다.");
-            return;
-        }
-
-        if (!currentUnit.isAlly)
-        {
-            Debug.Log("현재 유닛이 아군이 아닙니다.");
-            return;
-        }
+        if (card == null || currentUnit == null || !currentUnit.isAlly) return;
 
         selectedCard = card;
-
         Debug.Log("카드 선택됨: " + selectedCard.cardName);
 
         if (currentUnit.movement != null)
-        {
-            MovePattern movePattern = ConvertPieceTypeToMovePattern(selectedCard.pieceType);
-            currentUnit.movement.ShowMoveRange(movePattern);
-        }
+            currentUnit.movement.ShowMoveRange(ConvertPieceTypeToMovePattern(selectedCard.pieceType));
     }
 
     private void Update()
     {
-        if (selectedCard == null || currentUnit == null)
-            return;
-
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            TryUseSelectedCard();
-        }
-
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            CancelSelectedCard();
-        }
+        if (selectedCard == null || currentUnit == null) return;
+        if (Mouse.current.leftButton.wasPressedThisFrame) TryUseSelectedCard();
+        if (Mouse.current.rightButton.wasPressedThisFrame) CancelSelectedCard();
     }
 
     private void TryUseSelectedCard()
     {
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
-
-        if (!Physics.Raycast(ray, out RaycastHit hit))
-            return;
-
-        if (!hit.collider.CompareTag("Tile"))
-            return;
+        if (!Physics.Raycast(ray, out RaycastHit hit) || !hit.collider.CompareTag("Tile")) return;
 
         Tile clickedTile = hit.collider.GetComponent<Tile>();
-
-        if (clickedTile == null)
-        {
-            Debug.LogWarning("Tile 컴포넌트 없음");
-            return;
-        }
-
-        if (!MapManager.Instance.IsValidMove(clickedTile))
-        {
-            Debug.Log("이동 불가능 타일");
-            return;
-        }
+        if (!MapManager.Instance.IsValidMove(clickedTile)) return;
 
         Unit targetUnit = clickedTile.GetComponentInChildren<Unit>();
+        EnemyUnit targetEnemy = clickedTile.GetComponentInChildren<EnemyUnit>();
 
-        // 이동
         currentUnit.movement.TryMoveTo(clickedTile);
+        ApplySelectedCardEffect(targetUnit, targetEnemy);
 
-        // 효과 적용
-        ApplySelectedCardEffect(targetUnit);
-
-        // 정리
         MapManager.Instance.ClearHighlights();
-
-        Debug.Log("카드 사용 완료: " + selectedCard.cardName);
-
         selectedCard = null;
     }
 
-    private void ApplySelectedCardEffect(Unit targetUnit)
+    private void ApplySelectedCardEffect(Unit targetUnit, EnemyUnit targetEnemy)
     {
-        if (selectedCard == null || currentUnit == null)
-            return;
+        if (selectedCard == null || currentUnit == null) return;
 
-        // -----------------
-        // 데미지
-        // -----------------
+        // 1. 진짜 CombatManager 데미지 연동
         if (selectedCard.power > 0)
         {
-            if (selectedCard.targetType == CardTargetType.Enemy)
+            if (selectedCard.targetType == CardTargetType.Enemy && targetEnemy != null)
             {
-                if (targetUnit != null && !targetUnit.isAlly)
-                {
-                    targetUnit.TakeDamage(selectedCard.power);
-                    Debug.Log("데미지 적용: " + selectedCard.power);
-                }
+                CombatManager.Instance.PlayerAttackEnemy(currentUnit.battleUnit, selectedCard, targetEnemy);
             }
             else if (selectedCard.targetType == CardTargetType.Self)
             {
-                currentUnit.TakeDamage(selectedCard.power);
+                currentUnit.battleUnit.TakeDamage(selectedCard.power, selectedCard.damageType);
             }
         }
 
-        // -----------------
-        // 상태 효과
-        // -----------------
-        if (!selectedCard.useEffect)
-            return;
-
-        if (selectedCard.effectType == StatusEffectType.None)
-            return;
-
-        Unit effectTarget = selectedCard.effectToSelf ? currentUnit : targetUnit;
-
-        if (effectTarget == null)
+        // 2. 진짜 BattleUnit 상태이상 연동
+        if (selectedCard.useEffect && selectedCard.effectType != StatusEffectType.None)
         {
-            Debug.Log("효과 대상 없음");
-            return;
+            if (selectedCard.effectToSelf)
+            {
+                currentUnit.battleUnit.AddStatus(selectedCard.effectType, selectedCard.effectAmount);
+                Debug.Log($"자신에게 {selectedCard.effectType} {selectedCard.effectAmount} 적용");
+            }
+            else if (targetEnemy != null)
+            {
+                // 적의 상태이상은 추후 기믹 구현 시 추가될 예정이므로 로그만 남깁니다.
+                Debug.Log($"적({targetEnemy.name})에게 {selectedCard.effectType} {selectedCard.effectAmount} 부여 시도 (적용 대기)");
+            }
         }
-
-        effectTarget.AddStatus(selectedCard.effectType, selectedCard.effectAmount);
-
-        Debug.Log("상태 적용: " + selectedCard.effectType + " / " + selectedCard.effectAmount);
     }
 
     private void CancelSelectedCard()
     {
-        Debug.Log("카드 취소");
-
         selectedCard = null;
-
         MapManager.Instance.ClearHighlights();
     }
 
     private MovePattern ConvertPieceTypeToMovePattern(PieceType pieceType)
     {
-        switch (pieceType)
+        return pieceType switch
         {
-            case PieceType.Pawn: return MovePattern.Pawn;
-            case PieceType.Knight: return MovePattern.Knight;
-            case PieceType.Bishop: return MovePattern.Bishop;
-            case PieceType.Rook: return MovePattern.Rook;
-            case PieceType.Queen: return MovePattern.Queen;
-            case PieceType.King: return MovePattern.King;
-            default: return MovePattern.Pawn;
-        }
+            PieceType.Pawn => MovePattern.Pawn,
+            PieceType.Knight => MovePattern.Knight,
+            PieceType.Bishop => MovePattern.Bishop,
+            PieceType.Rook => MovePattern.Rook,
+            PieceType.Queen => MovePattern.Queen,
+            PieceType.King => MovePattern.King,
+            _ => MovePattern.Pawn
+        };
     }
 }

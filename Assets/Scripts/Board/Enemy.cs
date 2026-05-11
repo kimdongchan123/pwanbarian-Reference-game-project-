@@ -31,10 +31,10 @@ public class Enemy : MonoBehaviour
             Sp = Random.Range(EnemyData.minSp, EnemyData.maxSp);
             gameObject.name = EnemyData.unitName;
         }
-        if (EnemyData != null )
+        if (EnemyData != null)
         {
             damage = Random.Range(EnemyData.minatk, EnemyData.maxatk);
-            gameObject.name = EnemyData.unitName;   
+            gameObject.name = EnemyData.unitName;
         }
     }
 
@@ -261,7 +261,8 @@ public class Enemy : MonoBehaviour
         if (!MapManager.Instance.tiles.TryGetValue(unit.gridPosition, out Tile tile)) return;
         if (!tile.CompareTag("SeaPoint")) return;
 
-        unit.ApplyBuff(new ActiveBuff(10, 1));
+        // 🌟 수정됨: ActiveBuff -> EnemyActiveBuff로 변경!
+        unit.ApplyBuff(new EnemyActiveBuff(10, 1));
         hasSwiftnessBuff = true;
         hasSpreadBuff = true;
         Debug.Log($"{EnemyData.unitName} [바다의 재앙] 바다 포인트 — ATK+10, 재빠름, 확산 활성화");

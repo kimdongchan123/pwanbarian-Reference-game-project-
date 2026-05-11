@@ -20,7 +20,8 @@ public class EnemyUnit : MonoBehaviour
     private SpriteRenderer sr;
     private Sprite originalSprite;
 
-    private List<ActiveBuff> activeBuffs = new List<ActiveBuff>();
+    // 🌟 수정됨: ActiveBuff -> EnemyActiveBuff로 변경!
+    private List<EnemyActiveBuff> activeBuffs = new List<EnemyActiveBuff>();
     private Enemy enemy;
 
     private void Awake()
@@ -134,7 +135,8 @@ public class EnemyUnit : MonoBehaviour
             case SkillEffect.damagebuff:
                 // 중첩 방지: 기존 피해량 버프 제거 후 새 버프 적용
                 activeBuffs.RemoveAll(b => b.damageBonus > 0);
-                ApplyBuff(new ActiveBuff(skill.effectValue, skill.duration));
+                // 🌟 수정됨: ActiveBuff -> EnemyActiveBuff로 변경!
+                ApplyBuff(new EnemyActiveBuff(skill.effectValue, skill.duration));
                 if (enemy != null)
                     enemy.damage = (enemy.EnemyData != null ? enemy.EnemyData.maxatk : 0) + GetDamageBonus();
                 if (sr != null && buffedSprite != null)
@@ -176,7 +178,8 @@ public class EnemyUnit : MonoBehaviour
         return bonus;
     }
 
-    public void ApplyBuff(ActiveBuff buff)
+    // 🌟 수정됨: ActiveBuff -> EnemyActiveBuff로 변경!
+    public void ApplyBuff(EnemyActiveBuff buff)
     {
         activeBuffs.Add(buff);
         Debug.Log($"{gameObject.name} 버프 적용: 피해량 +{buff.damageBonus} ({buff.turnsRemaining}턴)");

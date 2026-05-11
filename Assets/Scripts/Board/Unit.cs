@@ -1,41 +1,38 @@
 using UnityEngine;
 
+[RequireComponent(typeof(BattleUnit))] // 🌟 드디어 진짜 RPG 스탯이 들어옵니다!
 public class Unit : MonoBehaviour
 {
     [Header("기본 정보")]
-    public string unitName = "테스트 유닛"; // 기물 이름 (예: 나이트, 오크 등)
-    public bool isAlly = true;              // true면 아군, false면 적군
-    public int formationIndex = 0;          // 아군 편성 순서 (속도가 겹칠 때 먼저 움직일 순서)
+    public string unitName = "테스트 유닛";
+    public bool isAlly = true;
 
-    [Header("전투 스탯")]
-    public int atk = 5;
-    public int maxHp = 20;
-    [HideInInspector] public int currentHp;
+    [Header("핵심 시스템 모듈")]
+    public UnitMovement movement;
+    public BattleUnit battleUnit; // 🌟 가짜 UnitStats를 밀어내고 진짜가 왔습니다!
 
-    [Header("핵심 시스템 모듈 (자동 연결됨)")]
-    public UnitMovement movement; // 이동 담당
-    public UnitStats stats;       // 스탯 담당 (속도, 체력 등)
+    // TurnManager가 체력을 물어볼 때 진짜 BattleUnit의 체력을 대답해줍니다.
+    public int currentHp
+    {
+        get => battleUnit != null ? battleUnit.currentHp : 0;
+        set { if (battleUnit != null) battleUnit.currentHp = value; }
+    }
+    public int maxHp => battleUnit != null && battleUnit.data != null ? battleUnit.data.maxHp : 1;
 
     void Awake()
     {
         movement = GetComponent<UnitMovement>();
-        stats = GetComponent<UnitStats>();
-        if (movement == null) Debug.LogWarning($" {unitName} 오브젝트에 UnitMovement 스크립트가 안 붙어있습니다!");
-        if (stats == null) Debug.LogWarning($" {unitName} 오브젝트에 UnitStats 스크립트가 안 붙어있습니다!");
+        battleUnit = GetComponent<BattleUnit>();
     }
 
-    void Start()
-    {
-        currentHp = maxHp;
-    }
-
+    // 외부에서 찌르면 진짜 BattleUnit에게 전달합니다.
     public void TakeDamage(int damage)
     {
-        Debug.Log($"{name}이 {damage} 피해를 받음");
+        if (battleUnit != null) battleUnit.TakeDamage(damage, DamageType.Physical);
     }
 
     public void AddStatus(StatusEffectType type, int amount)
     {
-        Debug.Log($"{name}에게 {type} {amount} 적용");
+        if (battleUnit != null) battleUnit.AddStatus(type, amount);
     }
 }
