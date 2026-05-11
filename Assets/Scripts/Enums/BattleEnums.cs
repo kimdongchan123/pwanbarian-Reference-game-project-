@@ -91,6 +91,8 @@ public enum StatusEffectType
     Charm,
     Condemnation,
     Crumple,
+    VitalPoint,
+    VitalPointStun,
 }
 
 public enum CardTargetType

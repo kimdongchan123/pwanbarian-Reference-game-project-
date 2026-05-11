@@ -92,7 +92,7 @@ public class PlayerSelectManager : MonoBehaviour
     {
         if (System.Array.IndexOf(partyMembers, member) >= 0)
         {
-            Debug.LogWarning($"이미 {member.unitName}이(가) 파티에 포함되어 있습니다.");
+            Debug.LogWarning($"?��? {member.unitName}??가) ?�티???�함?�어 ?�습?�다.");
             return;
         }
 
@@ -154,12 +154,7 @@ public class PlayerSelectManager : MonoBehaviour
                 GameObject instantiatedPlayer = Instantiate(player, tile);
                 instantiatedPlayers[i] = instantiatedPlayer.GetComponent<DraggableUI>();
                 instantiatedPlayers[i].SetUnitData(partyMembers[i]);
-                if (i == 0)
-                    instantiatedPlayer.GetComponent<Image>().color = Color.red;
-                else if (i == 1)
-                    instantiatedPlayer.GetComponent<Image>().color = Color.green;
-                else if (i == 2)
-                    instantiatedPlayer.GetComponent<Image>().color = Color.blue;
+                ApplyPartyMemberFallbackColor(instantiatedPlayer, partyMembers[i], i);
             }
         }
 
@@ -167,6 +162,35 @@ public class PlayerSelectManager : MonoBehaviour
         positioningUI.SetActive(true);
     }
 
+
+    private void ApplyPartyMemberFallbackColor(GameObject instantiatedPlayer, UnitData unitData, int index)
+    {
+        Image image = instantiatedPlayer.GetComponent<Image>();
+        if (image == null) return;
+
+        Sprite sprite = unitData != null && unitData.battleSprite != null ? unitData.battleSprite : unitData?.portraitSprite;
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+            image.color = Color.white;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            Debug.Log($"[PlayerSelectManager] Applied sprite '{sprite.name}' for {unitData.unitName}.");
+            return;
+        }
+
+        if (unitData != null)
+        {
+            Debug.LogWarning($"[PlayerSelectManager] {unitData.unitName}: sprite is not assigned. Using fallback color.");
+        }
+
+        if (index == 0)
+            image.color = Color.red;
+        else if (index == 1)
+            image.color = Color.green;
+        else if (index == 2)
+            image.color = Color.blue;
+    }
     public void StartGame()
     {
         StageManager.SelectedPartyMembers = new PlayerEntry[instantiatedPlayers.Length];

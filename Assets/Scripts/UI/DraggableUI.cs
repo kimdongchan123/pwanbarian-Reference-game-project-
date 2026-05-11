@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -7,6 +8,7 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private Transform previousParent;
     private RectTransform rect;
     private CanvasGroup canvasGroup;
+    private Image image;
 
     private UnitData unitData;
 
@@ -19,11 +21,42 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+        image = GetComponent<Image>();
     }
 
     public void SetUnitData(UnitData data)
     {
         unitData = data;
+
+        if (image == null)
+        {
+            image = GetComponent<Image>();
+        }
+
+        if (unitData == null)
+        {
+            Debug.LogWarning($"[DraggableUI] {gameObject.name}: UnitData is null.");
+            return;
+        }
+
+        if (image == null)
+        {
+            Debug.LogWarning($"[DraggableUI] {gameObject.name}: Image component is missing.");
+            return;
+        }
+
+        Sprite sprite = unitData.battleSprite != null ? unitData.battleSprite : unitData.portraitSprite;
+        if (sprite == null)
+        {
+            Debug.LogWarning($"[DraggableUI] {unitData.unitName}: battleSprite/portraitSprite is empty. Using fallback color.");
+            return;
+        }
+
+        image.sprite = sprite;
+        image.color = Color.white;
+        image.type = Image.Type.Simple;
+        image.preserveAspect = true;
+        Debug.Log($"[DraggableUI] Applied sprite '{sprite.name}' for {unitData.unitName}.");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
