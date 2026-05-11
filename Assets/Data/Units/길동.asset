@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "\uAE38\uB3D9"
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitName: "\uAE38\uB3D9"
+  unitPrefab: {fileID: 6233576781834785788, guid: dd7dfc59ca6454c418d2519a1b5219e4, type: 3}
   panicType: 0
   maxHp: 35
   maxSt: 35
