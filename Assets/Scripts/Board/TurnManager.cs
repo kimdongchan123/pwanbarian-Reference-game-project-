@@ -3,175 +3,160 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-// 아군/적 통합 턴 단위
+// 아군/적 통합 턴 단위 클래스
 public class TurnActor
 {
-    public Unit unit;           // 아군이면 채워짐, 적이면 null
-    public EnemyUnit enemyUnit; // 적이면 채워짐, 아군이면 null
+    public Unit unit;
+    public EnemyUnit enemyUnit;
     public int speed;
-    public bool isAlly => unit != null;
-    public string displayName => isAlly ? unit.unitName : enemyUnit?.name ?? "?";
+    public bool isAllyFlag;
+
+    public string displayName
+    {
+        get
+        {
+            if (isAllyFlag) return unit != null ? unit.unitName : "사망한 기물";
+            return enemyUnit != null ? enemyUnit.name : "사망한 기물";
+        }
+    }
+
+    public bool IsAlive => isAllyFlag ? (unit != null) : (enemyUnit != null);
 }
 
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
 
-    [Header("기물 프리팹 리스트")]
-    public GameObject[] unitPrefabs;
-
     public List<Unit> allUnits = new List<Unit>();
     private List<TurnActor> finalTurnOrder = new List<TurnActor>();
     private int currentTurnIndex = 0;
 
-    void Awake() => Instance = this;
+    void Awake()
+    {
+        Instance = this;
+    }
 
     IEnumerator Start()
     {
-        SpawnUnitsFromBattleData();
-        // EnemyBattleSetup.Instance?.SpawnEnemies();
-        yield return null; // EnemySpawnManager.Start()가 먼저 실행되도록 1프레임 대기
+        SpawnUnitsFromStageManager();
+        yield return null;
         GenerateTurnOrder();
     }
 
-    void SpawnUnitsFromBattleData()
+    void SpawnUnitsFromStageManager()
     {
         allUnits.Clear();
-        if (BattleData.placedUnits.Count == 0)
+
+        if (StageManager.SelectedPartyMembers == null || StageManager.SelectedPartyMembers.Length == 0) return;
+
+        foreach (var info in StageManager.SelectedPartyMembers)
         {
-            Debug.LogWarning(" BattleData에 배치된 유닛이 없습니다!");
-            return;
-        }
-        foreach (var info in BattleData.placedUnits)
-        {
-            if (info.unitIndex < 0 || info.unitIndex >= unitPrefabs.Length)
-            {
-                Debug.LogWarning($" unitIndex {info.unitIndex}이 범위를 벗어남 (배열 크기: {unitPrefabs.Length})");
-                continue;
-            }
-            GameObject go = Instantiate(unitPrefabs[info.unitIndex], info.position, Quaternion.identity);
+            if (info == null || info.unitData == null || info.unitData.unitPrefab == null) continue;
+
+            int gridX = (int)info.file - 1;
+            int gridY = info.rank - 1;
+            Vector3 spawnPos = new Vector3(gridX - 3.5f, gridY - 3.5f, 0f);
+
+            GameObject go = Instantiate(info.unitData.unitPrefab, spawnPos, Quaternion.identity);
             Unit unit = go.GetComponent<Unit>();
-            if (unit != null) allUnits.Add(unit);
+
+            if (unit != null)
+            {
+                unit.unitName = info.unitData.unitName;
+                allUnits.Add(unit);
+            }
+
+            Vector2Int pos2D = new Vector2Int(gridX, gridY);
+            if (MapManager.Instance != null && MapManager.Instance.tiles.TryGetValue(pos2D, out Tile tile))
+            {
+                tile.isOccupied = true;
+                tile.currentUnit = go;
+                if (unit != null && unit.movement != null)
+                {
+                    unit.movement.currentTile = tile;
+                }
+            }
         }
     }
 
     public void GenerateTurnOrder()
-{
-    currentTurnIndex = 0;
-    finalTurnOrder.Clear();
-    allUnits.RemoveAll(u => u == null);
-
-    // 아군 SP 굴림
-    List<TurnActor> allies = new List<TurnActor>();
-    foreach (var unit in allUnits)
     {
-        int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
-        unit.stats.currentTurnSpeed = speed;
-        allies.Add(new TurnActor { unit = unit, speed = speed });
-    }
-    allies = allies.OrderByDescending(a => a.speed).ToList();
+        currentTurnIndex = 0;
+        finalTurnOrder.Clear();
 
-    // 적 SP 굴림
-    List<TurnActor> enemies = new List<TurnActor>();
-    foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
-    {
-        Enemy enemy = eu.GetComponent<Enemy>();
-        if (enemy?.EnemyData == null) continue;
-        int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
-        enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
-    }
-    enemies = enemies.OrderByDescending(a => a.speed).ToList();
+        List<TurnActor> actors = new List<TurnActor>();
+        foreach (var unit in allUnits)
+        {
+            if (unit == null) continue;
+            int speed = 5;
+            actors.Add(new TurnActor { unit = unit, speed = speed, isAllyFlag = true });
+        }
 
-    // 아군-적-아군-적 순으로 번갈아 배치
-    int max = Mathf.Max(allies.Count, enemies.Count);
-    for (int i = 0; i < max; i++)
-    {
-        if (i < allies.Count)  finalTurnOrder.Add(allies[i]);
-        if (i < enemies.Count) finalTurnOrder.Add(enemies[i]);
+        foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+        {
+            Enemy enemy = eu.GetComponent<Enemy>();
+            int speed = enemy != null ? Random.Range(enemy.Sp, enemy.Sp + 3) : 3;
+            actors.Add(new TurnActor { enemyUnit = eu, speed = speed, isAllyFlag = false });
+        }
+
+        finalTurnOrder = actors.OrderByDescending(a => a.speed).ToList();
+        ProcessCurrentTurn();
     }
 
-    Debug.Log("🏁 이번 라운드 행동 순서:");
-    foreach (var a in finalTurnOrder)
-        Debug.Log($"  {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
-
-    ProcessCurrentTurn();
-}
-
-    private TurnActor GetCurrentActor()
-    {
-        if (currentTurnIndex < finalTurnOrder.Count)
-            return finalTurnOrder[currentTurnIndex];
-        return null;
-    }
-
-    // PlayerActionController에서 사용 — 아군 턴일 때만 Unit 반환
     public Unit GetCurrentUnit()
     {
-        return GetCurrentActor()?.unit;
+        if (currentTurnIndex < finalTurnOrder.Count) return finalTurnOrder[currentTurnIndex].unit;
+        return null;
     }
 
     private void ProcessCurrentTurn()
     {
-        TurnActor actor = GetCurrentActor();
-        if (actor == null) { StartNewRound(); return; }
-
-        // 죽은 유닛 건너뜀
-        if (actor.isAlly && actor.unit == null)  { NextTurn(); return; }
-        if (!actor.isAlly && actor.enemyUnit == null) { NextTurn(); return; }
-
-        if (actor.isAlly)
+        if (currentTurnIndex >= finalTurnOrder.Count)
         {
-            Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
+            StartNewRound();
+            return;
+        }
+
+        TurnActor actor = finalTurnOrder[currentTurnIndex];
+
+        if (!actor.IsAlive)
+        {
+            NextTurn();
+            return;
+        }
+
+        if (actor.isAllyFlag)
+        {
+            Debug.Log($"➡️ [아군 턴] {actor.displayName}");
         }
         else
         {
-            Debug.Log($"👹 [적 턴] {actor.displayName} 행동 시작");
-            StartCoroutine(EnemyActAndNext(actor.enemyUnit));
+            Debug.Log($"👹 [적 턴] {actor.displayName}");
+            StartCoroutine(EnemyActRoutine(actor.enemyUnit));
         }
     }
 
     public void NextTurn()
     {
         currentTurnIndex++;
-        if (currentTurnIndex >= finalTurnOrder.Count)
-        {
-            StartNewRound();
-            return;
-        }
         ProcessCurrentTurn();
     }
 
-    // ============================
-    // 적 행동
-    // ============================
-    private IEnumerator EnemyActAndNext(EnemyUnit enemyUnit)
+    // 🌟 [부활] 적 AI 행동 코루틴
+    private IEnumerator EnemyActRoutine(EnemyUnit enemyUnit)
     {
         if (enemyUnit == null) { NextTurn(); yield break; }
 
-        Enemy enemy = enemyUnit.GetComponent<Enemy>();
-        enemy?.OnTurnStart();
-
-        // 턴 시작 시 스킬 쿨타임 감소
-        enemyUnit.TickSkillCT();
-
-        yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
-
-        if (enemy != null && (enemy.HasTrait(TraitEffect.swiftness) || enemy.hasSwiftnessBuff))
-        {
-            yield return new WaitForSeconds(0.3f);
-            yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
-        }
-
         yield return new WaitForSeconds(0.5f);
 
-        // 턴 종료 시 버프 만료 처리 + 발동한 스킬 CT 설정
-        enemyUnit.OnEnemyTurnEnd();
+        // 가장 가까운 아군을 찾아 이동 및 공격
+        yield return StartCoroutine(MoveEnemyTowardAlly(enemyUnit));
 
-        enemy?.OnTurnEnd();
-
+        yield return new WaitForSeconds(0.5f);
         NextTurn();
     }
 
+    // 🌟 [부활] 아군을 향해 길을 찾고 이동하는 로직
     private IEnumerator MoveEnemyTowardAlly(EnemyUnit enemyUnit)
     {
         Unit nearestAlly = FindNearestAlly(enemyUnit.gridPosition);
@@ -181,189 +166,119 @@ public class TurnManager : MonoBehaviour
         int ay = Mathf.RoundToInt(nearestAlly.transform.position.y + 3.5f);
         Vector2Int allyPos = new Vector2Int(ax, ay);
 
-        // 이미 인접해 있으면 이동 없이 바로 공격
+        // 이미 바로 옆에 있다면 바로 공격!
         if (IsAdjacent(enemyUnit.gridPosition, allyPos))
         {
-            enemyUnit.UseNextSkillInSequence();
             AttackAlly(enemyUnit, nearestAlly);
             yield break;
         }
 
-        Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, nearestAlly);
-        if (targetTile == null) yield break;
-
-        if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile oldTile))
+        // 인접하지 않다면 한 칸 이동
+        Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, allyPos);
+        if (targetTile != null)
         {
-            oldTile.isOccupied = false;
-            oldTile.currentUnit = null;
-        }
-
-        Vector2Int newPos = new Vector2Int(targetTile.x, targetTile.y);
-        enemyUnit.gridPosition = newPos;
-        enemyUnit.transform.position = targetTile.transform.position;
-        targetTile.isOccupied = true;
-        targetTile.currentUnit = enemyUnit.gameObject;
-
-        enemyUnit.UseNextSkillInSequence();
-        Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
-
-        // 이동 후 인접하게 됐으면 공격
-        if (IsAdjacent(newPos, allyPos))
-            AttackAlly(enemyUnit, nearestAlly);
-
-        yield return null;
-    }
-
-    private bool IsAdjacent(Vector2Int a, Vector2Int b)
-    {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
-    }
-
-    private void AttackAlly(EnemyUnit enemyUnit, Unit ally)
-    {
-        Enemy enemy = enemyUnit.GetComponent<Enemy>();
-        int dmg = enemy != null ? enemy.damage : 1;
-
-        UnitMovement allyMovement = ally.movement;
-        if (allyMovement != null && allyMovement.currentTile != null)
-        {
-            Tile allyTile = allyMovement.currentTile;
-            Vector2Int allyGridPos   = new Vector2Int(allyTile.x, allyTile.y);
-            Vector2Int enemyGridPos  = enemyUnit.gridPosition;
-
-            // 넉백 방향: 적 → 아군 방향으로 1칸 더
-            Vector2Int diff    = allyGridPos - enemyGridPos;
-            Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
-                ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
-                : new Vector2Int(0, (int)Mathf.Sign(diff.y));
-            Vector2Int knockBackGridPos = allyGridPos + pushDir;
-
-            Tile knockBackTile = null;
-            bool canKnockBack = MapManager.Instance != null
-                                && MapManager.Instance.tiles.TryGetValue(knockBackGridPos, out knockBackTile)
-                                && !knockBackTile.isOccupied;
-
-            if (canKnockBack)
+            // 기존 타일 비우기
+            if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile oldTile))
             {
-                // 아군 → 넉백 위치
-                allyTile.isOccupied = false;
-                allyTile.currentUnit = null;
-                ally.transform.position = knockBackTile.transform.position;
-                knockBackTile.isOccupied = true;
-                knockBackTile.currentUnit = ally.gameObject;
-                allyMovement.currentTile = knockBackTile;
-
-                // 적 → 아군의 원래 위치
-                if (MapManager.Instance.tiles.TryGetValue(enemyGridPos, out Tile enemyOldTile))
-                {
-                    enemyOldTile.isOccupied = false;
-                    enemyOldTile.currentUnit = null;
-                }
-                enemyUnit.transform.position = allyTile.transform.position;
-                enemyUnit.gridPosition = allyGridPos;
-                allyTile.isOccupied = true;
-                allyTile.currentUnit = enemyUnit.gameObject;
-
-                Debug.Log($"💨 {ally.unitName} 넉백 → ({knockBackGridPos.x}, {knockBackGridPos.y})");
+                oldTile.isOccupied = false;
+                oldTile.currentUnit = null;
             }
-            else
+
+            // 새 타일로 물리적 이동
+            Vector2Int newPos = new Vector2Int(targetTile.x, targetTile.y);
+            enemyUnit.gridPosition = newPos;
+            enemyUnit.transform.position = targetTile.transform.position;
+
+            targetTile.isOccupied = true;
+            targetTile.currentUnit = enemyUnit.gameObject;
+
+            yield return new WaitForSeconds(0.3f);
+
+            // 이동했더니 바로 옆에 아군이 있다면 이어서 공격!
+            if (IsAdjacent(newPos, allyPos))
             {
-                Debug.Log($"🧱 {ally.unitName} 넉백 불가 (벽 또는 유닛에 막힘)");
+                AttackAlly(enemyUnit, nearestAlly);
             }
         }
-
-        // 데미지 + 로그
-        int prevHp = ally.currentHp;
-        ally.currentHp = Mathf.Max(0, ally.currentHp - dmg);
-        Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} | HP: {prevHp} → {ally.currentHp}/{ally.maxHp} (-{dmg})");
-
-        if (ally.currentHp <= 0)
-        {
-            Debug.Log($"💀 {ally.unitName} 사망");
-            if (allyMovement?.currentTile != null)
-            {
-                allyMovement.currentTile.isOccupied = false;
-                allyMovement.currentTile.currentUnit = null;
-            }
-            allUnits.Remove(ally);
-            Destroy(ally.gameObject);
-        }
     }
 
-    public void KnockBack(GameObject target, Vector2Int attackerGridPos)
-    {
-        if (MapManager.Instance == null) return;
-
-        // 피격 유닛의 현재 그리드 좌표 계산
-        int tx = Mathf.RoundToInt(target.transform.position.x + 3.5f);
-        int ty = Mathf.RoundToInt(target.transform.position.y + 3.5f);
-        Vector2Int targetPos = new Vector2Int(tx, ty);
-
-        // 밀려나는 방향: 공격자 → 피격자 방향으로 1칸
-        Vector2Int diff = targetPos - attackerGridPos;
-        Vector2Int pushDir = Mathf.Abs(diff.x) >= Mathf.Abs(diff.y)
-            ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
-            : new Vector2Int(0, (int)Mathf.Sign(diff.y));
-
-        Vector2Int pushPos = targetPos + pushDir;
-
-        if (!MapManager.Instance.tiles.TryGetValue(pushPos, out Tile pushTile)) return;
-        if (pushTile.isOccupied) return; // 뒤가 막혀있으면 밀리지 않음
-
-        // 기존 타일 점유 해제
-        if (MapManager.Instance.tiles.TryGetValue(targetPos, out Tile currentTile))
-        {
-            currentTile.isOccupied = false;
-            currentTile.currentUnit = null;
-        }
-
-        // 새 위치로 이동
-        target.transform.position = pushTile.transform.position;
-        pushTile.isOccupied = true;
-        pushTile.currentUnit = target;
-
-        Debug.Log($"💨 {target.name} 넉백 → ({pushPos.x}, {pushPos.y})");
-    }
+    private bool IsAdjacent(Vector2Int a, Vector2Int b) => Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
 
     private Unit FindNearestAlly(Vector2Int fromPos)
     {
         Unit nearest = null;
         float minDist = float.MaxValue;
+
         foreach (var unit in allUnits)
         {
             if (unit == null) continue;
-            int ux = Mathf.RoundToInt(unit.transform.position.x + 3.5f);
-            int uy = Mathf.RoundToInt(unit.transform.position.y + 3.5f);
-            float dist = Vector2Int.Distance(fromPos, new Vector2Int(ux, uy));
+            float dist = Vector2Int.Distance(fromPos, new Vector2Int(Mathf.RoundToInt(unit.transform.position.x + 3.5f), Mathf.RoundToInt(unit.transform.position.y + 3.5f)));
             if (dist < minDist) { minDist = dist; nearest = unit; }
         }
         return nearest;
     }
 
-    private Tile FindStepTowardAlly(Vector2Int enemyPos, Unit ally)
+    private Tile FindStepTowardAlly(Vector2Int enemyPos, Vector2Int allyPos)
     {
-        int ax = Mathf.RoundToInt(ally.transform.position.x + 3.5f);
-        int ay = Mathf.RoundToInt(ally.transform.position.y + 3.5f);
-        Vector2Int allyPos = new Vector2Int(ax, ay);
-
         Tile bestTile = null;
         float bestDist = Vector2Int.Distance(enemyPos, allyPos);
-
         Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
         foreach (var dir in dirs)
         {
             Vector2Int candidate = enemyPos + dir;
-            if (!MapManager.Instance.tiles.TryGetValue(candidate, out Tile tile)) continue;
-            if (tile.isOccupied) continue;
+            if (!MapManager.Instance.tiles.TryGetValue(candidate, out Tile tile) || tile.isOccupied) continue;
+
             float dist = Vector2Int.Distance(candidate, allyPos);
             if (dist < bestDist) { bestDist = dist; bestTile = tile; }
         }
         return bestTile;
     }
 
+    // 🌟 [부활] 적이 아군을 밀어내는(넉백) 로직
+    private void AttackAlly(EnemyUnit enemyUnit, Unit ally)
+    {
+        UnitMovement allyMovement = ally.movement;
+        if (allyMovement != null && allyMovement.currentTile != null)
+        {
+            Tile allyTile = allyMovement.currentTile;
+            Vector2Int diff = new Vector2Int(allyTile.x, allyTile.y) - enemyUnit.gridPosition;
+
+            // 밀어낼 방향 설정
+            Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
+                ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
+                : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+            Vector2Int knockBackGridPos = new Vector2Int(allyTile.x, allyTile.y) + pushDir;
+
+            // 넉백 타일이 비어있다면 아군을 밀침
+            if (MapManager.Instance != null && MapManager.Instance.tiles.TryGetValue(knockBackGridPos, out Tile knockBackTile) && !knockBackTile.isOccupied)
+            {
+                allyTile.isOccupied = false; allyTile.currentUnit = null;
+                ally.transform.position = knockBackTile.transform.position;
+                knockBackTile.isOccupied = true; knockBackTile.currentUnit = ally.gameObject;
+                allyMovement.currentTile = knockBackTile;
+
+                if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile enemyOldTile))
+                { enemyOldTile.isOccupied = false; enemyOldTile.currentUnit = null; }
+
+                // 적이 그 자리로 전진
+                enemyUnit.transform.position = allyTile.transform.position;
+                enemyUnit.gridPosition = new Vector2Int(allyTile.x, allyTile.y);
+                allyTile.isOccupied = true; allyTile.currentUnit = enemyUnit.gameObject;
+            }
+        }
+
+        // 지금은 스탯 시스템이 꺼져있으므로 임시로 10 데미지만 줍니다.
+        ally.currentHp -= 10;
+        if (ally.currentHp <= 0)
+        {
+            allUnits.Remove(ally);
+            Destroy(ally.gameObject);
+        }
+    }
+
     private void StartNewRound()
     {
-        Debug.Log("🚩 [라운드 종료] 새 라운드 시작");
         GenerateTurnOrder();
     }
 }

@@ -174,9 +174,9 @@ public class PlayerSelectManager : MonoBehaviour
         {
             if (instantiatedPlayers[i] != null)
             {
-                int tileIndex = instantiatedPlayers[i].PreviousParent
-                    ? instantiatedPlayers[i].PreviousParent.GetSiblingIndex()
-                    : instantiatedPlayers[i].transform.parent.GetSiblingIndex();
+                // 🌟 [수정된 부분] 과거 위치(PreviousParent)를 무시하고, '현재 속해있는 타일'의 위치만 정확하게 가져옵니다!
+                int tileIndex = instantiatedPlayers[i].transform.parent.GetSiblingIndex();
+
                 StageManager.SelectedPartyMembers[i] = new PlayerEntry
                 {
                     unitData = instantiatedPlayers[i].UnitData,
