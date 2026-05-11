@@ -18,7 +18,7 @@ public class EnemySlot : MonoBehaviour
     public void OnPointerEnter()
     {
         rectTransform.localScale = Vector3.one * 1.1f;
-        UnitInspector.Instance.ShowEnemyInfo(enemyPrefab.EnemyData);
+        UnitInspector.Instance.ShowEnemyInfo(enemyPrefab);
     }
 
     public void OnPointerExit()
@@ -32,7 +32,13 @@ public class EnemySlot : MonoBehaviour
         enemyPrefab = prefab;
         if (enemyPrefab != null)
         {
-            enemyImage.color = enemyPrefab.GetComponent<SpriteRenderer>().color;
+            SpriteRenderer spriteRenderer = enemyPrefab.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                enemyImage.sprite = spriteRenderer.sprite;
+                enemyImage.color = Color.white;
+                enemyImage.preserveAspect = true;
+            }
         }
         else
         {

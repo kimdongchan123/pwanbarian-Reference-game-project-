@@ -9,9 +9,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cb6e6f2949ca9f47a8debbcd6b751f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
   m_Name: "\uC0B4\uC218"
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  Description: 
+  skillName: "\uC0B4\uC218"
+  description: "<\uC218\uB835-\uC778\uAC04\uD615>(5)\uB97C \uC5BB\uB294\uB2E4."
   coolTime: 4
+  targetType: 0
+  costType: 0
+  costAmount: 0
+  consumeAction: 1
+  useDamage: 0
+  damageType: 0
+  power: 0
+  includeAtk: 1
+  useStatusEffect: 1
+  statusEffectType: 6
+  statusAmount: 5
+  statusCount: 0
+  statusToSelf: 1
+  hpRecover: 0
+  stRecover: 0
+  skillEffect: 0
+  effectValue: 0
+  duration: 0

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerSelectButton : MonoBehaviour
 {
@@ -7,15 +8,22 @@ public class PlayerSelectButton : MonoBehaviour
     private UnitData unitData;
     [SerializeField]
     private TextMeshProUGUI nameText;
+    [SerializeField]
+    private Image portraitImage;
 
     private RectTransform rectTransform;
     
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        if (portraitImage == null)
+        {
+            portraitImage = GetComponentInChildren<Image>();
+        }
+
         if (unitData != null)
         {
-            nameText.text = unitData.unitName;
+            Refresh();
         }
     }
 
@@ -48,11 +56,39 @@ public class PlayerSelectButton : MonoBehaviour
         unitData = data;
         if (unitData != null)
         {
-            nameText.text = unitData.unitName;
+            Refresh();
         }
         else
         {
             nameText.text = "--";
+            ClearPortrait();
         }
+    }
+
+    private void Refresh()
+    {
+        nameText.text = unitData.unitName;
+        ApplyPortrait();
+    }
+
+    private void ApplyPortrait()
+    {
+        if (portraitImage == null || unitData == null) return;
+
+        Sprite sprite = unitData.portraitSprite != null ? unitData.portraitSprite : unitData.battleSprite;
+        if (sprite == null) return;
+
+        portraitImage.sprite = sprite;
+        portraitImage.color = Color.white;
+        portraitImage.type = Image.Type.Simple;
+        portraitImage.preserveAspect = true;
+    }
+
+    private void ClearPortrait()
+    {
+        if (portraitImage == null) return;
+
+        portraitImage.sprite = null;
+        portraitImage.color = Color.clear;
     }
 }

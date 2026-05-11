@@ -9,9 +9,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cb6e6f2949ca9f47a8debbcd6b751f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
   m_Name: "\uC2DC\uC120"
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: "\uC2DC\uC120"
-  Description: 
-  coolTime: 4
+  description: "\uC801\uC5D0\uAC8C ST \uD53C\uD574\uB97C \uC8FC\uACE0 \uD658\uAC01\uC744 \uBD80\uC5EC\uD55C\uB2E4."
+  coolTime: 13
+  targetType: 1
+  costType: 0
+  costAmount: 0
+  consumeAction: 1
+  useDamage: 0
+  damageType: 1
+  power: 0
+  includeAtk: 0
+  useStatusEffect: 1
+  statusEffectType: 8
+  statusAmount: 3
+  statusCount: 1
+  statusToSelf: 0
+  hpRecover: 0
+  stRecover: 0
+  skillEffect: 0
+  effectValue: 0
+  duration: 0
