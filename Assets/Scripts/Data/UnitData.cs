@@ -4,13 +4,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Unit Data")]
 public class UnitData : ScriptableObject
 {
-    [Header("±âº» Á¤º¸")]
+    [Header("ê¸°ë³¸ ì •ë³´")]
     public string unitName;
-    public PanicType panicType;
-    public Sprite portraitSprite;
-    public Sprite battleSprite;
 
-    [Header("±âº» ½ºÅÈ")]
+    // ğŸŒŸ ìš°ë¦¬ê°€ í•„ìš”í•œ ì „íˆ¬ ì”¬ ì†Œí™˜ìš© í”„ë¦¬íŒ¹
+    public GameObject unitPrefab;
+
+    public Sprite battleSprite;
+    public Sprite portraitSprite;
+
+    public PanicType panicType;
+
+    [Header("ê¸°ë³¸ ìŠ¤íƒ¯")]
     public int maxHp;
     public int maxSt;
     public int minSp;
@@ -19,18 +24,18 @@ public class UnitData : ScriptableObject
     public int maxAtk;
     public int def;
 
-    [Header("°ø°İ ³»¼º")]
+    [Header("ê³µê²© ë‚´ì„±")]
     public float physicalResist = 1f;
     public float mentalResist = 1f;
     public float specialResist = 1f;
     public float sinResist = 1f;
 
-    [Header("±â¹° Å°¿öµå")]
+    [Header("ê¸°ë¬¼ í‚¤ì›Œë“œ")]
     public string affiliation;
     public string unitTypeKeyword;
     public List<string> traitKeywords = new List<string>();
 
-    [Header("¿¬°á µ¥ÀÌÅÍ")]
+    [Header("ì—°ê²° ë°ì´í„°")]
     public TraitData[] traits;
     public SkillData[] skills;
     public CardData[] deck;

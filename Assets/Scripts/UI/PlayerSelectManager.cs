@@ -92,7 +92,7 @@ public class PlayerSelectManager : MonoBehaviour
     {
         if (System.Array.IndexOf(partyMembers, member) >= 0)
         {
-            Debug.LogWarning($"?��? {member.unitName}??가) ?�티???�함?�어 ?�습?�다.");
+            Debug.LogWarning($"?대? {member.unitName}??媛) ?뚰떚???ы븿?섏뼱 ?덉뒿?덈떎.");
             return;
         }
 
@@ -198,9 +198,9 @@ public class PlayerSelectManager : MonoBehaviour
         {
             if (instantiatedPlayers[i] != null)
             {
-                int tileIndex = instantiatedPlayers[i].PreviousParent
-                    ? instantiatedPlayers[i].PreviousParent.GetSiblingIndex()
-                    : instantiatedPlayers[i].transform.parent.GetSiblingIndex();
+                // 🌟 [핵심 해결] PreviousParent(과거 위치)를 묻지도 따지지도 말고, '현재 올려져 있는 타일'의 위치만 가져오도록 다시 수정!
+                int tileIndex = instantiatedPlayers[i].transform.parent.GetSiblingIndex();
+
                 StageManager.SelectedPartyMembers[i] = new PlayerEntry
                 {
                     unitData = instantiatedPlayers[i].UnitData,

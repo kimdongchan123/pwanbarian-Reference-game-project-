@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+
 public class UnitMovement : MonoBehaviour
 {
     private Unit myUnit;
@@ -10,20 +11,11 @@ public class UnitMovement : MonoBehaviour
         myUnit = GetComponent<Unit>();
     }
 
-    // void Start() 대신 IEnumerator Start()를 사용합니다!
     IEnumerator Start()
     {
-        // ⏳ 다른 매니저들이 준비될 때까지 딱 1프레임만 기다려줍니다.
         yield return null;
+        if (MapManager.Instance == null) yield break;
 
-        // 🚨 [핵심] 맵 매니저가 없다면? (예: 세팅 씬일 경우)
-        if (MapManager.Instance == null)
-        {
-            // 에러를 띄우지 않고, 그냥 조용히 이 함수를 끝내버립니다. (세팅 씬 평화 유지)
-            yield break;
-        }
-
-        // 🚀 맵 매니저가 있다면? (예: 전투 씬일 경우) 정상적으로 타일을 찾습니다.
         int myX = Mathf.RoundToInt(transform.position.x + 3.5f);
         int myY = Mathf.RoundToInt(transform.position.y + 3.5f);
         Vector2Int myPos = new Vector2Int(myX, myY);
@@ -36,27 +28,19 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // 🃏 카드를 눌렀을 때 이동 범위 표시
     public void ShowMoveRange(MovePattern pattern)
     {
-        // 내 현재 위치(정수 좌표) 다시 확인
         int myX = Mathf.RoundToInt(transform.position.x + 3.5f);
         int myY = Mathf.RoundToInt(transform.position.y + 3.5f);
-
         Vector2Int myPos = new Vector2Int(myX, myY);
         Tile foundTile = null;
 
         if (MapManager.Instance.tiles.ContainsKey(myPos))
-        {
             foundTile = MapManager.Instance.tiles[myPos];
-        }
 
         if (foundTile != null)
         {
             currentTile = foundTile;
-
-            // 🚨 바로 이 부분입니다! (에러 해결)
-            // 매니저에게 '내가 아군인지 적군인지(myUnit.isAlly)' 3번째 재료로 넘겨줍니다!
             MapManager.Instance.ShowMoveRange(currentTile, pattern, myUnit.isAlly);
         }
         else
@@ -65,7 +49,6 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // 👆 파란색 타일을 클릭했을 때 이동 시도
     public void TryMoveTo(Tile targetTile)
     {
         if (!targetTile.isOccupied)
@@ -78,7 +61,6 @@ public class UnitMovement : MonoBehaviour
             Enemy enemy = defenderGO.GetComponent<Enemy>();
             Unit targetUnit = defenderGO.GetComponent<Unit>();
 
-            // 적 유닛은 Enemy 컴포넌트로 판별, 아군은 Unit.isAlly로 판별
             bool isEnemy = myUnit.isAlly && enemy != null;
             bool isFriendlyBlocking = !isEnemy && targetUnit != null && targetUnit.isAlly == myUnit.isAlly;
 
@@ -89,23 +71,26 @@ public class UnitMovement : MonoBehaviour
 
                 EnemyUnit eu = defenderGO.GetComponent<EnemyUnit>();
 
-                // 넉백 방향 계산
                 Vector2Int attackerGridPos = currentTile != null
                     ? new Vector2Int(currentTile.x, currentTile.y)
                     : new Vector2Int(Mathf.RoundToInt(transform.position.x + 3.5f), Mathf.RoundToInt(transform.position.y + 3.5f));
                 Vector2Int defenderGridPos = new Vector2Int(targetTile.x, targetTile.y);
                 Vector2Int diff = defenderGridPos - attackerGridPos;
-                Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
-                    ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
-                    : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+
+                // 🌟 [핵심 수정 1] 유니티 Mathf.Sign 버그 완전 차단! (0이면 정직하게 0으로 처리)
+                int dirX = diff.x == 0 ? 0 : (diff.x > 0 ? 1 : -1);
+                int dirY = diff.y == 0 ? 0 : (diff.y > 0 ? 1 : -1);
+                Vector2Int pushDir = new Vector2Int(dirX, dirY);
+
                 Vector2Int knockBackPos = defenderGridPos + pushDir;
 
                 bool canKnockBack = MapManager.Instance.tiles.TryGetValue(knockBackPos, out Tile knockBackTile)
                                     && !knockBackTile.isOccupied;
 
+                // 🌟 [핵심 수정 2] 회원님의 정석 넉백 & 착지 규칙 적용
                 if (canKnockBack)
                 {
-                    // 방어자 → 넉백 위치
+                    // 1. 적이 뒤로 밀려남
                     targetTile.isOccupied = false;
                     targetTile.currentUnit = null;
                     defenderGO.transform.position = knockBackTile.transform.position;
@@ -113,25 +98,36 @@ public class UnitMovement : MonoBehaviour
                     knockBackTile.currentUnit = defenderGO;
                     if (eu != null) eu.gridPosition = knockBackPos;
 
-                    // 공격자 → 방어자의 원래 위치
-                    if (currentTile != null)
-                    {
-                        currentTile.isOccupied = false;
-                        currentTile.currentUnit = null;
-                    }
+                    // 2. 아군은 적이 있던 자리를 빼앗고 점유함
+                    if (currentTile != null) { currentTile.isOccupied = false; currentTile.currentUnit = null; }
                     transform.position = targetTile.transform.position;
                     currentTile = targetTile;
                     targetTile.isOccupied = true;
                     targetTile.currentUnit = this.gameObject;
 
-                    Debug.Log($"💨 {defenderName} 넉백 → ({knockBackPos.x}, {knockBackPos.y})");
+                    Debug.Log($"💨 넉백 성공! {defenderName} → {knockBackPos} / 아군은 {defenderGridPos} 자리 뺏음!");
                 }
                 else
                 {
-                    Debug.Log($"🧱 {defenderName} 넉백 불가 (벽 또는 유닛에 막힘)");
+                    // 1. 벽에 막힘 -> 적은 밀려나지 않음
+                    // 2. 아군은 적의 "바로 앞(때린 방향 한 칸 뒤)" 타일에 떨어짐!
+                    Vector2Int inFrontPos = defenderGridPos - pushDir;
+
+                    if (attackerGridPos != inFrontPos) // (이미 바로 앞에 붙어있다면 굳이 이동 안 함)
+                    {
+                        if (MapManager.Instance.tiles.TryGetValue(inFrontPos, out Tile inFrontTile))
+                        {
+                            if (currentTile != null) { currentTile.isOccupied = false; currentTile.currentUnit = null; }
+                            transform.position = inFrontTile.transform.position;
+                            currentTile = inFrontTile;
+                            inFrontTile.isOccupied = true;
+                            inFrontTile.currentUnit = this.gameObject;
+                        }
+                    }
+                    Debug.Log($"🧱 벽에 막힘! 적은 고정, 아군은 적 앞({inFrontPos})에 착지!");
                 }
 
-                // 🌟 [핵심 수정!] 공격할 때 옛날 변수인 atk 대신, 버프가 적용된 GetAttackPower()를 사용합니다!
+                // 공격 데미지 적용
                 enemy.TakeDamage(myUnit.GetAttackPower());
 
                 MapManager.Instance.ClearHighlights();
@@ -145,27 +141,21 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // 🚶 실제 이동 및 턴 종료 로직
     private void ExecuteMove(Tile targetTile)
     {
-        // 1) 예전 타일 비우기
         if (currentTile != null)
         {
             currentTile.isOccupied = false;
             currentTile.currentUnit = null;
         }
 
-        // 2) 내 몸 이동시키기
         transform.position = targetTile.transform.position;
-
-        // 3) 새 타일에 내 정보 등록하기
         currentTile = targetTile;
         targetTile.isOccupied = true;
         targetTile.currentUnit = this.gameObject;
 
         Debug.Log($" {myUnit.unitName} 이동 완료!");
 
-        // 4) 파란 불 끄고 다음 사람 턴으로!
         MapManager.Instance.ClearHighlights();
         TurnManager.Instance.NextTurn();
     }

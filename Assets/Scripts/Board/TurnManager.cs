@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement; // 🌟 씬(Scene) 이동을 위해 추가된 필수 부품!
 
 // 아군/적 통합 턴 단위
 public class TurnActor
@@ -9,93 +10,114 @@ public class TurnActor
     public Unit unit;           // 아군이면 채워짐, 적이면 null
     public EnemyUnit enemyUnit; // 적이면 채워짐, 아군이면 null
     public int speed;
-    public bool isAlly => unit != null;
-    public string displayName => isAlly ? unit.unitName : enemyUnit?.name ?? "?";
+
+    // 파괴된 유닛 에러 방지용 안전장치
+    public bool isAllyFlag;
+    public string displayName
+    {
+        get
+        {
+            if (isAllyFlag) return unit != null ? unit.unitName : "사망한 기물";
+            return enemyUnit != null ? enemyUnit.name : "사망한 기물";
+        }
+    }
+    public bool IsAlive => isAllyFlag ? (unit != null) : (enemyUnit != null);
 }
 
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
 
-    [Header("기물 프리팹 리스트")]
-    public GameObject[] unitPrefabs;
-
     public List<Unit> allUnits = new List<Unit>();
     private List<TurnActor> finalTurnOrder = new List<TurnActor>();
     private int currentTurnIndex = 0;
+
+    // 🌟 게임이 종료되었는지 확인하는 스위치 (중복 실행 방지)
+    private bool isGameOver = false;
 
     void Awake() => Instance = this;
 
     IEnumerator Start()
     {
-        SpawnUnitsFromBattleData();
+        SpawnUnitsFromStageManager();
         // EnemyBattleSetup.Instance?.SpawnEnemies();
         yield return null; // EnemySpawnManager.Start()가 먼저 실행되도록 1프레임 대기
         GenerateTurnOrder();
     }
 
-    void SpawnUnitsFromBattleData()
+    void SpawnUnitsFromStageManager()
     {
         allUnits.Clear();
-        if (BattleData.placedUnits.Count == 0)
+        if (StageManager.SelectedPartyMembers == null || StageManager.SelectedPartyMembers.Length == 0)
         {
             Debug.LogWarning(" BattleData에 배치된 유닛이 없습니다!");
             return;
         }
-        foreach (var info in BattleData.placedUnits)
+
+        foreach (var info in StageManager.SelectedPartyMembers)
         {
-            if (info.unitIndex < 0 || info.unitIndex >= unitPrefabs.Length)
-            {
-                Debug.LogWarning($" unitIndex {info.unitIndex}이 범위를 벗어남 (배열 크기: {unitPrefabs.Length})");
-                continue;
-            }
-            GameObject go = Instantiate(unitPrefabs[info.unitIndex], info.position, Quaternion.identity);
+            if (info == null || info.unitData == null || info.unitData.unitPrefab == null) continue;
+
+            int gridX = (int)info.file - 1;
+            int gridY = info.rank - 1;
+            Vector3 spawnPos = new Vector3(gridX - 3.5f, gridY - 3.5f, 0f);
+
+            GameObject go = Instantiate(info.unitData.unitPrefab, spawnPos, Quaternion.identity);
             Unit unit = go.GetComponent<Unit>();
-            if (unit != null) allUnits.Add(unit);
+            if (unit != null)
+            {
+                unit.unitName = info.unitData.unitName;
+                allUnits.Add(unit);
+            }
+
+            Vector2Int pos2D = new Vector2Int(gridX, gridY);
+            if (MapManager.Instance != null && MapManager.Instance.tiles.TryGetValue(pos2D, out Tile tile))
+            {
+                tile.isOccupied = true;
+                tile.currentUnit = go;
+                if (unit != null && unit.movement != null) unit.movement.currentTile = tile;
+            }
         }
     }
 
     public void GenerateTurnOrder()
-{
-    currentTurnIndex = 0;
-    finalTurnOrder.Clear();
-    allUnits.RemoveAll(u => u == null);
-
-    // 아군 SP 굴림
-    List<TurnActor> allies = new List<TurnActor>();
-    foreach (var unit in allUnits)
     {
-        int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
-        unit.stats.currentTurnSpeed = speed;
-        allies.Add(new TurnActor { unit = unit, speed = speed });
+        currentTurnIndex = 0;
+        finalTurnOrder.Clear();
+        allUnits.RemoveAll(u => u == null);
+
+        List<TurnActor> allies = new List<TurnActor>();
+        foreach (var unit in allUnits)
+        {
+            int speed = unit.stats != null ? Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1) : 5;
+            if (unit.stats != null) unit.stats.currentTurnSpeed = speed;
+            allies.Add(new TurnActor { unit = unit, speed = speed, isAllyFlag = true });
+        }
+        allies = allies.OrderByDescending(a => a.speed).ToList();
+
+        List<TurnActor> enemies = new List<TurnActor>();
+        foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+        {
+            Enemy enemy = eu.GetComponent<Enemy>();
+            if (enemy?.EnemyData == null) continue;
+            int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
+            enemies.Add(new TurnActor { enemyUnit = eu, speed = speed, isAllyFlag = false });
+        }
+        enemies = enemies.OrderByDescending(a => a.speed).ToList();
+
+        int max = Mathf.Max(allies.Count, enemies.Count);
+        for (int i = 0; i < max; i++)
+        {
+            if (i < allies.Count) finalTurnOrder.Add(allies[i]);
+            if (i < enemies.Count) finalTurnOrder.Add(enemies[i]);
+        }
+
+        Debug.Log("🏁 이번 라운드 행동 순서:");
+        foreach (var a in finalTurnOrder)
+            Debug.Log($"  {(a.isAllyFlag ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
+
+        ProcessCurrentTurn();
     }
-    allies = allies.OrderByDescending(a => a.speed).ToList();
-
-    // 적 SP 굴림
-    List<TurnActor> enemies = new List<TurnActor>();
-    foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
-    {
-        Enemy enemy = eu.GetComponent<Enemy>();
-        if (enemy?.EnemyData == null) continue;
-        int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
-        enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
-    }
-    enemies = enemies.OrderByDescending(a => a.speed).ToList();
-
-    // 아군-적-아군-적 순으로 번갈아 배치
-    int max = Mathf.Max(allies.Count, enemies.Count);
-    for (int i = 0; i < max; i++)
-    {
-        if (i < allies.Count)  finalTurnOrder.Add(allies[i]);
-        if (i < enemies.Count) finalTurnOrder.Add(enemies[i]);
-    }
-
-    Debug.Log("🏁 이번 라운드 행동 순서:");
-    foreach (var a in finalTurnOrder)
-        Debug.Log($"  {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
-
-    ProcessCurrentTurn();
-}
 
     private TurnActor GetCurrentActor()
     {
@@ -104,7 +126,6 @@ public class TurnManager : MonoBehaviour
         return null;
     }
 
-    // PlayerActionController에서 사용 — 아군 턴일 때만 Unit 반환
     public Unit GetCurrentUnit()
     {
         return GetCurrentActor()?.unit;
@@ -112,14 +133,15 @@ public class TurnManager : MonoBehaviour
 
     private void ProcessCurrentTurn()
     {
+        if (isGameOver) return; // 이미 끝났으면 아무것도 하지 않음
+
         TurnActor actor = GetCurrentActor();
         if (actor == null) { StartNewRound(); return; }
 
-        // 죽은 유닛 건너뜀
-        if (actor.isAlly && actor.unit == null)  { NextTurn(); return; }
-        if (!actor.isAlly && actor.enemyUnit == null) { NextTurn(); return; }
+        // 죽은 유닛 건너뜀 (안전장치 적용)
+        if (!actor.IsAlive) { NextTurn(); return; }
 
-        if (actor.isAlly)
+        if (actor.isAllyFlag)
         {
             Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
         }
@@ -132,6 +154,9 @@ public class TurnManager : MonoBehaviour
 
     public void NextTurn()
     {
+        // 🌟 누군가 행동을 마쳤을 때, 게임이 끝났는지 확인합니다!
+        if (CheckWinLossCondition()) return;
+
         currentTurnIndex++;
         if (currentTurnIndex >= finalTurnOrder.Count)
         {
@@ -139,6 +164,47 @@ public class TurnManager : MonoBehaviour
             return;
         }
         ProcessCurrentTurn();
+    }
+
+    // 🌟 [핵심 추가] 승리 및 패배 조건 검사 로직
+    private bool CheckWinLossCondition()
+    {
+        if (isGameOver) return true;
+
+        allUnits.RemoveAll(u => u == null); // 죽은 아군 명부 정리
+
+        // 1. 패배 조건: 아군이 모두 사망했을 때
+        if (allUnits.Count == 0)
+        {
+            isGameOver = true;
+            Debug.Log("💀 [패배] 모든 아군이 전멸했습니다.");
+            StartCoroutine(GameOverRoutine());
+            return true;
+        }
+
+        // 2. 승리 조건: 맵 위에 적군이 0명일 때
+        EnemyUnit[] remainingEnemies = FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None);
+        if (remainingEnemies.Length == 0)
+        {
+            isGameOver = true;
+            Debug.Log("🎉 [승리] 모든 적을 처치했습니다!");
+            StartCoroutine(GameOverRoutine());
+            return true;
+        }
+
+        return false;
+    }
+
+    // 🌟 [핵심 추가] 여운을 주고 메인 메뉴로 돌아가는 코루틴
+    // 🌟 여운을 주고 메인 메뉴로 돌아가는 코루틴
+    private IEnumerator GameOverRoutine()
+    {
+        // 2초 동안 방금 죽은 적(또는 아군)을 감상(?)할 시간을 줍니다.
+        yield return new WaitForSeconds(2f);
+
+        Debug.Log("🔄 메인 메뉴로 돌아갑니다...");
+        // 🌟 올려주신 사진의 씬 이름에 맞춰 "MainMenu"로 정확하게 수정!
+        SceneManager.LoadScene("MainMenu");
     }
 
     // ============================
@@ -166,7 +232,6 @@ public class TurnManager : MonoBehaviour
 
         // 턴 종료 시 버프 만료 처리 + 발동한 스킬 CT 설정
         enemyUnit.OnEnemyTurnEnd();
-
         enemy?.OnTurnEnd();
 
         NextTurn();
@@ -205,7 +270,6 @@ public class TurnManager : MonoBehaviour
         targetTile.currentUnit = enemyUnit.gameObject;
 
         enemyUnit.UseNextSkillInSequence();
-        Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
 
         // 이동 후 인접하게 됐으면 공격
         if (IsAdjacent(newPos, allyPos))
@@ -228,14 +292,36 @@ public class TurnManager : MonoBehaviour
         if (allyMovement != null && allyMovement.currentTile != null)
         {
             Tile allyTile = allyMovement.currentTile;
-            Vector2Int allyGridPos   = new Vector2Int(allyTile.x, allyTile.y);
-            Vector2Int enemyGridPos  = enemyUnit.gridPosition;
+            Vector2Int allyGridPos = new Vector2Int(allyTile.x, allyTile.y);
+            Vector2Int enemyGridPos = enemyUnit.gridPosition;
 
             // 넉백 방향: 적 → 아군 방향으로 1칸 더
-            Vector2Int diff    = allyGridPos - enemyGridPos;
-            Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
-                ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
-                : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+            Vector2Int diff = allyGridPos - enemyGridPos;
+            int absDiffX = Mathf.Abs(diff.x);
+            int absDiffY = Mathf.Abs(diff.y);
+            Vector2Int pushDir;
+
+            if (absDiffX == absDiffY) // (1) 완벽한 사선 공격
+            {
+                pushDir = new Vector2Int(
+                    diff.x > 0 ? 1 : (diff.x < 0 ? -1 : 0),
+                    diff.y > 0 ? 1 : (diff.y < 0 ? -1 : 0)
+                );
+            }
+            else if (absDiffX > absDiffY) // (2) 주로 가로축/십자형 공격
+            {
+                pushDir = new Vector2Int(
+                    diff.x > 0 ? 1 : (diff.x < 0 ? -1 : 0),
+                    0
+                );
+            }
+            else // (3) 주로 세로축/십자형 공격
+            {
+                pushDir = new Vector2Int(
+                    0,
+                    diff.y > 0 ? 1 : (diff.y < 0 ? -1 : 0)
+                );
+            }
             Vector2Int knockBackGridPos = allyGridPos + pushDir;
 
             Tile knockBackTile = null;
@@ -272,7 +358,6 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        // 데미지 + 로그
         int prevHp = ally.currentHp;
         ally.currentHp = Mathf.Max(0, ally.currentHp - dmg);
         Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} | HP: {prevHp} → {ally.currentHp}/{ally.maxHp} (-{dmg})");
@@ -294,30 +379,47 @@ public class TurnManager : MonoBehaviour
     {
         if (MapManager.Instance == null) return;
 
-        // 피격 유닛의 현재 그리드 좌표 계산
         int tx = Mathf.RoundToInt(target.transform.position.x + 3.5f);
         int ty = Mathf.RoundToInt(target.transform.position.y + 3.5f);
         Vector2Int targetPos = new Vector2Int(tx, ty);
 
-        // 밀려나는 방향: 공격자 → 피격자 방향으로 1칸
         Vector2Int diff = targetPos - attackerGridPos;
-        Vector2Int pushDir = Mathf.Abs(diff.x) >= Mathf.Abs(diff.y)
-            ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
-            : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+        int absDiffX = Mathf.Abs(diff.x);
+        int absDiffY = Mathf.Abs(diff.y);
+        Vector2Int pushDir;
 
+        if (absDiffX == absDiffY) // (1) 완벽한 사선 공격
+        {
+            pushDir = new Vector2Int(
+                diff.x > 0 ? 1 : (diff.x < 0 ? -1 : 0),
+                diff.y > 0 ? 1 : (diff.y < 0 ? -1 : 0)
+            );
+        }
+        else if (absDiffX > absDiffY) // (2) 주로 가로축/십자형 공격
+        {
+            pushDir = new Vector2Int(
+                diff.x > 0 ? 1 : (diff.x < 0 ? -1 : 0),
+                0
+            );
+        }
+        else // (3) 주로 세로축/십자형 공격
+        {
+            pushDir = new Vector2Int(
+                0,
+                diff.y > 0 ? 1 : (diff.y < 0 ? -1 : 0)
+            );
+        }
         Vector2Int pushPos = targetPos + pushDir;
 
         if (!MapManager.Instance.tiles.TryGetValue(pushPos, out Tile pushTile)) return;
-        if (pushTile.isOccupied) return; // 뒤가 막혀있으면 밀리지 않음
+        if (pushTile.isOccupied) return;
 
-        // 기존 타일 점유 해제
         if (MapManager.Instance.tiles.TryGetValue(targetPos, out Tile currentTile))
         {
             currentTile.isOccupied = false;
             currentTile.currentUnit = null;
         }
 
-        // 새 위치로 이동
         target.transform.position = pushTile.transform.position;
         pushTile.isOccupied = true;
         pushTile.currentUnit = target;
@@ -363,6 +465,7 @@ public class TurnManager : MonoBehaviour
 
     private void StartNewRound()
     {
+        if (isGameOver) return;
         Debug.Log("🚩 [라운드 종료] 새 라운드 시작");
         GenerateTurnOrder();
     }
