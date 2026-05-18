@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PlayerSelectManager : MonoBehaviour
 {
@@ -92,7 +93,7 @@ public class PlayerSelectManager : MonoBehaviour
     {
         if (System.Array.IndexOf(partyMembers, member) >= 0)
         {
-            Debug.LogWarning($"?´ë? {member.unitName}??ê°€) ?Œí‹°???¬í•¨?˜ì–´ ?ˆìŠµ?ˆë‹¤.");
+            Debug.LogWarning($"?ï¿½ï¿½? {member.unitName}??ê°€) ?ï¿½í‹°???ï¿½í•¨?ï¿½ì–´ ?ï¿½ìŠµ?ï¿½ë‹¤.");
             return;
         }
 
@@ -191,6 +192,7 @@ public class PlayerSelectManager : MonoBehaviour
         else if (index == 2)
             image.color = Color.blue;
     }
+
     public void StartGame()
     {
         StageManager.SelectedPartyMembers = new PlayerEntry[instantiatedPlayers.Length];
@@ -210,6 +212,38 @@ public class PlayerSelectManager : MonoBehaviour
             }
         }
         SceneManager.LoadScene("BattleScene");
+    }
+
+    public void ReturnByEscape(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        if (positioningUI.activeSelf)
+        {
+            ReturnToPartySelect();
+        }
+        else
+        {
+            ReturnToStageSelect();
+        }
+    }
+
+    public void ReturnToStageSelect()
+    {
+        SceneManager.LoadScene("StageSelectScene");
+    }
+
+    public void ReturnToPartySelect()
+    {
+        for (int i = 0; i < instantiatedPlayers.Length; i++)
+        {
+            if (instantiatedPlayers[i] != null)
+            {
+                Destroy(instantiatedPlayers[i].gameObject);
+                instantiatedPlayers[i] = null;
+            }
+        }
+        positioningUI.SetActive(false);
+        partyUI.SetActive(true);
     }
 
     private IEnumerator ShowWarningMessage()

@@ -8,7 +8,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private RectTransform settingsButton;
     [SerializeField] private RectTransform quitButton;
 
-    [SerializeField] private string gameSceneName = "SettingPlaceScene";
+    [SerializeField] private string gameSceneName = "StageSelectScene";
 
     public void StartGame()
     {
