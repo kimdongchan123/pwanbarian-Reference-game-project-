@@ -36,5 +36,6 @@ MonoBehaviour:
   - "\uC778\uB958\uC758 \uCC9C\uC801"
   traits:
   - {fileID: 11400000, guid: 826732f642b148c4e9a255f06fde9aaa, type: 2}
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: e3b267deea6043fbbb12124cf85a1d1e, type: 2}
   deck: []

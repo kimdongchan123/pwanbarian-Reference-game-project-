@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -165,15 +165,12 @@ public class UnitInspector : MonoBehaviour
             SkillData skill = skills[i];
             if (skill == null) continue;
 
-            if (builder.Length > 0)
-            {
-                builder.Append(", ");
-            }
-
+            builder.AppendLine();
+            builder.Append("- ");
             builder.Append(skill.skillName);
         }
 
-        return builder.Length > 0 ? $"스킬 : {builder}" : string.Empty;
+        return builder.Length > 0 ? $"스킬 :{builder}" : string.Empty;
     }
 
     private string BuildStatusSummary(BattleUnit battleUnit)
@@ -250,7 +247,7 @@ public class UnitInspector : MonoBehaviour
         skillText.fontSize = SPText.fontSize;
         skillText.color = SPText.color;
         skillText.alignment = TextAlignmentOptions.Left;
-        skillText.enableWordWrapping = false;
+        skillText.enableWordWrapping = true;
         skillText.overflowMode = TextOverflowModes.Overflow;
         skillText.raycastTarget = false;
 
@@ -259,7 +256,7 @@ public class UnitInspector : MonoBehaviour
         rectTransform.anchorMin = SPText.rectTransform.anchorMin;
         rectTransform.anchorMax = SPText.rectTransform.anchorMax;
         rectTransform.pivot = SPText.rectTransform.pivot;
-        rectTransform.sizeDelta = SPText.rectTransform.sizeDelta;
+        rectTransform.sizeDelta = new Vector2(Mathf.Max(SPText.rectTransform.sizeDelta.x, 180f), 72f);
 
         LayoutElement layoutElement = skillText.GetComponent<LayoutElement>();
         if (layoutElement == null)
@@ -268,7 +265,7 @@ public class UnitInspector : MonoBehaviour
         }
 
         layoutElement.ignoreLayout = false;
-        layoutElement.preferredHeight = SPText.rectTransform.rect.height > 0 ? SPText.rectTransform.rect.height : 24f;
+        layoutElement.preferredHeight = 72f;
     }
 
     public void HideInfo()

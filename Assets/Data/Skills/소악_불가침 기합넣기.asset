@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
+  m_Name: "\uBD88\uAC00\uCE68 \uAE30\uD569\uB123\uAE30"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "\uBD88\uAC00\uCE68 \uAE30\uD569\uB123\uAE30"
+  description: "\uC790\uC2E0\uC758 \uC8C4\uC885\uC744 \uC804\uBD80 \uC18C\uBAA8\uD55C\uB2E4. \uC18C\uBAA8\uD55C \uC218\uCE58\uB9CC\uD07C HP, ST\uB97C \uD68C\uBCF5\uD55C\uB2E4."
+  coolTime: 7
+  targetType: 0
+  costType: 0
+  costAmount: 0
+  consumeAction: 1
+  useDamage: 0
+  damageType: 0
+  power: 0
+  includeAtk: 0
+  useStatusEffect: 0
+  statusEffectType: 0
+  statusAmount: 0
+  statusCount: 0
+  statusToSelf: 0
+  hpRecover: 0
+  stRecover: 0
+  skillEffect: 0
+  effectValue: 0
+  duration: 0

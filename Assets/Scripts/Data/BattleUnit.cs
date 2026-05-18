@@ -503,6 +503,101 @@ public class BattleUnit : MonoBehaviour
                 effectTarget.AddStatus(StatusEffectType.Agitation, 3, 2);
                 Debug.Log("혓바닥휘두르기 발동: 파열, 동요 부여");
                 break;
+
+            case "꼬르르르르르크르르륵!!!":
+                int focusAmount = Mathf.Clamp(data.maxSt - currentSt, 0, 150);
+                if (focusAmount > 0)
+                {
+                    AddStatus(StatusEffectType.Focus, focusAmount);
+                }
+                Debug.Log($"꼬르르르르르크르르륵!!! 발동: 집중 +{focusAmount}");
+                break;
+
+            case "퀵드로우":
+                DrawCard(2);
+                AddStatus(StatusEffectType.Charge, 1);
+                Debug.Log("퀵드로우 발동: 카드 2장 드로우, 충전 +1");
+                break;
+
+            case "케이론류 창술 556식 현하희풍":
+                AddStatus(StatusEffectType.DefUp, 1);
+                Debug.Log("케이론류 창술 556식 현하희풍 발동: DEF 증가 +1");
+                break;
+
+            case "케이론류 창술 423식 파도뚫기":
+                AddStatus(StatusEffectType.DamageUp, 1);
+                Debug.Log("케이론류 창술 423식 파도뚫기 발동: 피해량 증가 +1");
+                break;
+
+            case "아류 제이슨 오의 조각해류":
+                int breathAmount = Mathf.Max(1, GetStatusAmount(StatusEffectType.Breath));
+                AddStatus(StatusEffectType.Frenzy, breathAmount, 1);
+                AddStatus(StatusEffectType.Tenacity, 1);
+                Debug.Log($"아류 제이슨 오의 조각해류 발동: 폭주 +{breathAmount}, 집념 +1");
+                break;
+
+            case "용암뚫기":
+                effectTarget.AddStatus(StatusEffectType.Burn, 1, 1);
+                Debug.Log("용암뚫기 발동: 대상에게 화상 +1");
+                break;
+
+            case "깨어진 환상":
+                statusEffects.Clear();
+                AddStatus(StatusEffectType.Agitation, 10, 1);
+                Debug.Log("깨어진 환상 발동: 모든 상태효과 제거, 동요 +10");
+                break;
+
+            case "무모한 질주":
+                AddStatus(StatusEffectType.DamageUp, 10);
+                AddStatus(StatusEffectType.Quick, 3);
+                Debug.Log("무모한 질주 발동: 피해량 증가 +10, 재빠름 +3");
+                break;
+
+            case "Gda.Over 10(k)":
+                if (GetStatusAmount(StatusEffectType.Charge) >= 3)
+                {
+                    RemoveStatus(StatusEffectType.Charge, 3);
+                    AddStatus(StatusEffectType.Shield, 1);
+                    Debug.Log("Gda.Over 10(k) 발동: 충전 3 소모, 보호막 +1");
+                }
+                else
+                {
+                    Debug.LogWarning("Gda.Over 10(k) 사용 실패: 충전이 부족함");
+                }
+                break;
+
+            case "후방 저격":
+                AddStatus(StatusEffectType.DamageUp, 3);
+                AddStatus(StatusEffectType.Quick, 1);
+                Debug.Log("후방 저격 발동: 피해량 증가 +3, 재빠름 +1");
+                break;
+
+            case "불가침 기합넣기":
+                int recoverAmount = Mathf.Max(5, GetStatusAmount(StatusEffectType.Focus));
+                RecoverHp(recoverAmount);
+                RecoverSt(recoverAmount);
+                RemoveStatus(StatusEffectType.Focus, recoverAmount);
+                Debug.Log($"불가침 기합넣기 발동: HP/ST {recoverAmount} 회복");
+                break;
+
+            case "황금대출-위프":
+                AddStatus(StatusEffectType.GoldenGuarantee, 5);
+                Debug.Log("황금대출-위프 발동: 황금시간-이자 +5");
+                break;
+
+            case "황금저축":
+                if (GetStatusAmount(StatusEffectType.GoldenTime) > 0)
+                {
+                    RemoveStatus(StatusEffectType.GoldenTime, 1);
+                    int depositAmount = Random.Range(10, 16);
+                    AddStatus(StatusEffectType.GoldenGuarantee, depositAmount);
+                    Debug.Log($"황금저축 발동: 황금시간 1 소모, 황금시간-예금 +{depositAmount}");
+                }
+                else
+                {
+                    Debug.LogWarning("황금저축 사용 실패: 황금시간이 없음");
+                }
+                break;
         }
     }
     public int CalculateCardDamage(CardData card, BattleUnit target)

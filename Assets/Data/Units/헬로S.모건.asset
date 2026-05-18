@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -35,5 +35,7 @@ MonoBehaviour:
   - "\uC778\uAC04\uD615"
   - "\uD669\uAE08\uC5EC\uD589\uC790"
   traits: []
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: 9878821ef3d44352a74c284492ba9687, type: 2}
+  - {fileID: 11400000, guid: f09205b093484cdcaf419a87107c7b9d, type: 2}
   deck: []
