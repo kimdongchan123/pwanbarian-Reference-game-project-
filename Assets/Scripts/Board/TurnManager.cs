@@ -28,10 +28,46 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        SpawnUnitsFromBattleData();
+        if (!SpawnUnitsFromSelectedPartyData())
+        {
+            SpawnUnitsFromBattleData();
+        }
+
+        EnsureBattleSkillButtonUI();
         // EnemyBattleSetup.Instance?.SpawnEnemies();
         yield return null; // EnemySpawnManager.Start()가 먼저 실행되도록 1프레임 대기
         GenerateTurnOrder();
+    }
+
+    private bool SpawnUnitsFromSelectedPartyData()
+    {
+        allUnits.Clear();
+
+        if (StageManager.SelectedPartyMembers == null || StageManager.SelectedPartyMembers.Length == 0)
+        {
+            return false;
+        }
+
+        bool spawnedAny = false;
+        for (int i = 0; i < StageManager.SelectedPartyMembers.Length; i++)
+        {
+            PlayerEntry entry = StageManager.SelectedPartyMembers[i];
+            if (entry == null || entry.unitData == null) continue;
+            if (unitPrefabs == null || unitPrefabs.Length == 0) continue;
+
+            int prefabIndex = Mathf.Clamp(i, 0, unitPrefabs.Length - 1);
+            Vector3 spawnPosition = GetSpawnPosition(entry);
+            GameObject go = Instantiate(unitPrefabs[prefabIndex], spawnPosition, Quaternion.identity);
+            Unit unit = go.GetComponent<Unit>();
+            if (unit == null) continue;
+
+            unit.Initialize(entry.unitData);
+            allUnits.Add(unit);
+            MarkSpawnTile(entry, go);
+            spawnedAny = true;
+        }
+
+        return spawnedAny;
     }
 
     void SpawnUnitsFromBattleData()
@@ -51,7 +87,16 @@ public class TurnManager : MonoBehaviour
             }
             GameObject go = Instantiate(unitPrefabs[info.unitIndex], info.position, Quaternion.identity);
             Unit unit = go.GetComponent<Unit>();
-            if (unit != null) allUnits.Add(unit);
+            if (unit != null)
+            {
+                UnitData selectedData = GetSelectedUnitData(info.unitIndex);
+                if (selectedData != null)
+                {
+                    unit.Initialize(selectedData);
+                }
+
+                allUnits.Add(unit);
+            }
         }
     }
 
@@ -121,17 +166,26 @@ public class TurnManager : MonoBehaviour
 
         if (actor.isAlly)
         {
+            actor.unit.OnTurnStart();
             Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
+            if (BattleSkillButtonUI.Instance != null) BattleSkillButtonUI.Instance.Refresh();
         }
         else
         {
             Debug.Log($"👹 [적 턴] {actor.displayName} 행동 시작");
+            if (BattleSkillButtonUI.Instance != null) BattleSkillButtonUI.Instance.Refresh();
             StartCoroutine(EnemyActAndNext(actor.enemyUnit));
         }
     }
 
     public void NextTurn()
     {
+        TurnActor currentActor = GetCurrentActor();
+        if (currentActor != null && currentActor.isAlly && currentActor.unit != null)
+        {
+            currentActor.unit.OnTurnEnd();
+        }
+
         currentTurnIndex++;
         if (currentTurnIndex >= finalTurnOrder.Count)
         {
@@ -365,5 +419,73 @@ public class TurnManager : MonoBehaviour
     {
         Debug.Log("🚩 [라운드 종료] 새 라운드 시작");
         GenerateTurnOrder();
+    }
+
+    private UnitData GetSelectedUnitData(int unitIndex)
+    {
+        if (StageManager.SelectedPartyMembers != null)
+        {
+            for (int i = 0; i < StageManager.SelectedPartyMembers.Length; i++)
+            {
+                PlayerEntry entry = StageManager.SelectedPartyMembers[i];
+                if (entry != null && entry.unitData != null && i == unitIndex)
+                {
+                    return entry.unitData;
+                }
+            }
+        }
+
+        if (PlayerSelectionData.Instance != null && PlayerSelectionData.Instance.selectedUnit != null)
+        {
+            return PlayerSelectionData.Instance.selectedUnit;
+        }
+
+        return null;
+    }
+
+    private Vector3 GetSpawnPosition(PlayerEntry entry)
+    {
+        Tile tile = GetTileFromEntry(entry);
+        if (tile != null)
+        {
+            Vector3 tilePosition = tile.GetComponent<Collider>().bounds.center;
+            tilePosition.z = 0f;
+            return tilePosition;
+        }
+
+        return Vector3.zero;
+    }
+
+    private void MarkSpawnTile(PlayerEntry entry, GameObject unitObject)
+    {
+        Tile tile = GetTileFromEntry(entry);
+        if (tile == null) return;
+
+        tile.isOccupied = true;
+        tile.currentUnit = unitObject;
+    }
+
+    private Tile GetTileFromEntry(PlayerEntry entry)
+    {
+        if (entry == null || MapManager.Instance == null) return null;
+
+        int x = Mathf.Clamp((int)entry.file - 1, 0, 7);
+        int y = Mathf.Clamp(entry.rank - 1, 0, 7);
+        MapManager.Instance.tiles.TryGetValue(new Vector2Int(x, y), out Tile tile);
+        return tile;
+    }
+
+    private void EnsureBattleSkillButtonUI()
+    {
+        if (FindFirstObjectByType<BattleSkillButtonUI>() != null) return;
+
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogWarning("BattleSkillButtonUI를 붙일 Canvas를 찾지 못했습니다.");
+            return;
+        }
+
+        canvas.gameObject.AddComponent<BattleSkillButtonUI>();
     }
 }

@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     private bool hasUsedGrogyEscape = false;
 
     public int wetStacks = 0;
+    public int burnStacks = 0;
 
     // 바다의 재앙 — 바다 포인트 체류 시 활성화 (매 턴 리셋)
     public bool hasSwiftnessBuff = false;
@@ -80,6 +81,12 @@ public class Enemy : MonoBehaviour
             Debug.Log($"{EnemyData.unitName} 사망");
             Destroy(gameObject);
         }
+    }
+
+    public void AddBurn(int amount)
+    {
+        burnStacks += amount;
+        Debug.Log($"{EnemyData?.unitName ?? name} 화상 +{amount} (총 {burnStacks})");
     }
 
     public void OnAllyDied()
