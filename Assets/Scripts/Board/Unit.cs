@@ -33,6 +33,8 @@ public class Unit : MonoBehaviour
     private bool unyieldingUsed;
     private bool unyieldingProtectionActive;
 
+    public UnitData UnitData => data;
+
     void Awake()
     {
         movement = GetComponent<UnitMovement>();

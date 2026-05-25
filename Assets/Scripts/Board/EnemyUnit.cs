@@ -38,6 +38,8 @@ public class EnemyUnit : MonoBehaviour
     private List<LegacyEnemyBuff> activeBuffs = new List<LegacyEnemyBuff>();
     private Enemy enemy;
 
+    public EnemyData EnemyData => enemy != null ? enemy.EnemyData : null;
+
     private void Awake()
     {
         enemy = GetComponent<Enemy>();
@@ -198,44 +200,44 @@ public class EnemyUnit : MonoBehaviour
 
             // ── 용언세뇌: 자신보다 maxSt 낮은 적 1명에게 세뇌(8) 부여 ──────
             case SkillEffect.brainwash:
-            {
-                int selfMaxSt = enemy?.EnemyData?.maxSt ?? 0;
-                BattleUnit brainTarget = null;
-                foreach (var unit in FindObjectsByType<BattleUnit>(FindObjectsSortMode.None))
                 {
-                    if (unit.data == null) continue;
-                    if (unit.data.maxSt < selfMaxSt &&
-                        (brainTarget == null || unit.data.maxSt < brainTarget.data.maxSt))
-                        brainTarget = unit;
+                    int selfMaxSt = enemy?.EnemyData?.maxSt ?? 0;
+                    BattleUnit brainTarget = null;
+                    foreach (var unit in FindObjectsByType<BattleUnit>(FindObjectsSortMode.None))
+                    {
+                        if (unit.data == null) continue;
+                        if (unit.data.maxSt < selfMaxSt &&
+                            (brainTarget == null || unit.data.maxSt < brainTarget.data.maxSt))
+                            brainTarget = unit;
+                    }
+                    if (brainTarget != null && enemy != null)
+                    {
+                        int drain = brainTarget.currentSt;
+                        enemy.CurrentSt = Mathf.Max(0, enemy.CurrentSt - drain);
+                        brainTarget.AddStatus(StatusEffectType.Charm, 1, 8);
+                        Debug.Log($"[용언세뇌] {gameObject.name} → {brainTarget.name} | 자신 St -{drain}, 세뇌(Charm×8) 부여");
+                    }
+                    else
+                    {
+                        Debug.Log($"[용언세뇌] {gameObject.name} — 대상 없음(자신보다 maxSt 낮은 아군 기물 없음)");
+                    }
+                    break;
                 }
-                if (brainTarget != null && enemy != null)
-                {
-                    int drain = brainTarget.currentSt;
-                    enemy.CurrentSt = Mathf.Max(0, enemy.CurrentSt - drain);
-                    brainTarget.AddStatus(StatusEffectType.Charm, 1, 8);
-                    Debug.Log($"[용언세뇌] {gameObject.name} → {brainTarget.name} | 자신 St -{drain}, 세뇌(Charm×8) 부여");
-                }
-                else
-                {
-                    Debug.Log($"[용언세뇌] {gameObject.name} — 대상 없음(자신보다 maxSt 낮은 아군 기물 없음)");
-                }
-                break;
-            }
 
             // ── 지원 요청: 우앙개미 0~2마리 소환 ────────────────────────────
             case SkillEffect.callForAid:
-            {
-                int spawnCount = Random.Range(0, 3);
-                int spawned = 0;
-                for (int i = 0; i < spawnCount; i++)
                 {
-                    if (EnemySpawnManager.Instance != null &&
-                        EnemySpawnManager.Instance.SpawnEnemy("우앙개미") != null)
-                        spawned++;
+                    int spawnCount = Random.Range(0, 3);
+                    int spawned = 0;
+                    for (int i = 0; i < spawnCount; i++)
+                    {
+                        if (EnemySpawnManager.Instance != null &&
+                            EnemySpawnManager.Instance.SpawnEnemy("우앙개미") != null)
+                            spawned++;
+                    }
+                    Debug.Log($"[지원 요청] {gameObject.name} — 우앙개미 {spawned}마리 소환");
+                    break;
                 }
-                Debug.Log($"[지원 요청] {gameObject.name} — 우앙개미 {spawned}마리 소환");
-                break;
-            }
 
             // ── 용의 마력: 마나 1 축적 (거센 불길 트리거 기준: 10) ───────────
             case SkillEffect.dragonMana:
