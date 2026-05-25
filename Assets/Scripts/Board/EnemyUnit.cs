@@ -174,6 +174,78 @@ public class EnemyUnit : MonoBehaviour
                 }
                 break;
 
+            // ── 신체재생: HP·St 회복 + 자바무너의 다리 1~2개 부활 ───────────
+            case SkillEffect.bodyRegen:
+                if (enemy != null && enemy.EnemyData != null)
+                {
+                    int hpRec = Mathf.Max(1, Mathf.RoundToInt(enemy.EnemyData.maxHp * 0.1f));
+                    enemy.CurrentHp = Mathf.Min(enemy.CurrentHp + hpRec, enemy.EnemyData.maxHp);
+
+                    int stRec = Mathf.Max(1, Mathf.RoundToInt(enemy.EnemyData.maxSt * 0.1f));
+                    enemy.RecoverSt(stRec);
+
+                    int reviveCount = Random.Range(1, 3);
+                    int revived = 0;
+                    for (int i = 0; i < reviveCount; i++)
+                    {
+                        if (EnemySpawnManager.Instance != null &&
+                            EnemySpawnManager.Instance.SpawnEnemy("자바문어의 다리") != null)
+                            revived++;
+                    }
+                    Debug.Log($"[신체재생] {gameObject.name} HP+{hpRec}({enemy.CurrentHp}/{enemy.EnemyData.maxHp}) St+{stRec} 다리 {revived}개 부활");
+                }
+                break;
+
+            // ── 용언세뇌: 자신보다 maxSt 낮은 적 1명에게 세뇌(8) 부여 ──────
+            case SkillEffect.brainwash:
+            {
+                int selfMaxSt = enemy?.EnemyData?.maxSt ?? 0;
+                BattleUnit brainTarget = null;
+                foreach (var unit in FindObjectsByType<BattleUnit>(FindObjectsSortMode.None))
+                {
+                    if (unit.data == null) continue;
+                    if (unit.data.maxSt < selfMaxSt &&
+                        (brainTarget == null || unit.data.maxSt < brainTarget.data.maxSt))
+                        brainTarget = unit;
+                }
+                if (brainTarget != null && enemy != null)
+                {
+                    int drain = brainTarget.currentSt;
+                    enemy.CurrentSt = Mathf.Max(0, enemy.CurrentSt - drain);
+                    brainTarget.AddStatus(StatusEffectType.Charm, 1, 8);
+                    Debug.Log($"[용언세뇌] {gameObject.name} → {brainTarget.name} | 자신 St -{drain}, 세뇌(Charm×8) 부여");
+                }
+                else
+                {
+                    Debug.Log($"[용언세뇌] {gameObject.name} — 대상 없음(자신보다 maxSt 낮은 아군 기물 없음)");
+                }
+                break;
+            }
+
+            // ── 지원 요청: 우앙개미 0~2마리 소환 ────────────────────────────
+            case SkillEffect.callForAid:
+            {
+                int spawnCount = Random.Range(0, 3);
+                int spawned = 0;
+                for (int i = 0; i < spawnCount; i++)
+                {
+                    if (EnemySpawnManager.Instance != null &&
+                        EnemySpawnManager.Instance.SpawnEnemy("우앙개미") != null)
+                        spawned++;
+                }
+                Debug.Log($"[지원 요청] {gameObject.name} — 우앙개미 {spawned}마리 소환");
+                break;
+            }
+
+            // ── 용의 마력: 마나 1 축적 (거센 불길 트리거 기준: 10) ───────────
+            case SkillEffect.dragonMana:
+                if (enemy != null)
+                {
+                    enemy.manaStacks++;
+                    Debug.Log($"[용의 마력] {gameObject.name} — 마나 {enemy.manaStacks}스택 (거센 불길 발동 조건: 10스택)");
+                }
+                break;
+
             default:
                 Debug.Log($"[스킬] {gameObject.name} ▶ {skill.skillName} | 발동 (별도 효과 없음)");
                 break;

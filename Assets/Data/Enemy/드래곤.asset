@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
+  m_Name: "\uB4DC\uB798\uACE4"
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  unitName: "\uB4DC\uB798\uACE4"
+  maxHp: 200
+  maxSt: 100
+  minSp: 7
+  maxSp: 9
+  minatk: 10
+  maxatk: 15
+  mindef: 10
+  maxdef: 10
+  panic: 1a000000
+  affiliation: "\uC18C\uC18D\uC5C6\uC74C"
+  unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
+  traitKeywords:
+  - "\uC131\uBCC4\uBD88\uBA85"
+  - "\uC6A9"
+  - "\uCD08\uAC70\uB300"
+  - "\uC778\uB958\uC758 \uCC9C\uC801"
+  physicalResist: 1
+  mentalResist: 0.5
+  specialResist: 1
+  sinResist: 1
+  defensiveCharacteristic: 
+  universalCharacteristic: 07000000
+  pieceCharacteristic: 
+  skills:
+  - {fileID: 11400000, guid: 7cb8a2f000c6a71479d4e872d02bb961, type: 2}
+  traits:
+  - {fileID: 11400000, guid: 13eef4beea36c5f4293e1d2ddd97dedd, type: 2}
+  - {fileID: 11400000, guid: ccfdd7b74ad31c14d93c7f4dfe1a56f8, type: 2}
+  - {fileID: 11400000, guid: c46d63a3563489d488082f9b4638afd2, type: 2}
+  - {fileID: 0}
+  deck: []

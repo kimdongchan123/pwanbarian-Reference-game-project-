@@ -6,7 +6,11 @@ public enum SkillEffect
     damagebuff,
     atkbuff,
     deepbreath,
-    hpbuff
+    hpbuff,
+    bodyRegen,   // 신체재생: HP+St 회복 + 자바무너의 다리 부활
+    brainwash,   // 용언세뇌: St 소모 후 세뇌 부여
+    callForAid,  // 지원 요청: 우앙개미 소환
+    dragonMana,  // 용의 마력: 마나 축적
 }
 
 public enum SkillTargetType

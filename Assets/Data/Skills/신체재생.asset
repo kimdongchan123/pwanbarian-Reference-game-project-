@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
+  m_Name: "\uC2E0\uCCB4\uC7AC\uC0DD"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "\uC2E0\uCCB4\uC7AC\uC0DD"
+  description: "Hp\uB97C (\uCD5C\uB300 Hp\uC758 10%)\uB9CC\uD07C \uD68C\uBCF5\uD55C\uB2E4.\nSt\uB97C
+    (\uCD5C\uB300 St\uC758 10%)\uB9CC\uD07C \uD68C\uBCF5\uD55C\uB2E4.\n\uC0AC\uB9DD\uD55C
+    [\uC790\uBC14\uBB34\uB108\uC758 \uB2E4\uB9AC](1~2)\uB97C \uBD80\uD65C\uC2DC\uD0A8\uB2E4.
+    (Hp 100%, St 100%)"
+  coolTime: 3
+  targetType: 1
+  costType: 0
+  costAmount: 0
+  consumeAction: 1
+  useDamage: 0
+  damageType: 0
+  power: 0
+  includeAtk: 1
+  useStatusEffect: 0
+  statusEffectType: 0
+  statusAmount: 0
+  statusCount: 0
+  statusToSelf: 0
+  hpRecover: 0
+  stRecover: 0
+  skillEffect: 5
+  effectValue: 0
+  duration: 0

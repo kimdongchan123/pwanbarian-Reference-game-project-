@@ -19,7 +19,8 @@ MonoBehaviour:
   maxSp: 4
   minatk: 3
   maxatk: 3
-  def: 0
+  mindef: 0
+  maxdef: 0
   panic: 04000000
   affiliation: "\uBC14\uB2E4\uBBFC\uC871"
   unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"

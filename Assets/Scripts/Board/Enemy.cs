@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
 
     public int wetStacks = 0;
     public int burnStacks = 0;
+    public int manaStacks = 0; // 용의 마력 스킬로 쌓이는 마나 (거센 불길 트리거)
 
     // 바다의 재앙 — 바다 포인트 체류 시 활성화 (매 턴 리셋)
     public bool hasSwiftnessBuff = false;

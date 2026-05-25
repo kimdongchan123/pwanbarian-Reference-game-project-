@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: UshiMachina
+  m_Name: "\uC790\uBC14\uBB38\uC5B4\uC758 \uB2E4\uB9AC"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: UshiMachina
-  maxHp: 324
-  maxSt: 216
+  unitName: "\uC790\uBC14\uBB38\uC5B4\uC758 \uB2E4\uB9AC"
+  maxHp: 30
+  maxSt: 0
   minSp: 4
-  maxSp: 13
-  minatk: 15
-  maxatk: 20
+  maxSp: 7
+  minatk: 0
+  maxatk: 2
   mindef: 0
   maxdef: 0
   panic: 
-  affiliation: "\uC648\uD050\uB808\uC758 \uC138\uACC4"
+  affiliation: "\uC18C\uC18D\uBD88\uBA85"
   unitTypeKeyword: "\uCCB4\uC2A4"
   traitKeywords:
-  - "\uB0A8\uC131"
-  - "\uC2E0"
-  - "\uBAB0\uB77D\uC2E0\uC131"
-  physicalResist: 1
-  mentalResist: 1
-  specialResist: 1
-  sinResist: 1
+  - "\uBB34\uC131"
+  - "\uC778\uB958\uC758 \uCC9C\uC801"
+  physicalResist: 2
+  mentalResist: 2
+  specialResist: 2
+  sinResist: 2
   defensiveCharacteristic: 
-  universalCharacteristic: 
+  universalCharacteristic: 09000000
   pieceCharacteristic: 
-  skills:
-  - {fileID: 11400000, guid: d54809d089fccb94283044cd18e96b2d, type: 2}
-  traits: []
+  skills: []
+  traits:
+  - {fileID: 11400000, guid: 1a1e77935ed798a46a25f59890b76de9, type: 2}
+  - {fileID: 11400000, guid: 13a1a677d92909b49a63cae645797437, type: 2}
   deck: []

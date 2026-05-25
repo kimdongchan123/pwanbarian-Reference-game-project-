@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Gulpfrog
+  m_Name: "\uC790\uBC14\uBB38\uC5B4"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: "\uAFC0\uAEBD\uAD6C\uB9AC"
-  maxHp: 80
-  maxSt: 30
-  minSp: 4
-  maxSp: 6
-  minatk: 5
-  maxatk: 16
-  mindef: 3
-  maxdef: 3
+  unitName: "\uC790\uBC14\uBB38\uC5B4"
+  maxHp: 100
+  maxSt: 60
+  minSp: 3
+  maxSp: 5
+  minatk: 6
+  maxatk: 6
+  mindef: 30
+  maxdef: 30
   panic: 03000000
   affiliation: "\uC18C\uC18D\uBD88\uBA85"
   unitTypeKeyword: "\uCCB4\uC2A4"
@@ -29,15 +29,15 @@ MonoBehaviour:
   - "\uC778\uB958\uC758 \uCC9C\uC801"
   physicalResist: 0.8
   mentalResist: 0.8
-  specialResist: 1.5
-  sinResist: 1.5
-  defensiveCharacteristic: 01000000
-  universalCharacteristic: 06000000
+  specialResist: 0.8
+  sinResist: 0.8
+  defensiveCharacteristic: 
+  universalCharacteristic: 07000000
   pieceCharacteristic: 
   skills:
-  - {fileID: 11400000, guid: 46bac13e2fbed524aba8540833b16d2b, type: 2}
+  - {fileID: 11400000, guid: 68b364a56ebbfe143bd4b08cf8d84e98, type: 2}
   traits:
+  - {fileID: 11400000, guid: 5190898e3eb77bd4fbe8461a5059510f, type: 2}
   - {fileID: 0}
   - {fileID: 11400000, guid: 42d6fff48cbd7194a84e886055a5f18b, type: 2}
-  - {fileID: 0}
   deck: []

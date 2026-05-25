@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d041d66741920e4bb6bb835af595b02, type: 3}
+  m_Name: "\uACF5\uC911\uACE1\uC608"
+  m_EditorClassIdentifier: Assembly-CSharp::TraitData
+  traitName: "\uACF5\uC911\uACE1\uC608"
+  triggerType: 0
+  traitEffect: 16
+  description: "\u300A\uBC29\uC5B4 \uD2B9\uC131\u300B\n\uC774 \uD2B9\uC131\uC740
+    \u300A\uD68C\uD53C\u300B\uB85C \uCDE8\uAE09\uB41C\uB2E4.\nSp(4)\uC774\uD558\uC778
+    \uAE30\uBB3C\uC758 \uACF5\uACA9\uC744 \uBC1B\uC9C0 \uC54A\uB294\uB2E4."
+  stAmount: 0
+  affiliationTarget: 

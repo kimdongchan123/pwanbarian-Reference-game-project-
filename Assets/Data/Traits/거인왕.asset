@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d041d66741920e4bb6bb835af595b02, type: 3}
+  m_Name: "\uAC70\uC778\uC655"
+  m_EditorClassIdentifier: Assembly-CSharp::TraitData
+  traitName: "\uAC70\uC778\uC655"
+  triggerType: 1
+  traitEffect: 23
+  description: "\uD134 \uC2DC\uC791 \uC2DC \uBAA8\uB4E0 \uC544\uAD70 {\uAC70\uC778}\uC5D0\uAC8C
+    <ATK \uC99D\uAC00>(3)\uC744 \uBD80\uC5EC\uD55C\uB2E4.\n(\uC0DD\uC874\uD55C \uC544\uAD70
+    {\uAC70\uC778}\xD73)\uB9CC\uD07C ATK\uAC00 \uC99D\uAC00\uD55C\uB2E4."
+  stAmount: 3
+  affiliationTarget: "\uAC70\uC778"

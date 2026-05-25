@@ -10,33 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Scavenger
+  m_Name: Giant
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: Scavenger
-  maxHp: 25
-  maxSt: 4
-  minSp: 2
-  maxSp: 8
-  minatk: 6
-  maxatk: 6
-  mindef: 1
-  maxdef: 1
-  panic: 
-  affiliation: "\uB514\uD504\uB808 \uB77C\uD50C\uB9AC\uC758 \uC138\uACC4"
+  unitName: "\uAC70\uC778"
+  maxHp: 300
+  maxSt: 150
+  minSp: 1
+  maxSp: 3
+  minatk: 7
+  maxatk: 7
+  mindef: 15
+  maxdef: 15
+  panic: 04000000
+  affiliation: "\uAC70\uC778\uC5F0\uB9F9"
   unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
   traitKeywords:
-  - "\uC5EC\uC131"
-  - "\uC778\uAC04"
+  - "\uC591\uC131"
+  - "\uAC70\uC778"
   - "\uC778\uAC04\uD615"
+  - "\uCD08\uAC70\uB300"
   - "\uC778\uB958\uC758 \uCC9C\uC801"
   physicalResist: 1
   mentalResist: 1.5
-  specialResist: 1.5
+  specialResist: 0.8
   sinResist: 1.5
   defensiveCharacteristic: 
-  universalCharacteristic: 
+  universalCharacteristic: 06000000
   pieceCharacteristic: 
   skills:
-  - {fileID: 11400000, guid: 859dbe9eae2a9df409bbdc77ebf949ad, type: 2}
-  traits: []
+  - {fileID: 11400000, guid: 546002f390a04854f9381b9ca82f6d03, type: 2}
+  traits:
+  - {fileID: 0}
+  - {fileID: 0}
   deck: []

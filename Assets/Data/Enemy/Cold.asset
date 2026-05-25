@@ -10,33 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Outlaw
+  m_Name: Cold
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: Outlaw
-  maxHp: 10
-  maxSt: 15
+  unitName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
+  maxHp: 12
+  maxSt: 13
   minSp: 1
-  maxSp: 5
+  maxSp: 3
   minatk: 2
   maxatk: 2
-  mindef: 1
-  maxdef: 1
-  panic: 
-  affiliation: "\uC70C\uB9AC\uC5C4 T \uC8FC\uB2C8\uC5B4\uC758 \uC138\uACC4"
-  unitTypeKeyword: "\uCCB4\uC2A4"
+  mindef: 2
+  maxdef: 2
+  panic: 02000000
+  affiliation: "\uBC14\uB2E4\uBBFC\uC871"
+  unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
   traitKeywords:
   - "\uB0A8\uC131"
   - "\uC778\uAC04"
   - "\uC778\uAC04\uD615"
-  - "\uD669\uC57C\uC758 \uBB34\uBC95\uC790"
-  physicalResist: 1.5
-  mentalResist: 1.5
+  physicalResist: 2
+  mentalResist: 1
   specialResist: 1.5
-  sinResist: 2
-  defensiveCharacteristic: 
+  sinResist: 1.5
+  defensiveCharacteristic: 01000000
   universalCharacteristic: 
   pieceCharacteristic: 
   skills:
+  - {fileID: 11400000, guid: 1701470cc77573d448c0f4d8cc92fbaa, type: 2}
+  traits:
   - {fileID: 0}
-  traits: []
+  - {fileID: 0}
   deck: []

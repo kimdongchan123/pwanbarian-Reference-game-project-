@@ -10,30 +10,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Ptera
+  m_Name: EnemyData 2
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: Ptera
-  maxHp: 42
-  maxSt: 80
-  minSp: 6
-  maxSp: 12
-  minatk: 6
-  maxatk: 18
-  mindef: 2
-  maxdef: 6
-  panic: 
-  affiliation: "\uC70C\uB9AC\uC5C4 T \uC8FC\uB2C8\uC5B4\uC758 \uC138\uACC4"
+  unitName: "\uBC14\uB2E4\uBBFC\uC871 \uAC70\uC778"
+  maxHp: 100
+  maxSt: 25
+  minSp: 5
+  maxSp: 8
+  minatk: 1
+  maxatk: 1
+  mindef: 10
+  maxdef: 10
+  panic: 06000000
+  affiliation: "\uBC14\uB2E4\uBBFC\uC871"
   unitTypeKeyword: "\uCCB4\uC2A4"
   traitKeywords:
   - "\uC5EC\uC131"
-  - "\uC778\uB958\uC758 \uCC9C\uC801"
+  - "\uC778\uAC04"
+  - "\uC778\uAC04\uD615"
+  - "\uCD08\uAC70\uB300"
   physicalResist: 1
   mentalResist: 1
   specialResist: 1
   sinResist: 1
   defensiveCharacteristic: 
-  universalCharacteristic: 
+  universalCharacteristic: 07000000
   pieceCharacteristic: 
-  skills: []
-  traits: []
+  skills:
+  - {fileID: 11400000, guid: d2464a4255f37174da840c41a00275df, type: 2}
+  - {fileID: 11400000, guid: 1701470cc77573d448c0f4d8cc92fbaa, type: 2}
+  traits:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   deck: []

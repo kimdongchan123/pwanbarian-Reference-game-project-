@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d041d66741920e4bb6bb835af595b02, type: 3}
+  m_Name: "\uC12D\uCDE8"
+  m_EditorClassIdentifier: Assembly-CSharp::TraitData
+  traitName: "\uC12D\uCDE8"
+  triggerType: 4
+  traitEffect: 11
+  description: "\uACF5\uACA9 \uC801\uC911 \uC2DC \uC0C1\uB300 \uAE30\uBB3C\uC758
+    Hp\uAC00 (\uCD5C\uB300 Hp\uC758 20%)\uC774\uD558\uC778 \uACBD\uC6B0 \uBC1C\uB3D9\uD55C\uB2E4.\n\uACF5\uACA9
+    \uC801\uC911 \uC2DC \uC0C1\uB300 \uAE30\uBB3C\uC740 \uC0AC\uB9DD\uD558\uACE0
+    \uADF8 \uD3EC\uC778\uD2B8\uB85C \uC774\uB3D9\uD55C\uB2E4.\nHp(40), St(30)\uC744
+    \uD68C\uBCF5\uD55C\uB2E4."
+  stAmount: 0
+  affiliationTarget: 

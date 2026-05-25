@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d041d66741920e4bb6bb835af595b02, type: 3}
+  m_Name: "\uC2A4\uD154\uC2A4 \uBB34\uB108"
+  m_EditorClassIdentifier: Assembly-CSharp::TraitData
+  traitName: "\uC2A4\uD154\uC2A4 \uBB34\uB108"
+  triggerType: 0
+  traitEffect: 14
+  description: "\uBAA8\uB4E0 \uD53C\uC2A4\uC5D0 [\uC5F0\uD0C0]\uB97C \uBD80\uC5EC\uD55C\uB2E4.\n\uACF5\uACA9
+    \uC801\uC911 \uC2DC 15%\uC758 \uD655\uB960\uB85C {\uB3D9\uC694}(1) \uBD80\uC5EC.\n\uACF5\uACA9
+    \uC801\uC911 \uC2DC 3%\uC758 \uD655\uB960\uB85C <\uD53C\uD574\uB7C9 \uAC10\uC18C>(1)
+    \uBD80\uC5EC.\n\uACF5\uACA9 \uC801\uC911 \uC2DC 10%\uC758 \uD655\uB960\uB85C
+    [\uC8C4\uC885(\uBD84\uB178)](1) \uD53C\uD574."
+  stAmount: 0
+  affiliationTarget: 

@@ -10,33 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Transcendent
+  m_Name: "\uB9B0\uB4DC\uBE14\uB8F8"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: Transcendent
-  maxHp: 20
-  maxSt: 20
+  unitName: "\uB9B0\uB4DC\uBE14\uB8F8"
+  maxHp: 25
+  maxSt: 10
   minSp: 1
   maxSp: 4
-  minatk: 2
-  maxatk: 3
-  mindef: 3
-  maxdef: 3
-  panic: 
-  affiliation: "\uC648\uD050\uB808\uC758 \uC138\uACC4"
-  unitTypeKeyword: "\uCCB4\uC2A4"
+  minatk: 3
+  maxatk: 6
+  mindef: 5
+  maxdef: 5
+  panic: 03000000
+  affiliation: "\uC640\uC774\uBC18 \uAD70\uB77D \uC5F0\uB9F9"
+  unitTypeKeyword: "\uBCC0\uD615 \uCCB4\uC2A4"
   traitKeywords:
-  - "\uC5EC\uC131"
+  - "\uC131\uBCC4\uBD88\uBA85"
   - "\uC778\uAC04"
-  - "\uC778\uAC04\uD615"
-  - "\uCD08\uC6D4"
+  - "\uC6A9"
+  - "\uC778\uB958\uC758 \uCC9C\uC801"
   physicalResist: 1.5
   mentalResist: 1.5
   specialResist: 1.5
-  sinResist: 1.5
+  sinResist: 2
   defensiveCharacteristic: 
   universalCharacteristic: 
   pieceCharacteristic: 
-  skills:
-  - {fileID: 11400000, guid: ee2eaea2d38e68242900579ba61aa0e3, type: 2}
-  traits: []
+  skills: []
+  traits:
+  - {fileID: 11400000, guid: 37ff8b1d64b6ded4d86b21b72ad17730, type: 2}
   deck: []

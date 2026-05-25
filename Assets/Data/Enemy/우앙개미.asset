@@ -10,33 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: Stonehand Hwando
+  m_Name: "\uC6B0\uC559\uAC1C\uBBF8"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  unitName: Stonehand:Hwando
-  maxHp: 50
-  maxSt: 30
+  unitName: "\uC6B0\uC559\uAC1C\uBBF8"
+  maxHp: 44
+  maxSt: 44
   minSp: 4
-  maxSp: 8
-  minatk: 3
-  maxatk: 3
-  mindef: 5
-  maxdef: 5
-  panic: 
-  affiliation: "\uAE38\uB3D9\uC758 \uC138\uACC4"
-  unitTypeKeyword: "\uC7A5\uAE30"
+  maxSp: 4
+  minatk: 4
+  maxatk: 4
+  mindef: 4
+  maxdef: 4
+  panic: 27000000
+  affiliation: "\uAC1C\uBBF8\uC655\uAD6D"
+  unitTypeKeyword: "\uCCB4\uC2A4"
   traitKeywords:
-  - "\uBB34\uC131"
-  - "\uAE30\uACC4"
-  - "\uC778\uAC04\uD615"
-  physicalResist: 0.5
-  mentalResist: 1.5
-  specialResist: 1
+  - "\uC554\uCEF7"
+  - "\uBC8C\uB808"
+  - "\uC778\uB958\uC758 \uCC9C\uC801"
+  physicalResist: 1
+  mentalResist: 0.5
+  specialResist: 1.5
   sinResist: 1
   defensiveCharacteristic: 
   universalCharacteristic: 
   pieceCharacteristic: 
   skills:
-  - {fileID: 11400000, guid: 8ac0ea7e67fcbf646b84b33591714019, type: 2}
-  - {fileID: 11400000, guid: 3fb482d6879de0a47ac2fe43a0ae84e0, type: 2}
-  traits: []
+  - {fileID: 11400000, guid: ede332348c0947842a8affe48e630c95, type: 2}
+  traits:
+  - {fileID: 11400000, guid: c909c229f726ec44daf86a99ff9d8f3f, type: 2}
   deck: []

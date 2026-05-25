@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95de5c47affe35b4dbd2cf67cc819d75, type: 3}
+  m_Name: "\uC9C0\uC6D0 \uC694\uCCAD"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "\uC9C0\uC6D0 \uC694\uCCAD"
+  description: "\uB2E4\uC74C \uD134\uC5D0 [\uC6B0\uC559\uAC1C\uBBF8](0~2)\uB97C \uC18C\uD658\uD55C\uB2E4."
+  coolTime: 2
+  targetType: 1
+  costType: 0
+  costAmount: 0
+  consumeAction: 1
+  useDamage: 0
+  damageType: 0
+  power: 0
+  includeAtk: 1
+  useStatusEffect: 0
+  statusEffectType: 0
+  statusAmount: 0
+  statusCount: 0
+  statusToSelf: 0
+  hpRecover: 0
+  stRecover: 0
+  skillEffect: 7
+  effectValue: 0
+  duration: 0
