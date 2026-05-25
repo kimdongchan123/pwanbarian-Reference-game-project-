@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Yaman
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uC57C\uB9CC\uC801\uC778 \uBC14\uB2E4\uBBFC\uC871"
+  portraitSprite: {fileID: 1419130553184538979, guid: 3714d0006a44a6e4696471666fcadb4b, type: 3}
   maxHp: 16
   maxSt: 9
   minSp: 3
