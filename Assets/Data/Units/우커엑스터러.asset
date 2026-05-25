@@ -30,7 +30,23 @@ MonoBehaviour:
   traitKeywords:
   - "\uC6A9\uC0AC"
   - "\uB0A8\uC131"
-  traits: []
+  traits:
+  - {fileID: 11400000, guid: 8050407b854b2354faed2351eff78d40, type: 2}
+  - {fileID: 11400000, guid: a3118cef1a234e27ae837e9d942e9331, type: 2}
   skills:
   - {fileID: 11400000, guid: 53aedd6b7c034bb39d40aee6d43b068d, type: 2}
-  deck: []
+  deck:
+  - {fileID: 11400000, guid: c5005ea942254aaa85ba5813ddcf22f3, type: 2}
+  - {fileID: 11400000, guid: 998d3aad663f4292b25217b6dc03a86a, type: 2}
+  - {fileID: 11400000, guid: be969872f4f34c72a4f101b9fe28de08, type: 2}
+  - {fileID: 11400000, guid: 45e87eace47c4ef7a11db8f3279e38e8, type: 2}
+  - {fileID: 11400000, guid: d198608a11084fb99534ca0a49aca59a, type: 2}
+  - {fileID: 11400000, guid: b1b188b3ce0a40d8984823cf9cda7d22, type: 2}
+  - {fileID: 11400000, guid: aa0b0223140c40bcba5a6a3ab399eff1, type: 2}
+  - {fileID: 11400000, guid: d12a6a51d8b84463a9f2f93be65df949, type: 2}
+  - {fileID: 11400000, guid: 8e98ffb628dc4fad81f75b139fc6bd8b, type: 2}
+  - {fileID: 11400000, guid: 4eff094a845a4325be83177f82198253, type: 2}
+  - {fileID: 11400000, guid: f90c1fc4f06b45cc895ab0ea38592f0d, type: 2}
+  - {fileID: 11400000, guid: ce5ca257048e48ada7fd7840aed5ee48, type: 2}
+  - {fileID: 11400000, guid: 3e82cd0988d34e54a1ef9518cf138d7b, type: 2}
+  - {fileID: 11400000, guid: 3bd7793aafbe4b519f477fdbb901b5a8, type: 2}

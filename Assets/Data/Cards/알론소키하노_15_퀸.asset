@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
+  m_Name: "\uc54c\ub860\uc18c\ud0a4\ud558\ub178_15_\ud038"
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardName: "\uc54c\ub860\uc18c\ud0a4\ud558\ub178_15_\ud038"
+  pieceType: 4
+  sinType: 0
+  damageType: 3
+  targetType: 0
+  isRanged: 0
+  attackRange: 1
+  power: 108
+  useEffect: 1
+  effectType: 12
+  effectAmount: 30
+  effectToSelf: 1
+  description: "\u318d [ \uad00\ud1b5 ] \u318d\uc774 \ud53c\uc2a4 \u3161\ubc84\ub9bc\u3161 \uc2dc <ATK \uc99d\uac00 >(30) \uc5bb\uc74c \u318d\uacf5\uaca9 \uc18d\uc131 - [ \ubb3c\ub9ac ] \u3161\uba85\uc608\ub85c\uc6b4 \uc5c5\uc801\u3161 \u318d\ucd5c\ub300 \uc218\uce58 3 \u318d\uc218\uce58\ub9cc\ud07c ATK, DEF, Sp \uac00 \uc99d\uac00\ud55c\ub2e4 . \u318d\uc218\uce58\uac00 3 \uc774 \ub41c \ud134 \uc885\ub8cc \uc2dc \uc18c\uba78\ud558\uace0 \u3161\uafc8\uc758 \uc804\ud22c\u3161 (1) \uc744 \uc5bb\ub294\ub2e4 . \u3161\uafc8\uc758 \uc804\ud22c\u3161 \u318d\ucd5c\ub300 \uc218\uce58 1 \u318d Sp \uc758 \ucd5c\ub300\uac12 (7), \ucd5c\uc18c\uac12 (3) \uc99d\uac00\ud55c\ub2e4 . \u318d\ucd5c\ub300 Hp+50, \ucd5c\ub300 St+40 \u318d ATK, DEF \uac00 (2+ \uc790\uc2e0\uc744 \ud3ec\ud568\ud574 \uc0dd\uc874\ud55c \uc544\uad70 { \uc6a9\uc0ac } \uc758 \u00d74) \ub9cc\ud07c \uc99d\uac00\ud55c\ub2e4 . \u318d\ubaa8\ub4e0 \ud53c\uc2a4\uc758 \ud53c\ud574\ub7c9\uc774 100% \uc99d\uac00\ud55c\ub2e4 . \u318d [ \uc5f0\ud0c0 ] \uc758 \ud6a8\uacfc\uac00 \" \uc774 \ud53c\uc2a4\uc758 \uacf5\uaca9\uc740 5 \ud68c \uc801\uc911\ud55c\ub2e4 .\" \ub85c \ubcc0\uacbd\ub41c\ub2e4 . \u318d\uacf5\uaca9 \ub0b4\uc131\uc774 \uc774\ud558\uc640 \uac19\uc774 \ubcc0\uacbd\ub41c\ub2e4 . { \ubb3c\ub9ac }{0.5} { \uc815\uc2e0 }{0.5} { \ud2b9\uc218 }{1.0} { \uc8c4\uc885 }{0.5} \u318d\u3161\uafc8\uc758 \uc804\ud22c\u3161\uac00 \uc788\ub294 \ud55c \u3161\uba85\uc608\ub85c\uc6b4 \uc5c5\uc801\u3161\uc740 \uc18c\uba78\ud558\uc9c0 \uc54a\ub294\ub2e4 ."

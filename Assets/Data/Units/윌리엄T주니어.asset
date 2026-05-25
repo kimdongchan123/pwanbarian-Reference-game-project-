@@ -33,7 +33,24 @@ MonoBehaviour:
   - "\uC778\uAC04"
   - "\uC778\uAC04\uD615"
   - "\uD669\uC57C\uC758\uBB34\uBC95\uC790"
-  traits: []
+  traits:
+  - {fileID: 11400000, guid: 7a923866065e4761a3c6fd548fcc8133, type: 2}
+  - {fileID: 11400000, guid: 559d146807414172a384fc62ba9446ab, type: 2}
   skills:
   - {fileID: 11400000, guid: 530318a33207489fa1722754112d59ae, type: 2}
-  deck: []
+  deck:
+  - {fileID: 11400000, guid: 9ab6dea82fd74ab8b4e24e039f97db03, type: 2}
+  - {fileID: 11400000, guid: ae1e748466e54b8a98f9a25908b71c36, type: 2}
+  - {fileID: 11400000, guid: 71b3202ad07a437f8bc97ddce29e201d, type: 2}
+  - {fileID: 11400000, guid: 45963ddc1fa84f1483b6ff1c9391a1e0, type: 2}
+  - {fileID: 11400000, guid: 352f3a6bbc604d01837cde5334bd038b, type: 2}
+  - {fileID: 11400000, guid: d95c30c5af434d6c854083785de5b8bb, type: 2}
+  - {fileID: 11400000, guid: cb3354641966425cbfaff8a6e498d667, type: 2}
+  - {fileID: 11400000, guid: 1dc4ce11794c4b44a3d2daacd314a5b8, type: 2}
+  - {fileID: 11400000, guid: ee1dc3dc5344478eaf0d38af94848eb5, type: 2}
+  - {fileID: 11400000, guid: 09d7477900214a56af907a5f302bdd34, type: 2}
+  - {fileID: 11400000, guid: 99a0036f8d2b42bab6154a94825ce686, type: 2}
+  - {fileID: 11400000, guid: 1a4f6a58823549b5abe0f5c0fc8c38d5, type: 2}
+  - {fileID: 11400000, guid: 48e374f1a30742e8a741de5a0a9530d7, type: 2}
+  - {fileID: 11400000, guid: d891ae3b70d846df8141f4ca3a69d311, type: 2}
+  - {fileID: 11400000, guid: e551968b3b24476893053c969ff79d10, type: 2}

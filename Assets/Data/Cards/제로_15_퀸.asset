@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
+  m_Name: "\uc81c\ub85c_15_\ud038"
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardName: "\uc81c\ub85c_15_\ud038"
+  pieceType: 4
+  sinType: 2
+  damageType: 3
+  targetType: 0
+  isRanged: 0
+  attackRange: 1
+  power: 38
+  useEffect: 1
+  effectType: 4
+  effectAmount: 1
+  effectToSelf: 1
+  description: "\u318d\u3161\ucda9\uc804\u3161\uc744 \uc804\ubd80 \uc18c\ubaa8\ud558\uc5ec [ \uc5f0\ud0c0 ], [ \ud655\uc0b0 - \uc138\ub85c ], [ \ud655\uc0b0 - \uac00\ub85c ], [ \ud655\uc0b0 - \ube57\uae08 ], [ \ud655\uc0b0 - \uc0ac\uc120 ] \u318d\uc18c\ubaa8\ud55c \u3161\ucda9\uc804\u3161 (25) \ubbf8\ub9cc\uc774\uba74 \uc790\uc2e0\uc5d0\uac8c ( \ucd5c\ub300 Hp \uc758 50%) \ub9cc\ud07c [ \uc8c4\uc885 ( \ubbf8\uc0c9 )] \ud53c\ud574 \u318d\uc18c\ubaa8\ud55c \u3161\ucda9\uc804\u3161 (30) \uc774\uc0c1\uc774\uba74 \ud53c\ud574\ub7c9 +30% \u318d\uc18c\ubaa8\ud55c \u3161\ucda9\uc804\u3161 (40) \uc774\uc0c1\uc774\uba74 \ud53c\ud574\ub7c9 +60% \u318d\uc18c\ubaa8\ud55c \u3161\ucda9\uc804\u3161 (45) \uc774\uc0c1\uc774\uba74 \ud53c\ud574\ub7c9 +90% \u318d\uc18c\ubaa8\ud55c \u3161\ucda9\uc804\u3161 (50) \uc774\uc0c1\uc774\uba74 \ud53c\ud574\ub7c9 +120% \u318d\uacf5\uaca9 \uc18d\uc131 - [ \uc8c4\uc885 ( \ubbf8\uc0c9 )]"

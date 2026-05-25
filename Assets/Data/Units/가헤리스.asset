@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitName: "\uAC00\uD5E4\uB9AC\uC2A4"
   panicType: 1
-  portraitSprite: {fileID: 1920328428, guid: 2d0f85df58ce11248935c7334b241c06, type: 3}
-  battleSprite: {fileID: 1920328428, guid: 2d0f85df58ce11248935c7334b241c06, type: 3}
+  portraitSprite: {fileID: 7547628168700498191, guid: 2f2f021e2b4d400bb9f280ee4779e4a6, type: 3}
+  battleSprite: {fileID: 7547628168700498191, guid: 2f2f021e2b4d400bb9f280ee4779e4a6, type: 3}
   maxHp: 45
   maxSt: 40
   minSp: 5
@@ -36,14 +36,25 @@ MonoBehaviour:
   - "\uC778\uAC04\uD615"
   - "\uC544\uBC1C\uB860\uC758 \uAE30\uC0AC"
   traits:
+  - {fileID: 11400000, guid: 2f12d3f997292a74f894bf27ee222567, type: 2}
   - {fileID: 11400000, guid: ac731b6e2d6ca27439d2ff0b1d4388a4, type: 2}
   - {fileID: 11400000, guid: 2c468d7cecea1804994b89533d7263fd, type: 2}
   - {fileID: 11400000, guid: f93c1f044c4d7224fb7223ff28543991, type: 2}
-  - {fileID: 11400000, guid: 4b34374dc5dbffd42ab2bd104b13cc85, type: 2}
-  - {fileID: 11400000, guid: 2c468d7cecea1804994b89533d7263fd, type: 2}
-  - {fileID: 11400000, guid: 2f12d3f997292a74f894bf27ee222567, type: 2}
   skills:
   - {fileID: 11400000, guid: 105fbd3ea37fdf040aaa87ade662ed94, type: 2}
   deck:
-  - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
-  - {fileID: 11400000, guid: 7f5ccbd80710530479dac0de94abf5fd, type: 2}
+  - {fileID: 11400000, guid: dea0d2a6f6714cfe91269329ccb51447, type: 2}
+  - {fileID: 11400000, guid: 87739bc164fa4235b85eba0d863533f1, type: 2}
+  - {fileID: 11400000, guid: 624e150b6562432ebf6e99d9c1543aae, type: 2}
+  - {fileID: 11400000, guid: ed443fa55a1b48e1828d6ae44c345c6f, type: 2}
+  - {fileID: 11400000, guid: dd107d7470744751a0e46294293a6363, type: 2}
+  - {fileID: 11400000, guid: 778b026876fb467489b2c9d4fa1fedf3, type: 2}
+  - {fileID: 11400000, guid: d39d60e7658a444daf58d95c46c4db8f, type: 2}
+  - {fileID: 11400000, guid: 0ca26be1b4b1406cb2a940137a84a608, type: 2}
+  - {fileID: 11400000, guid: d15a9578f5f14219823b2b94e57c49d0, type: 2}
+  - {fileID: 11400000, guid: 6759dda72dc44f09920474e82b5e0294, type: 2}
+  - {fileID: 11400000, guid: 1a5fc2b6d29b4fdea1accb0b49f1a537, type: 2}
+  - {fileID: 11400000, guid: 6ca7e4b37a5c45acbb46cb052e087c52, type: 2}
+  - {fileID: 11400000, guid: 8515d9aa92914d3fbe64e5c28f642ef4, type: 2}
+  - {fileID: 11400000, guid: 9e6e63b7bb9d4d51b76e1b1f1ff76f6a, type: 2}
+  - {fileID: 11400000, guid: cd48c5bb638a4b95b779dfa8049840e2, type: 2}

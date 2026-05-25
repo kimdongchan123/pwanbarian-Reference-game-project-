@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0375a1a161b7d1d49aa02bb86f5384a9, type: 3}
   m_Name: "\uBC18\uACA9"
   m_EditorClassIdentifier: Assembly-CSharp::TraitData
-  traitName: 
+  traitName: "반격"
   triggerType: 0
-  description: 
+  description: "피격 후 폰 행마 방식을 적용해 공격한다. 반격 확정으로 ATK가 DEF만큼 상승한다."

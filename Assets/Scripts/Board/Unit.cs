@@ -29,6 +29,9 @@ public class Unit : MonoBehaviour
     private bool pendingSupportShot;
     private bool isRetreated;
     private bool returnFromRetreatNextTurn;
+    private bool extraMoveAvailable;
+    private bool unyieldingUsed;
+    private bool unyieldingProtectionActive;
 
     public UnitData UnitData => data;
 
@@ -61,6 +64,8 @@ public class Unit : MonoBehaviour
         maxSt = data.maxSt;
         currentHp = maxHp;
         currentSt = maxSt;
+        unyieldingUsed = false;
+        unyieldingProtectionActive = false;
 
         if (stats != null)
         {
@@ -141,14 +146,23 @@ public class Unit : MonoBehaviour
     // 🌟 카드를 써서 공격할 때 호출되는 진짜 공격력 (버프 포함)
     public int GetAttackPower()
     {
-        if (stats != null)
+        int baseAttack = stats != null ? stats.CurrentAttack : 5;
+        if (data != null)
         {
-            return stats.CurrentAttack;
+            baseAttack = Random.Range(data.minAtk, data.maxAtk + 1);
         }
-        return 5; // 예외 상황 시 기본값
+
+        baseAttack += GetStatusAmount(StatusEffectType.AtkUp);
+        baseAttack -= GetStatusAmount(StatusEffectType.AtkDown);
+        return Mathf.Max(1, baseAttack);
     }
 
     public void TakeDamage(int damage)
+    {
+        TakeDamage(damage, null);
+    }
+
+    public void TakeDamage(int damage, Enemy attacker)
     {
         if (isRetreated)
         {
@@ -156,8 +170,26 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        currentHp -= damage;
-        Debug.Log($"{name}이(가) {damage} 피해를 받음. 남은 체력: {currentHp}");
+        int finalDamage = CalculateIncomingDamage(damage);
+        if (finalDamage <= 0)
+        {
+            Debug.Log($"{unitName}: 방어 특성으로 피해를 받지 않음");
+            return;
+        }
+
+        if (currentHp - finalDamage <= 0 && HasTrait("불굴") && !unyieldingUsed)
+        {
+            unyieldingUsed = true;
+            unyieldingProtectionActive = true;
+            currentHp = 1;
+            Debug.Log($"{unitName} 불굴 발동: 사망 피해를 버팀");
+            return;
+        }
+
+        currentHp = Mathf.Max(0, currentHp - finalDamage);
+        Debug.Log($"{name}이(가) {finalDamage} 피해를 받음. 남은 체력: {currentHp}");
+
+        ApplyTraitsOnHit(attacker);
 
         if (currentHp <= 0)
         {
@@ -176,32 +208,18 @@ public class Unit : MonoBehaviour
     {
         if (type == StatusEffectType.None) return;
 
-        // "Atk" 단어가 포함되어 있으면 무조건 공격력 버프로 처리!
-        if (type.ToString().Contains("Atk"))
+        StatusEffect effect = statusEffects.Find(status => status.type == type);
+        if (effect == null)
         {
-            // Amount 1당 10%(0.1f) 증가로 계산
-            float buffValue = amount * 0.1f;
-
-            // 1턴 동안 공격력 증가 부여
-            buffHandler.AddBuff(BuffType.AtkUp, buffValue, 1);
-
-            Debug.Log($"🃏 카드 효과 발동! {name}의 공격력이 {buffValue * 100}% 증가합니다! (1턴 지속)");
+            statusEffects.Add(new StatusEffect(type, amount, count));
         }
         else
         {
-            StatusEffect effect = statusEffects.Find(status => status.type == type);
-            if (effect == null)
-            {
-                statusEffects.Add(new StatusEffect(type, amount, count));
-            }
-            else
-            {
-                effect.amount += amount;
-                effect.count = Mathf.Max(effect.count, count);
-            }
-
-            Debug.Log($"🃏 {type} 효과가 {amount}만큼 {name}에게 적용되었습니다.");
+            effect.amount += amount;
+            effect.count = Mathf.Max(effect.count, count);
         }
+
+        Debug.Log($"🃏 {type} 효과가 {amount}만큼 {name}에게 적용되었습니다.");
     }
 
     public int GetStatusAmount(StatusEffectType type)
@@ -224,9 +242,28 @@ public class Unit : MonoBehaviour
         return GetStatusAmount(type) >= minAmount;
     }
 
+    public bool HasTrait(string traitName)
+    {
+        if (data == null || data.traits == null) return false;
+
+        foreach (TraitData trait in data.traits)
+        {
+            if (trait == null) continue;
+            if (trait.traitName == traitName || trait.name == traitName) return true;
+        }
+
+        return false;
+    }
+
+    public bool ShouldIgnoreIncomingHit(int damage)
+    {
+        return HasTrait("회피") && damage <= GetDefenseValue();
+    }
+
     public void OnTurnStart()
     {
         ReduceSkillCooldowns();
+        ApplyTraitsOnTurnStart();
 
         if (returnFromRetreatNextTurn)
         {
@@ -337,6 +374,7 @@ public class Unit : MonoBehaviour
     public int GetAttackDamageAgainst(Enemy enemy)
     {
         int damage = GetAttackPower() + GetStatusAmount(StatusEffectType.DamageUp) - GetStatusAmount(StatusEffectType.DamageDown);
+        damage = ApplyTraitsToAttackDamage(damage, enemy);
 
         if (pendingFocusGapDamageOnAttack)
         {
@@ -358,6 +396,8 @@ public class Unit : MonoBehaviour
 
     public void OnAttackHit(Enemy target)
     {
+        ApplyTraitsOnAttackHit(target);
+
         if (target != null && pendingBurnOnAttack)
         {
             target.AddBurn(1);
@@ -378,6 +418,8 @@ public class Unit : MonoBehaviour
             buffHandler.TickBuffs();
         }
 
+        ApplyTraitsOnTurnEnd();
+
         foreach (StatusEffectType type in temporaryTurnStatuses)
         {
             RemoveStatus(type, 9999);
@@ -388,7 +430,17 @@ public class Unit : MonoBehaviour
         pendingFocusGapDamageOnAttack = false;
         pendingGiantSlayer = false;
         pendingSupportShot = false;
+        unyieldingProtectionActive = false;
         BattleSkillButtonUI.Instance?.Refresh();
+    }
+
+    public bool ConsumeExtraMove()
+    {
+        if (!extraMoveAvailable) return false;
+
+        extraMoveAvailable = false;
+        Debug.Log($"{unitName} 신속 발동: 한 번 더 행동 가능");
+        return true;
     }
 
     private void AddTemporaryStatus(StatusEffectType type, int amount)
@@ -425,5 +477,168 @@ public class Unit : MonoBehaviour
 
         Collider unitCollider = GetComponent<Collider>();
         if (unitCollider != null) unitCollider.enabled = !value;
+    }
+
+    private int GetDefenseValue()
+    {
+        int defense = data != null ? data.def : 0;
+        defense += GetStatusAmount(StatusEffectType.DefUp);
+        defense -= GetStatusAmount(StatusEffectType.DefDown);
+        if (HasTrait("바람타기")) defense += GetStatusAmount(StatusEffectType.Quick);
+        return Mathf.Max(0, defense);
+    }
+
+    private int CalculateIncomingDamage(int damage)
+    {
+        int finalDamage = Mathf.Max(0, damage);
+
+        if (ShouldIgnoreIncomingHit(finalDamage)) return 0;
+        if (HasTrait("감내")) finalDamage -= GetDefenseValue();
+        if (unyieldingProtectionActive) finalDamage -= 25;
+        if (HasStatus(StatusEffectType.Shield)) finalDamage -= GetStatusAmount(StatusEffectType.Shield);
+        if (HasStatus(StatusEffectType.Protection)) finalDamage -= GetStatusAmount(StatusEffectType.Protection);
+
+        return Mathf.Max(0, finalDamage);
+    }
+
+    private void ApplyTraitsOnTurnStart()
+    {
+        if (HasTrait("신속")) extraMoveAvailable = true;
+        if (HasTrait("정신오염")) AddTemporaryStatus(StatusEffectType.MentalProtection, 3);
+        if (HasTrait("생체에너지")) AddStatus(StatusEffectType.Charge, 1);
+        if (HasTrait("케이론류 심법"))
+        {
+            currentHp = Mathf.Min(maxHp, currentHp + Mathf.Max(1, Mathf.RoundToInt(maxHp * 0.16f)));
+            currentSt = Mathf.Min(maxSt, currentSt + Mathf.Max(1, Mathf.RoundToInt(maxSt * 0.16f)));
+        }
+        if (HasTrait("절대성"))
+        {
+            int allyCount = 0;
+            foreach (Unit unit in FindObjectsByType<Unit>(FindObjectsSortMode.None))
+            {
+                if (unit != null && unit.isAlly) allyCount++;
+            }
+
+            AddTemporaryStatus(StatusEffectType.AtkUp, Mathf.Max(1, allyCount));
+            AddTemporaryStatus(StatusEffectType.Quick, Mathf.Max(1, allyCount));
+        }
+        if (HasTrait("유동") && GetStatusAmount(StatusEffectType.Breath) > 0 && HandUIManager.Instance != null)
+        {
+            HandUIManager.Instance.DrawCards(1);
+        }
+        if (HasTrait("이체동심")) ShareStatusWithLinkedPair();
+    }
+
+    private void ApplyTraitsOnTurnEnd()
+    {
+        if (HasTrait("유동"))
+        {
+            int quick = GetStatusAmount(StatusEffectType.Quick);
+            if (quick > 0) RemoveStatus(StatusEffectType.Quick, Mathf.CeilToInt(quick * 0.5f));
+        }
+
+        if (HasTrait("따르는 자")) MoveNextToLinkedPair();
+    }
+
+    private void ApplyTraitsOnHit(Enemy attacker)
+    {
+        if (HasTrait("가드")) AddStatus(StatusEffectType.Shield, GetDefenseValue());
+        if (HasTrait("아프터 할짝대기"))
+        {
+            currentHp = Mathf.Min(maxHp, currentHp + Mathf.Max(1, Mathf.RoundToInt(maxHp * 0.1f)));
+            currentSt = Mathf.Min(maxSt, currentSt + Mathf.Max(1, Mathf.RoundToInt(maxSt * 0.1f)));
+        }
+
+        if (HasTrait("반격") && attacker != null)
+        {
+            int counterDamage = Mathf.Max(1, GetDefenseValue());
+            attacker.TakeDamage(counterDamage);
+            Debug.Log($"{unitName} 반격 발동: {counterDamage} 피해");
+        }
+    }
+
+    private int ApplyTraitsToAttackDamage(int damage, Enemy enemy)
+    {
+        int finalDamage = damage;
+
+        if (HasTrait("이름없는 크리처"))
+        {
+            finalDamage += Mathf.Max(0, maxHp - currentHp);
+        }
+        if (HasTrait("영웅마창"))
+        {
+            finalDamage = Mathf.RoundToInt(finalDamage * 1.3f);
+        }
+
+        return finalDamage;
+    }
+
+    private void ApplyTraitsOnAttackHit(Enemy target)
+    {
+        if (HasTrait("케이론류 심법"))
+        {
+            AddStatus(StatusEffectType.Breath, 5);
+        }
+        if (HasTrait("연격") && target != null)
+        {
+            target.TakeDamage(Mathf.Max(1, Mathf.RoundToInt(GetAttackPower() * 0.5f)));
+            Debug.Log($"{unitName} 연격 발동");
+        }
+    }
+
+    private void ShareStatusWithLinkedPair()
+    {
+        Unit pair = FindLinkedPair();
+        if (pair == null) return;
+
+        foreach (StatusEffect effect in statusEffects)
+        {
+            if (effect != null && pair.GetStatusAmount(effect.type) < effect.amount)
+            {
+                pair.AddStatus(effect.type, effect.amount - pair.GetStatusAmount(effect.type), effect.count);
+            }
+        }
+    }
+
+    private void MoveNextToLinkedPair()
+    {
+        Unit pair = FindLinkedPair();
+        if (pair == null || movement == null || MapManager.Instance == null) return;
+
+        Vector2Int pairPos = new Vector2Int(
+            Mathf.RoundToInt(pair.transform.position.x + 3.5f),
+            Mathf.RoundToInt(pair.transform.position.y + 3.5f)
+        );
+
+        Vector2Int[] dirs = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
+        foreach (Vector2Int dir in dirs)
+        {
+            if (!MapManager.Instance.tiles.TryGetValue(pairPos + dir, out Tile tile)) continue;
+            if (tile.isOccupied) continue;
+
+            if (movement.currentTile != null)
+            {
+                movement.currentTile.isOccupied = false;
+                movement.currentTile.currentUnit = null;
+            }
+
+            transform.position = tile.transform.position;
+            movement.currentTile = tile;
+            tile.isOccupied = true;
+            tile.currentUnit = gameObject;
+            Debug.Log($"{unitName} 따르는 자 발동: 연결 기물 주변으로 이동");
+            return;
+        }
+    }
+
+    private Unit FindLinkedPair()
+    {
+        string targetName = unitName.Contains("마창") ? "왈큐레" : "마창";
+        foreach (Unit unit in FindObjectsByType<Unit>(FindObjectsSortMode.None))
+        {
+            if (unit != null && unit != this && unit.unitName.Contains(targetName)) return unit;
+        }
+
+        return null;
     }
 }

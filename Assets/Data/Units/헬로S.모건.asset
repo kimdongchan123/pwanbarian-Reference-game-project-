@@ -38,4 +38,19 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: 9878821ef3d44352a74c284492ba9687, type: 2}
   - {fileID: 11400000, guid: f09205b093484cdcaf419a87107c7b9d, type: 2}
-  deck: []
+  deck:
+  - {fileID: 11400000, guid: 547ef4e380b34162a2aa8e65f283949a, type: 2}
+  - {fileID: 11400000, guid: e3a11fd0b4e14d7a9df7f6850a031e81, type: 2}
+  - {fileID: 11400000, guid: 578babdd4f854ee59b52065bfaea644e, type: 2}
+  - {fileID: 11400000, guid: a1e6bcce60d447868837217f379c46f3, type: 2}
+  - {fileID: 11400000, guid: b418a7cad4aa4da1a064e83676b42e57, type: 2}
+  - {fileID: 11400000, guid: 313260af062841849fe2564a0d9a18bf, type: 2}
+  - {fileID: 11400000, guid: addac1f482a54f9289f4225f50863221, type: 2}
+  - {fileID: 11400000, guid: c86dfff1fc064deb80d4063c9d7deae8, type: 2}
+  - {fileID: 11400000, guid: 764a886621d546ec94002ab6584c522e, type: 2}
+  - {fileID: 11400000, guid: 2285e8d62d61434ea95dca7a7ea98051, type: 2}
+  - {fileID: 11400000, guid: 1421caad5aa3413ea06705d29e040da3, type: 2}
+  - {fileID: 11400000, guid: 6331c00bf3554095ad4426df94cc9810, type: 2}
+  - {fileID: 11400000, guid: da52d06980364eb8b1b7f0ce9ee20fc9, type: 2}
+  - {fileID: 11400000, guid: e22e6682ec32474798359e6c64d4990c, type: 2}
+  - {fileID: 11400000, guid: b318821d4821435eb05fe769ab50abdc, type: 2}

@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0375a1a161b7d1d49aa02bb86f5384a9, type: 3}
   m_Name: "\uC720\uB3D9"
   m_EditorClassIdentifier: Assembly-CSharp::TraitData
-  traitName: "\uC720\uB3D9"
-  description: 
+  traitName: "유동"
+  description: "턴 종료 시 재빠름 수치가 절반 감소하고, 턴 시작 시 호흡을 얻으면 덱에서 피스를 드로우한다."
