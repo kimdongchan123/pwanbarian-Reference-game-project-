@@ -20,6 +20,11 @@ public class TurnManager : MonoBehaviour
     [Header("기물 프리팹 리스트")]
     public GameObject[] unitPrefabs;
 
+    [SerializeField]
+    private BattleSideUI teamSidePannel;
+    [SerializeField]
+    private BattleSideUI enemySidePannel;
+
     public List<Unit> allUnits = new List<Unit>();
     private List<TurnActor> finalTurnOrder = new List<TurnActor>();
     private int currentTurnIndex = 0;
@@ -101,46 +106,57 @@ public class TurnManager : MonoBehaviour
     }
 
     public void GenerateTurnOrder()
-{
-    currentTurnIndex = 0;
-    finalTurnOrder.Clear();
-    allUnits.RemoveAll(u => u == null);
-
-    // 아군 SP 굴림
-    List<TurnActor> allies = new List<TurnActor>();
-    foreach (var unit in allUnits)
     {
-        int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
-        unit.stats.currentTurnSpeed = speed;
-        allies.Add(new TurnActor { unit = unit, speed = speed });
+        currentTurnIndex = 0;
+        finalTurnOrder.Clear();
+        allUnits.RemoveAll(u => u == null);
+
+        // 아군 SP 굴림
+        List<TurnActor> allies = new List<TurnActor>();
+        foreach (var unit in allUnits)
+        {
+            int speed = Random.Range(unit.stats.minSpeed, unit.stats.maxSpeed + 1);
+            unit.stats.currentTurnSpeed = speed;
+            allies.Add(new TurnActor { unit = unit, speed = speed });
+        }
+        allies = allies.OrderByDescending(a => a.speed).ToList();
+
+        // 적 SP 굴림
+        List<TurnActor> enemies = new List<TurnActor>();
+        foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+        {
+            Enemy enemy = eu.GetComponent<Enemy>();
+            if (enemy?.EnemyData == null) continue;
+            int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
+            enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
+        }
+        enemies = enemies.OrderByDescending(a => a.speed).ToList();
+
+
+        teamSidePannel.ClearNameplates();
+        enemySidePannel.ClearNameplates();
+        // 아군-적-아군-적 순으로 번갈아 배치
+        int max = Mathf.Max(allies.Count, enemies.Count);
+        for (int i = 0; i < max; i++)
+        {
+            if (i < allies.Count)
+            {
+                teamSidePannel.AddNameplate(allies[i].unit.UnitData);
+                finalTurnOrder.Add(allies[i]);
+            }
+            if (i < enemies.Count)
+            {
+                enemySidePannel.AddNameplate(enemies[i].enemyUnit.EnemyData);
+                finalTurnOrder.Add(enemies[i]);
+            }
+        }
+
+        Debug.Log("🏁 이번 라운드 행동 순서:");
+        foreach (var a in finalTurnOrder)
+            Debug.Log($"  {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
+
+        ProcessCurrentTurn();
     }
-    allies = allies.OrderByDescending(a => a.speed).ToList();
-
-    // 적 SP 굴림
-    List<TurnActor> enemies = new List<TurnActor>();
-    foreach (var eu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
-    {
-        Enemy enemy = eu.GetComponent<Enemy>();
-        if (enemy?.EnemyData == null) continue;
-        int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
-        enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
-    }
-    enemies = enemies.OrderByDescending(a => a.speed).ToList();
-
-    // 아군-적-아군-적 순으로 번갈아 배치
-    int max = Mathf.Max(allies.Count, enemies.Count);
-    for (int i = 0; i < max; i++)
-    {
-        if (i < allies.Count)  finalTurnOrder.Add(allies[i]);
-        if (i < enemies.Count) finalTurnOrder.Add(enemies[i]);
-    }
-
-    Debug.Log("🏁 이번 라운드 행동 순서:");
-    foreach (var a in finalTurnOrder)
-        Debug.Log($"  {(a.isAlly ? "🟦아군" : "🟥적")} {a.displayName} (SP: {a.speed})");
-
-    ProcessCurrentTurn();
-}
 
     private TurnActor GetCurrentActor()
     {
@@ -161,17 +177,19 @@ public class TurnManager : MonoBehaviour
         if (actor == null) { StartNewRound(); return; }
 
         // 죽은 유닛 건너뜀
-        if (actor.isAlly && actor.unit == null)  { NextTurn(); return; }
+        if (actor.isAlly && actor.unit == null) { NextTurn(); return; }
         if (!actor.isAlly && actor.enemyUnit == null) { NextTurn(); return; }
 
         if (actor.isAlly)
         {
+            teamSidePannel.SetPortrait(actor.unit.UnitData.portraitSprite);
             actor.unit.OnTurnStart();
             Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
             if (BattleSkillButtonUI.Instance != null) BattleSkillButtonUI.Instance.Refresh();
         }
         else
         {
+            enemySidePannel.SetPortrait(actor.enemyUnit.EnemyData.portraitSprite);
             Debug.Log($"👹 [적 턴] {actor.displayName} 행동 시작");
             if (BattleSkillButtonUI.Instance != null) BattleSkillButtonUI.Instance.Refresh();
             StartCoroutine(EnemyActAndNext(actor.enemyUnit));
@@ -282,11 +300,11 @@ public class TurnManager : MonoBehaviour
         if (allyMovement != null && allyMovement.currentTile != null)
         {
             Tile allyTile = allyMovement.currentTile;
-            Vector2Int allyGridPos   = new Vector2Int(allyTile.x, allyTile.y);
-            Vector2Int enemyGridPos  = enemyUnit.gridPosition;
+            Vector2Int allyGridPos = new Vector2Int(allyTile.x, allyTile.y);
+            Vector2Int enemyGridPos = enemyUnit.gridPosition;
 
             // 넉백 방향: 적 → 아군 방향으로 1칸 더
-            Vector2Int diff    = allyGridPos - enemyGridPos;
+            Vector2Int diff = allyGridPos - enemyGridPos;
             Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
                 ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
                 : new Vector2Int(0, (int)Mathf.Sign(diff.y));

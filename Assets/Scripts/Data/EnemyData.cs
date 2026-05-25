@@ -95,6 +95,7 @@ public class EnemyData : ScriptableObject
 {
     [Header("기본 정보")]
     public string unitName;
+    public Sprite portraitSprite;
 
     [Header("기본 스탯")]
     public int maxHp;

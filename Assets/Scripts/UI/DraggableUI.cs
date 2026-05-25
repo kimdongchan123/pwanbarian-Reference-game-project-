@@ -12,7 +12,7 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private UnitData unitData;
 
-	public Transform PreviousParent => previousParent;
+    public Transform PreviousParent => previousParent;
     public UnitData UnitData => unitData;
 
 
@@ -82,6 +82,8 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             transform.SetParent(previousParent);
             rect.position = previousParent.GetComponent<RectTransform>().position;
         }
+
+        previousParent = null;
 
         canvasGroup.alpha = 1.0f;
         canvasGroup.blocksRaycasts = true;

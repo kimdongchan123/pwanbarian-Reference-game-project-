@@ -30,6 +30,8 @@ public class Unit : MonoBehaviour
     private bool isRetreated;
     private bool returnFromRetreatNextTurn;
 
+    public UnitData UnitData => data;
+
     void Awake()
     {
         movement = GetComponent<UnitMovement>();

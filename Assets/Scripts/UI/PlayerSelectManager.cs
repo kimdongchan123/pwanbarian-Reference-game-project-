@@ -203,12 +203,22 @@ public class PlayerSelectManager : MonoBehaviour
                 int tileIndex = instantiatedPlayers[i].PreviousParent
                     ? instantiatedPlayers[i].PreviousParent.GetSiblingIndex()
                     : instantiatedPlayers[i].transform.parent.GetSiblingIndex();
+                Debug.Log($"Player {i} placed on tile index {tileIndex} (Rank {(8 - tileIndex / 8)}, File {(File)(tileIndex % 8 + 1)})");
                 StageManager.SelectedPartyMembers[i] = new PlayerEntry
                 {
                     unitData = instantiatedPlayers[i].UnitData,
                     rank = 8 - tileIndex / 8,
                     file = (File)(tileIndex % 8 + 1),
                 };
+            }
+        }
+
+        Debug.Log("선택된 유닛과 위치:");
+        foreach (var entry in StageManager.SelectedPartyMembers)
+        {
+            if (entry != null)
+            {
+                Debug.Log($"- {entry.unitData.unitName} at Rank {entry.rank}, File {entry.file}");
             }
         }
         SceneManager.LoadScene("BattleScene");
