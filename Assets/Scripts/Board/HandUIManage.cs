@@ -1,26 +1,32 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public static HandUIManager Instance;
 
-    [Header("UI 연결")]
+    [Header("UI")]
     public GameObject pawnCardPrefab;
     public GameObject knightCardPrefab;
     public GameObject bishopCardPrefab;
+    public GameObject rookCardPrefab;
+    public GameObject queenCardPrefab;
+    public GameObject kingCardPrefab;
     public RectTransform handArea;
 
-    [Header("덱 데이터")]
+    [Header("Deck")]
     public List<CardData> deck = new List<CardData>();
+    public int initialDrawCount = 3;
 
-    [Header("슬라이딩 설정")]
+    [Header("Slide")]
     public float hiddenY = -150f;
     public float visibleY = 50f;
     public float slideSpeed = 10f;
 
+    private readonly List<CardData> drawPile = new List<CardData>();
+    private UnitData activeUnitData;
     private float targetY;
 
     private void Awake()
@@ -31,13 +37,40 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void Start()
     {
-        StartCoroutine(AutoDrawAtStart(3));
+        StartCoroutine(AutoDrawAtStart(initialDrawCount));
     }
 
     private IEnumerator AutoDrawAtStart(int amount)
     {
         yield return new WaitForSeconds(0.5f);
+
+        if (handArea != null && handArea.childCount > 0)
+        {
+            yield break;
+        }
+
+        LoadSelectedUnitDeck();
+        ShuffleDrawPile();
         DrawCards(amount);
+    }
+
+    public void RefreshForUnit(Unit unit)
+    {
+        if (unit == null || unit.data == null)
+        {
+            return;
+        }
+
+        if (activeUnitData == unit.data && handArea != null && handArea.childCount > 0)
+        {
+            return;
+        }
+
+        activeUnitData = unit.data;
+        LoadDeckFromUnitData(activeUnitData);
+        ShuffleDrawPile();
+        ClearHand();
+        DrawCards(initialDrawCount);
     }
 
     private void Update()
@@ -49,36 +82,132 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         handArea.anchoredPosition = new Vector2(currentPos.x, newY);
     }
 
+    private void LoadSelectedUnitDeck()
+    {
+        UnitData sourceDeck = GetCurrentPlayerUnitData();
+
+        if (sourceDeck == null)
+        {
+            Debug.LogWarning("HandUIManager: player unit deck source is missing. Using inspector deck.");
+            drawPile.Clear();
+            drawPile.AddRange(deck);
+            return;
+        }
+
+        activeUnitData = sourceDeck;
+        LoadDeckFromUnitData(sourceDeck);
+    }
+
+    private void LoadDeckFromUnitData(UnitData sourceDeck)
+    {
+        deck.Clear();
+
+        CardData[] selectedDeck = sourceDeck.deck;
+        if (selectedDeck != null)
+        {
+            deck.AddRange(selectedDeck);
+        }
+
+        drawPile.Clear();
+        drawPile.AddRange(deck);
+
+        Debug.Log($"HandUIManager: loaded {deck.Count} cards from {sourceDeck.unitName}.");
+    }
+
+    private void ClearHand()
+    {
+        if (handArea == null) return;
+
+        for (int i = handArea.childCount - 1; i >= 0; i--)
+        {
+            Destroy(handArea.GetChild(i).gameObject);
+        }
+    }
+
+    private UnitData GetCurrentPlayerUnitData()
+    {
+        if (TurnManager.Instance != null)
+        {
+            Unit currentUnit = TurnManager.Instance.GetCurrentUnit();
+            if (currentUnit != null && currentUnit.isAlly && currentUnit.data != null)
+            {
+                return currentUnit.data;
+            }
+        }
+
+        Unit[] units = FindObjectsByType<Unit>(FindObjectsSortMode.None);
+        foreach (Unit unit in units)
+        {
+            if (unit != null && unit.isAlly && unit.data != null)
+            {
+                return unit.data;
+            }
+        }
+
+        if (StageManager.SelectedPartyMembers != null)
+        {
+            foreach (PlayerEntry entry in StageManager.SelectedPartyMembers)
+            {
+                if (entry != null && entry.unitData != null)
+                {
+                    return entry.unitData;
+                }
+            }
+        }
+
+        if (PlayerSelectionData.Instance != null && PlayerSelectionData.Instance.selectedUnit != null)
+        {
+            return PlayerSelectionData.Instance.selectedUnit;
+        }
+
+        return null;
+    }
+
+    private void ShuffleDrawPile()
+    {
+        for (int i = 0; i < drawPile.Count; i++)
+        {
+            int randomIndex = Random.Range(i, drawPile.Count);
+            CardData temp = drawPile[i];
+            drawPile[i] = drawPile[randomIndex];
+            drawPile[randomIndex] = temp;
+        }
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Debug.Log("마우스 들어옴! 쑤욱 올라갑니다!");
         targetY = visibleY;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Debug.Log("마우스 나감! 다시 숨습니다.");
         targetY = hiddenY;
     }
 
-    // 👇 (수정) targetIndex = -1 이라는 '선택형 번호표'를 추가했습니다!
     public void DrawCards(int amount, int targetIndex = -1)
     {
         if (handArea == null)
         {
-            Debug.LogWarning("HandUIManager: handArea가 연결되지 않음");
+            Debug.LogWarning("HandUIManager: handArea is missing.");
             return;
         }
 
         for (int i = 0; i < amount; i++)
         {
-            if (deck.Count == 0)
+            if (drawPile.Count == 0)
             {
-                Debug.LogWarning("HandUIManager: deck이 비어 있음");
+                drawPile.AddRange(deck);
+                ShuffleDrawPile();
+            }
+
+            if (drawPile.Count == 0)
+            {
+                Debug.LogWarning("HandUIManager: deck is empty.");
                 break;
             }
 
-            CardData randomData = deck[Random.Range(0, deck.Count)];
+            CardData randomData = drawPile[0];
+            drawPile.RemoveAt(0);
             if (randomData == null) continue;
 
             GameObject prefabToUse = GetCardPrefab(randomData.pieceType);
@@ -86,7 +215,6 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
             GameObject newCardObj = Instantiate(prefabToUse, handArea);
 
-            // 🌟 [핵심 마법] 만약 번호표를 받았다면, 새 카드를 무조건 맨 오른쪽이 아니라 '그 번호 자리'로 끼워 넣습니다!
             if (targetIndex != -1)
             {
                 newCardObj.transform.SetSiblingIndex(targetIndex);
@@ -106,15 +234,18 @@ public class HandUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             case PieceType.Pawn:
                 return pawnCardPrefab;
-
             case PieceType.Knight:
-                return knightCardPrefab;
-
+                return knightCardPrefab != null ? knightCardPrefab : pawnCardPrefab;
             case PieceType.Bishop:
-                return bishopCardPrefab;
-
+                return bishopCardPrefab != null ? bishopCardPrefab : pawnCardPrefab;
+            case PieceType.Rook:
+                return rookCardPrefab != null ? rookCardPrefab : pawnCardPrefab;
+            case PieceType.Queen:
+                return queenCardPrefab != null ? queenCardPrefab : pawnCardPrefab;
+            case PieceType.King:
+                return kingCardPrefab != null ? kingCardPrefab : pawnCardPrefab;
             default:
-                Debug.LogWarning($"HandUIManager: 지원하지 않는 PieceType - {pieceType}");
+                Debug.LogWarning($"HandUIManager: unsupported PieceType - {pieceType}");
                 return pawnCardPrefab;
         }
     }

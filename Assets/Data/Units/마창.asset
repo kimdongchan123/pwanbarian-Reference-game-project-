@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -33,6 +33,24 @@ MonoBehaviour:
   - "\uC778\uAC04\uD615"
   - "\uBAB0\uB77D\uC2E0\uC131"
   - "\uC131\uBCC4\uBD88\uBA85"
-  traits: []
+  traits:
+  - {fileID: 11400000, guid: 9b4664b41b054c2283765c25a29c4fd4, type: 2}
+  - {fileID: 11400000, guid: 88fc4fc602c949c7b4c64cb94d8e6ba6, type: 2}
+  - {fileID: 11400000, guid: f0df80132b8f4f5797a186ac0d26471d, type: 2}
   skills: []
-  deck: []
+  deck:
+  - {fileID: 11400000, guid: 5bbb3e7cc10b49cf9aa8577e66357d15, type: 2}
+  - {fileID: 11400000, guid: 571d8d00d3c74f16a4515d01ffdf0a6a, type: 2}
+  - {fileID: 11400000, guid: a393fa462037449ba0965481ca432b55, type: 2}
+  - {fileID: 11400000, guid: fdd838f5b53b48c299c6c6e1e6ed08a8, type: 2}
+  - {fileID: 11400000, guid: ce7861081f85481fa0270e7828dc01b7, type: 2}
+  - {fileID: 11400000, guid: ba139d6093a24376848be3b010523f4c, type: 2}
+  - {fileID: 11400000, guid: 69a1041c95df4ed2b371f920ece9335c, type: 2}
+  - {fileID: 11400000, guid: b8397a8738534afb95a183610cac2d55, type: 2}
+  - {fileID: 11400000, guid: eb95902b09d1400fa8e70a2e3dc063ff, type: 2}
+  - {fileID: 11400000, guid: fe743736d2984e139cbdd3a71711491f, type: 2}
+  - {fileID: 11400000, guid: e694655c5ba74783986593e0b123ef7e, type: 2}
+  - {fileID: 11400000, guid: f436e9a28ba94ce18d7d7c7f1d292956, type: 2}
+  - {fileID: 11400000, guid: 7d581658911045589b7b09a6d28d49d6, type: 2}
+  - {fileID: 11400000, guid: 38f8280bf7634b5082169f1c3a8469d8, type: 2}
+  - {fileID: 11400000, guid: 1c306af6a40b4b338213a49f59e227f4, type: 2}

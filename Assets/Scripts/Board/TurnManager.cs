@@ -167,6 +167,7 @@ public class TurnManager : MonoBehaviour
         if (actor.isAlly)
         {
             actor.unit.OnTurnStart();
+            if (HandUIManager.Instance != null) HandUIManager.Instance.RefreshForUnit(actor.unit);
             Debug.Log($"➡️ [아군 턴] {actor.displayName} — 카드를 선택하세요.");
             if (BattleSkillButtonUI.Instance != null) BattleSkillButtonUI.Instance.Refresh();
         }
@@ -277,9 +278,10 @@ public class TurnManager : MonoBehaviour
     {
         Enemy enemy = enemyUnit.GetComponent<Enemy>();
         int dmg = enemy != null ? enemy.damage : 1;
+        bool hitIgnored = ally.ShouldIgnoreIncomingHit(dmg);
 
         UnitMovement allyMovement = ally.movement;
-        if (allyMovement != null && allyMovement.currentTile != null)
+        if (!hitIgnored && allyMovement != null && allyMovement.currentTile != null)
         {
             Tile allyTile = allyMovement.currentTile;
             Vector2Int allyGridPos   = new Vector2Int(allyTile.x, allyTile.y);
@@ -328,7 +330,7 @@ public class TurnManager : MonoBehaviour
 
         // 데미지 + 로그
         int prevHp = ally.currentHp;
-        ally.currentHp = Mathf.Max(0, ally.currentHp - dmg);
+        ally.TakeDamage(dmg, enemy);
         Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} | HP: {prevHp} → {ally.currentHp}/{ally.maxHp} (-{dmg})");
 
         if (ally.currentHp <= 0)

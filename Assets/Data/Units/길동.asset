@@ -34,7 +34,39 @@ MonoBehaviour:
   - "\uB0A8\uC131"
   - "\uC778\uAC04"
   - "\uC778\uAC04\uD615"
-  traits: []
+  traits:
+  - {fileID: 11400000, guid: 4b34374dc5dbffd42ab2bd104b13cc85, type: 2}
+  - {fileID: 11400000, guid: 2c468d7cecea1804994b89533d7263fd, type: 2}
   skills:
   - {fileID: 11400000, guid: b066c2564fda47b28ee50bd6c07a93a9, type: 2}
-  deck: []
+  deck:
+  - {fileID: 11400000, guid: 0d68070ec2ec4b5ea6e3b27fb3a9fcc1, type: 2}
+  - {fileID: 11400000, guid: 46018fc50c58409185f69860abe3fc53, type: 2}
+  - {fileID: 11400000, guid: 905e8c4b2cfe47e1ac17b0f7e698516e, type: 2}
+  - {fileID: 11400000, guid: cf630a8c4da84d4f88749167ea8e253f, type: 2}
+  - {fileID: 11400000, guid: 73aa49f5ad58473b8e7dce8776ac43c0, type: 2}
+  - {fileID: 11400000, guid: 6394ac9144694441abcb8a9bceb24410, type: 2}
+  - {fileID: 11400000, guid: 952c7b676d6e44bd93f27778e392c6bd, type: 2}
+  - {fileID: 11400000, guid: 67452bacac85466e9be7c2051d115858, type: 2}
+  - {fileID: 11400000, guid: e7b8505d871141b7b51bdf09587c122e, type: 2}
+  - {fileID: 11400000, guid: ad2975af25f743c18f7d58f9c6b0868e, type: 2}
+  - {fileID: 11400000, guid: 6967c95639ee419bbd4bd289f2854579, type: 2}
+  - {fileID: 11400000, guid: e0b05c0ebc9042d189f7d295c1a06726, type: 2}
+  - {fileID: 11400000, guid: 9874614fc1e046119826e13c82b7f57e, type: 2}
+  - {fileID: 11400000, guid: 9ffdc48b013d4686b1d729649117a99f, type: 2}
+  - {fileID: 11400000, guid: b1a7675293ff491d8477dbdd81490460, type: 2}
+  - {fileID: 11400000, guid: 61245c52ccfe495f8258c91a2ac5bd00, type: 2}
+  - {fileID: 11400000, guid: a09f945ea7064552a8bc9e2306841f4d, type: 2}
+  - {fileID: 11400000, guid: 52c0880a7d0b42d5b71a2d716745ecca, type: 2}
+  - {fileID: 11400000, guid: 6cdaf31587de493eac07e55163d16fa5, type: 2}
+  - {fileID: 11400000, guid: b2d717d26ae845a1b14c9a7f638223e1, type: 2}
+  - {fileID: 11400000, guid: cb78a241dca24d5d9a8002d5a6f182bd, type: 2}
+  - {fileID: 11400000, guid: b634b5b500eb4de78bbbe25d4a470768, type: 2}
+  - {fileID: 11400000, guid: 78299bf455e2496c805c2ff0475f585a, type: 2}
+  - {fileID: 11400000, guid: e5e52247b574484aae72126ced843bc9, type: 2}
+  - {fileID: 11400000, guid: 172f5ab110564d859fa090daa442ef5a, type: 2}
+  - {fileID: 11400000, guid: d81c28af7aac41a6bd0246a1b62156ea, type: 2}
+  - {fileID: 11400000, guid: 2b605d1ffc244c80b7e24d4f15fffdbc, type: 2}
+  - {fileID: 11400000, guid: 4c81b6afd01943719606075c21e104d4, type: 2}
+  - {fileID: 11400000, guid: f9523d6d772746e7810b5d68a36e95c4, type: 2}
+  - {fileID: 11400000, guid: 4b6ea1a884aa4e5ea7472cd22f902003, type: 2}

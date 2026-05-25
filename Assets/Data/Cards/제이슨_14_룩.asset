@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54db9196f91b0d84aae331a664fbf0b9, type: 3}
+  m_Name: "\uc81c\uc774\uc2a8_14_\ub8e9"
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardName: "\uc81c\uc774\uc2a8_14_\ub8e9"
+  pieceType: 3
+  sinType: 0
+  damageType: 2
+  targetType: 0
+  isRanged: 1
+  attackRange: 3
+  power: 5
+  useEffect: 1
+  effectType: 30
+  effectAmount: 1
+  effectToSelf: 0
+  description: "\u318d [ \uc6d0\uac70\ub9ac \uacf5\uaca9 \uc804\uc6a9 ] \u318d\uacf5\uaca9 \uc18d\uc131 - [ \ud2b9\uc218 < \uc9d1\uc911 >]"

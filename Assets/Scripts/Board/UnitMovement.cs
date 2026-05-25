@@ -136,7 +136,10 @@ public class UnitMovement : MonoBehaviour
                 myUnit.OnAttackHit(enemy);
 
                 MapManager.Instance.ClearHighlights();
-                TurnManager.Instance.NextTurn();
+                if (!myUnit.ConsumeExtraMove())
+                {
+                    TurnManager.Instance.NextTurn();
+                }
             }
             else
             {
@@ -168,6 +171,9 @@ public class UnitMovement : MonoBehaviour
 
         // 4) 파란 불 끄고 다음 사람 턴으로!
         MapManager.Instance.ClearHighlights();
-        TurnManager.Instance.NextTurn();
+        if (!myUnit.ConsumeExtraMove())
+        {
+            TurnManager.Instance.NextTurn();
+        }
     }
 }

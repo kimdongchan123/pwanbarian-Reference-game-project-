@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitName: "\uC81C\uB85C"
   panicType: 2
+  portraitSprite: {fileID: 7722185104766060780, guid: e4f7c9167d574374a99b051993cb9d26, type: 3}
+  battleSprite: {fileID: 7722185104766060780, guid: e4f7c9167d574374a99b051993cb9d26, type: 3}
   maxHp: 35
   maxSt: 50
   minSp: 2
@@ -40,5 +42,18 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: 13ca1298b7278ff4ea7df1baf21cfed2, type: 2}
   deck:
-  - {fileID: 11400000, guid: 87ccb58b7965f2f4486cb235a7871591, type: 2}
-  - {fileID: 11400000, guid: f93346bc73221514bad302aaacb10b9c, type: 2}
+  - {fileID: 11400000, guid: 9bb6755bd04b499493c9951e105eb663, type: 2}
+  - {fileID: 11400000, guid: 418be0fb5680453b95031755e283d06e, type: 2}
+  - {fileID: 11400000, guid: 70c49fdf44c94f0da739292f37f118c6, type: 2}
+  - {fileID: 11400000, guid: c37478613f1e4d54a4407fc4e4f4ba8f, type: 2}
+  - {fileID: 11400000, guid: 9bb19e47e80d422d813bfb77aa85b4de, type: 2}
+  - {fileID: 11400000, guid: 8161b643abe64f39a0d6fb840d5bda00, type: 2}
+  - {fileID: 11400000, guid: a5dfca6290d9496581108e7fd0b4718c, type: 2}
+  - {fileID: 11400000, guid: bc28dedc92094a2c8308246537d3c43d, type: 2}
+  - {fileID: 11400000, guid: b50734f2c047464c8d5f38b93faf91b8, type: 2}
+  - {fileID: 11400000, guid: feaed750751f4872bde6a043d9b65480, type: 2}
+  - {fileID: 11400000, guid: 470fc63dde924b42981599498dfb6dae, type: 2}
+  - {fileID: 11400000, guid: 346cba2f2612460ab4c82c24f066f48f, type: 2}
+  - {fileID: 11400000, guid: be359d6b5b114a13a3e5474c7f1ffdf8, type: 2}
+  - {fileID: 11400000, guid: b6c831994e614f7099261c29891f7da7, type: 2}
+  - {fileID: 11400000, guid: 9694f54721f04d509c35af76c499ad60, type: 2}

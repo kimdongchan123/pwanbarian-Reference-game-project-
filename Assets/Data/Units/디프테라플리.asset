@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitName: "\uB514\uD504\uD14C \uB77C\uD50C\uB9AC"
   panicType: 0
-  portraitSprite: {fileID: 662156392, guid: 2d0f85df58ce11248935c7334b241c06, type: 3}
-  battleSprite: {fileID: 662156392, guid: 2d0f85df58ce11248935c7334b241c06, type: 3}
+  portraitSprite: {fileID: 8845407571574918217, guid: 239f67dae0264f4ab78e8bd1d828ffc4, type: 3}
+  battleSprite: {fileID: 8845407571574918217, guid: 239f67dae0264f4ab78e8bd1d828ffc4, type: 3}
   maxHp: 70
   maxSt: 60
   minSp: 1
@@ -36,6 +36,21 @@ MonoBehaviour:
   - "\uC778\uB958\uC758 \uCC9C\uC801"
   traits:
   - {fileID: 11400000, guid: 826732f642b148c4e9a255f06fde9aaa, type: 2}
+  - {fileID: 11400000, guid: c647d7aabac04d3d9ed7d6488ae90fa7, type: 2}
   skills:
   - {fileID: 11400000, guid: e3b267deea6043fbbb12124cf85a1d1e, type: 2}
-  deck: []
+  deck:
+  - {fileID: 11400000, guid: b99a24faa0b14ce8a092cd3fa78e91e1, type: 2}
+  - {fileID: 11400000, guid: 545f02e26f35498f88d12d2818861344, type: 2}
+  - {fileID: 11400000, guid: 509496fad72b40c99a681e47a88f10eb, type: 2}
+  - {fileID: 11400000, guid: 6df6db37f3ee421aa5a5c23ecd683b2a, type: 2}
+  - {fileID: 11400000, guid: 74af6f13bdc44fa9ac7e86fdc7a29f43, type: 2}
+  - {fileID: 11400000, guid: 09562c703d20428288aaa19dcef9500a, type: 2}
+  - {fileID: 11400000, guid: fca7fbab70ce4d7a81f11e0d7d398b61, type: 2}
+  - {fileID: 11400000, guid: 7c1f161e9783470f8f4ef8b011334289, type: 2}
+  - {fileID: 11400000, guid: 19f73b87248f44e99856f86f0bf6cdf3, type: 2}
+  - {fileID: 11400000, guid: 68c6707fb50749fc9c55cb20ab41805f, type: 2}
+  - {fileID: 11400000, guid: 32a72a305d55480e9b6c06381ea4c853, type: 2}
+  - {fileID: 11400000, guid: ad4eaf6645bb40d5b5d9a7e466e7d0e7, type: 2}
+  - {fileID: 11400000, guid: c54b9b5db31c4b42b3ae8ca7b51e5c7e, type: 2}
+  - {fileID: 11400000, guid: 69679c882ba64283b4058c006c236874, type: 2}
