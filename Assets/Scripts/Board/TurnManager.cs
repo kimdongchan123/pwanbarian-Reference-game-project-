@@ -258,7 +258,7 @@ public class TurnManager : MonoBehaviour
         if (IsAdjacent(enemyUnit.gridPosition, allyPos))
         {
             enemyUnit.UseNextSkillInSequence();
-            AttackAlly(enemyUnit, nearestAlly);
+            yield return StartCoroutine(AttackAlly(enemyUnit, nearestAlly));
             yield break;
         }
 
@@ -273,18 +273,18 @@ public class TurnManager : MonoBehaviour
 
         Vector2Int newPos = new Vector2Int(targetTile.x, targetTile.y);
         enemyUnit.gridPosition = newPos;
-        enemyUnit.transform.position = targetTile.transform.position;
         targetTile.isOccupied = true;
         targetTile.currentUnit = enemyUnit.gameObject;
+
+        // 애니메이션으로 이동
+        yield return StartCoroutine(AnimateMove(enemyUnit.transform, targetTile.transform.position, 1f));
 
         enemyUnit.UseNextSkillInSequence();
         Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
 
         // 이동 후 인접하게 됐으면 공격
         if (IsAdjacent(newPos, allyPos))
-            AttackAlly(enemyUnit, nearestAlly);
-
-        yield return null;
+            yield return StartCoroutine(AttackAlly(enemyUnit, nearestAlly));
     }
 
     private bool IsAdjacent(Vector2Int a, Vector2Int b)
@@ -292,7 +292,7 @@ public class TurnManager : MonoBehaviour
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
     }
 
-    private void AttackAlly(EnemyUnit enemyUnit, Unit ally)
+    private IEnumerator AttackAlly(EnemyUnit enemyUnit, Unit ally)
     {
         Enemy enemy = enemyUnit.GetComponent<Enemy>();
         int dmg = enemy != null ? enemy.damage : 1;
@@ -319,26 +319,28 @@ public class TurnManager : MonoBehaviour
 
             if (canKnockBack)
             {
-                // 아군 → 넉백 위치
+                // 논리적 타일 상태 즉시 업데이트
                 allyTile.isOccupied = false;
                 allyTile.currentUnit = null;
-                ally.transform.position = knockBackTile.transform.position;
                 knockBackTile.isOccupied = true;
                 knockBackTile.currentUnit = ally.gameObject;
                 allyMovement.currentTile = knockBackTile;
 
-                // 적 → 아군의 원래 위치
                 if (MapManager.Instance.tiles.TryGetValue(enemyGridPos, out Tile enemyOldTile))
                 {
                     enemyOldTile.isOccupied = false;
                     enemyOldTile.currentUnit = null;
                 }
-                enemyUnit.transform.position = allyTile.transform.position;
                 enemyUnit.gridPosition = allyGridPos;
                 allyTile.isOccupied = true;
                 allyTile.currentUnit = enemyUnit.gameObject;
 
+                // 아군 넉백 애니메이션
+                yield return StartCoroutine(AnimateMove(ally.transform, knockBackTile.transform.position, 0.5f));
                 Debug.Log($"💨 {ally.unitName} 넉백 → ({knockBackGridPos.x}, {knockBackGridPos.y})");
+
+                // 적 전진 애니메이션
+                yield return StartCoroutine(AnimateMove(enemyUnit.transform, allyTile.transform.position, 1f));
             }
             else
             {
@@ -362,6 +364,22 @@ public class TurnManager : MonoBehaviour
             allUnits.Remove(ally);
             Destroy(ally.gameObject);
         }
+    }
+
+    private IEnumerator AnimateMove(Transform target, Vector3 destination, float duration)
+    {
+        Vector3 start = target.position;
+        destination.z = 0f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            t = t * t * (3f - 2f * t); // smoothstep easing
+            target.position = Vector3.Lerp(start, destination, t);
+            yield return null;
+        }
+        target.position = destination;
     }
 
     public void KnockBack(GameObject target, Vector2Int attackerGridPos)
