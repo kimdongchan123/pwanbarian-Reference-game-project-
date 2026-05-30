@@ -37,6 +37,7 @@ public class CombatManager : MonoBehaviour
         finalDamage = Mathf.Max(1, Mathf.RoundToInt(finalDamage / resist));
 
         defender.TakeDamage(finalDamage);
+        HitEffectSpawner.SpawnForCard(card, defender.transform.position);
         Debug.Log($"플레이어 → {defender.EnemyData.unitName}: {finalDamage} 피해 (내성:{resist})");
     }
 
@@ -47,6 +48,7 @@ public class CombatManager : MonoBehaviour
         int enemyATK = enemy != null ? enemy.damage : 0;
         int baseDamage = card.power + enemyATK + attacker.GetDamageBonus();
         defender.TakeDamage(baseDamage, card.damageType, null);
+        HitEffectSpawner.SpawnForDamageType(card.damageType, defender.transform.position);
         Debug.Log($"적 → 플레이어: {baseDamage} 피해");
     }
 
@@ -78,6 +80,7 @@ public class CombatManager : MonoBehaviour
         int finalDamage = Mathf.Max(1, Mathf.RoundToInt(baseDamage / resist));
 
         defender.TakeDamage(finalDamage);
+        HitEffectSpawner.SpawnImpact(defender.transform.position);
         Debug.Log($"[충돌] 플레이어 → {defender.EnemyData.unitName}: {finalDamage} 피해");
     }
 
@@ -87,6 +90,7 @@ public class CombatManager : MonoBehaviour
         int enemyATK = enemy != null ? enemy.damage : 0;
         int baseDamage = enemyATK + attacker.GetDamageBonus();
         defender.TakeDamage(baseDamage, DamageType.Physical, null);
+        HitEffectSpawner.SpawnImpact(defender.transform.position);
         Debug.Log($"[충돌] 적 → 플레이어: {baseDamage} 피해");
     }
 

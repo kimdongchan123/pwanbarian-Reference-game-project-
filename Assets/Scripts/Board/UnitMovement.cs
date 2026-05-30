@@ -12,20 +12,20 @@ public class UnitMovement : MonoBehaviour
         myUnit = GetComponent<Unit>();
     }
 
-    // void Start() 대신 IEnumerator Start()를 사용합니다!
+    // void Start() ?�??IEnumerator Start()�??�용?�니??
     IEnumerator Start()
     {
-        // ⏳ 다른 매니저들이 준비될 때까지 딱 1프레임만 기다려줍니다.
+        // ???�른 매니?�?�이 준비될 ?�까지 ??1?�레?�만 기다?�줍?�다.
         yield return null;
 
-        // 🚨 [핵심] 맵 매니저가 없다면? (예: 세팅 씬일 경우)
+        // ?�� [?�심] �?매니?�가 ?�다�? (?? ?�팅 ?�일 경우)
         if (MapManager.Instance == null)
         {
-            // 에러를 띄우지 않고, 그냥 조용히 이 함수를 끝내버립니다. (세팅 씬 평화 유지)
+            // ?�러�??�우지 ?�고, 그냥 조용?????�수�??�내버립?�다. (?�팅 ???�화 ?��?)
             yield break;
         }
 
-        // 🚀 맵 매니저가 있다면? (예: 전투 씬일 경우) 정상적으로 타일을 찾습니다.
+        // ?? �?매니?�가 ?�다�? (?? ?�투 ?�일 경우) ?�상?�으�??�?�을 찾습?�다.
         int myX = Mathf.RoundToInt(transform.position.x + 3.5f);
         int myY = Mathf.RoundToInt(transform.position.y + 3.5f);
         Vector2Int myPos = new Vector2Int(myX, myY);
@@ -38,10 +38,10 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // 🃏 카드를 눌렀을 때 이동 범위 표시
+    // ?�� 카드�??��??????�동 범위 ?�시
     public void ShowMoveRange(MovePattern pattern)
     {
-        // 내 현재 위치(정수 좌표) 다시 확인
+        // ???�재 ?�치(?�수 좌표) ?�시 ?�인
         int myX = Mathf.RoundToInt(transform.position.x + 3.5f);
         int myY = Mathf.RoundToInt(transform.position.y + 3.5f);
 
@@ -57,17 +57,17 @@ public class UnitMovement : MonoBehaviour
         {
             currentTile = foundTile;
 
-            // 🚨 바로 이 부분입니다! (에러 해결)
-            // 매니저에게 '내가 아군인지 적군인지(myUnit.isAlly)' 3번째 재료로 넘겨줍니다!
+            // ?�� 바로 ??부분입?�다! (?�러 ?�결)
+            // 매니?�?�게 '?��? ?�군?��? ?�군?��?(myUnit.isAlly)' 3번째 ?�료�??�겨줍니??
             MapManager.Instance.ShowMoveRange(currentTile, pattern, myUnit.isAlly);
         }
         else
         {
-            Debug.LogWarning($" {gameObject.name}의 발밑({myX}, {myY})에 등록된 타일이 없습니다!");
+            Debug.LogWarning($" {gameObject.name}??발밑({myX}, {myY})???�록???�?�이 ?�습?�다!");
         }
     }
 
-    // 👆 파란색 타일을 클릭했을 때 이동 시도
+    // ?�� ?��????�?�을 ?�릭?�을 ???�동 ?�도
     public void TryMoveTo(Tile targetTile)
     {
         if (!targetTile.isOccupied)
@@ -80,18 +80,18 @@ public class UnitMovement : MonoBehaviour
         Enemy enemy = defenderGO.GetComponent<Enemy>();
         Unit targetUnit = defenderGO.GetComponent<Unit>();
 
-        // 적 유닛은 Enemy 컴포넌트로 판별, 아군은 Unit.isAlly로 판별
+        // ???�닛?� Enemy 컴포?�트�??�별, ?�군?� Unit.isAlly�??�별
         bool isEnemy = myUnit.isAlly && enemy != null;
         bool isFriendlyBlocking = !isEnemy && targetUnit != null && targetUnit.isAlly == myUnit.isAlly;
 
         if (isEnemy)
         {
             string defenderName = enemy.EnemyData != null ? enemy.EnemyData.unitName : defenderGO.name;
-            Debug.Log($"⚔ {myUnit.unitName}이(가) 적군 {defenderName}을(를) 공격합니다!");
+            Debug.Log($"??{myUnit.unitName}??가) ?�군 {defenderName}??�? 공격?�니??");
 
             EnemyUnit eu = defenderGO.GetComponent<EnemyUnit>();
 
-            // 넉백 방향 계산
+            // ?�백 방향 계산
             Vector2Int attackerGridPos = currentTile != null
                 ? new Vector2Int(currentTile.x, currentTile.y)
                 : new Vector2Int(Mathf.RoundToInt(transform.position.x + 3.5f), Mathf.RoundToInt(transform.position.y + 3.5f));
@@ -110,7 +110,7 @@ public class UnitMovement : MonoBehaviour
         else
         {
             string blockerName = targetUnit != null ? targetUnit.unitName : defenderGO.name;
-            Debug.Log($"🛡️ 같은 편인 {blockerName}이(가) 길을 막고 있습니다!");
+            Debug.Log($"?���?같�? ?�인 {blockerName}??가) 길을 막고 ?�습?�다!");
         }
     }
 
@@ -119,18 +119,18 @@ public class UnitMovement : MonoBehaviour
     {
         if (canKnockBack)
         {
-            // 논리적 타일 상태 즉시 업데이트
+            // ?�리???�???�태 즉시 ?�데?�트
             targetTile.isOccupied = false;
             targetTile.currentUnit = null;
             knockBackTile.isOccupied = true;
             knockBackTile.currentUnit = defenderGO;
             if (eu != null) eu.gridPosition = knockBackPos;
 
-            // 방어자 넉백 애니메이션
+            // 방어???�백 ?�니메이??
             yield return StartCoroutine(AnimateMove(defenderGO.transform, knockBackTile.transform.position, MoveDuration * 0.5f));
-            Debug.Log($"💨 {defenderName} 넉백 → ({knockBackPos.x}, {knockBackPos.y})");
+            Debug.Log($"?�� {defenderName} ?�백 ??({knockBackPos.x}, {knockBackPos.y})");
 
-            // 공격자 전진 애니메이션
+            // 공격???�진 ?�니메이??
             if (currentTile != null)
             {
                 currentTile.isOccupied = false;
@@ -143,11 +143,12 @@ public class UnitMovement : MonoBehaviour
         }
         else
         {
-            Debug.Log($"🧱 {defenderName} 넉백 불가 (벽 또는 유닛에 막힘)");
+            Debug.Log($"?�� {defenderName} ?�백 불�? (�??�는 ?�닛??막힘)");
         }
 
         int finalDamage = myUnit.GetAttackDamageAgainst(enemy);
         enemy.TakeDamage(finalDamage);
+        HitEffectSpawner.SpawnImpact(enemy.transform.position);
         myUnit.OnAttackHit(enemy);
 
         MapManager.Instance.ClearHighlights();
@@ -157,27 +158,27 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // 🚶 실제 이동 및 턴 종료 로직
+    // ?�� ?�제 ?�동 �???종료 로직
     private IEnumerator ExecuteMove(Tile targetTile)
     {
-        // 1) 예전 타일 비우기
+        // 1) ?�전 ?�??비우�?
         if (currentTile != null)
         {
             currentTile.isOccupied = false;
             currentTile.currentUnit = null;
         }
 
-        // 2) 애니메이션으로 이동
+        // 2) ?�니메이?�으�??�동
         yield return StartCoroutine(AnimateMove(transform, targetTile.transform.position, MoveDuration));
 
-        // 3) 새 타일에 내 정보 등록하기
+        // 3) ???�?�에 ???�보 ?�록?�기
         currentTile = targetTile;
         targetTile.isOccupied = true;
         targetTile.currentUnit = this.gameObject;
 
-        Debug.Log($" {myUnit.unitName} 이동 완료!");
+        Debug.Log($" {myUnit.unitName} ?�동 ?�료!");
 
-        // 4) 파란 불 끄고 다음 사람 턴으로!
+        // 4) ?��? �??�고 ?�음 ?�람 ?�으�?
         MapManager.Instance.ClearHighlights();
         if (!myUnit.ConsumeExtraMove())
         {
