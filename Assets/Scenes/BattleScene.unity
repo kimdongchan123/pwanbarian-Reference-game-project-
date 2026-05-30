@@ -3987,13 +3987,25 @@ MonoBehaviour:
     isTopSide: 1
     spawnOnStart: 0
     spawnCount: 1
-    spawnX: 7
+    spawnX: 1
   - enemyName: "\uAFC0\uAEBD\uAD6C\uB9AC"
     prefab: {fileID: 6223548905357297895, guid: 43e935d3fd3266e438893be3f09b68be, type: 3}
     isTopSide: 1
     spawnOnStart: 0
     spawnCount: 1
-    spawnX: 4
+    spawnX: 3
+  - enemyName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
+    prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
+    isTopSide: 1
+    spawnOnStart: 0
+    spawnCount: 1
+    spawnX: 7
+  - enemyName: "\uAC70\uC778"
+    prefab: {fileID: 9101881790073909912, guid: 5cc70d501c41fe048b19df6d251a31e2, type: 3}
+    isTopSide: 1
+    spawnOnStart: 0
+    spawnCount: 1
+    spawnX: 5
 --- !u!4 &846833976
 Transform:
   m_ObjectHideFlags: 0
@@ -7447,6 +7459,9 @@ MonoBehaviour:
   pawnCardPrefab: {fileID: 4811897092414514401, guid: 5d5e8db3e44317a4fb2cc4fb321525cd, type: 3}
   knightCardPrefab: {fileID: 7047393308585186693, guid: f370b685e3888da4cb0169b9c8253ade, type: 3}
   bishopCardPrefab: {fileID: 6450081657140244437, guid: a4f81a9003f7f2c41a4c881a13e27516, type: 3}
+  rookCardPrefab: {fileID: 0}
+  queenCardPrefab: {fileID: 0}
+  kingCardPrefab: {fileID: 0}
   handArea: {fileID: 547875349}
   deck:
   - {fileID: 11400000, guid: 7f5ccbd80710530479dac0de94abf5fd, type: 2}
@@ -7460,6 +7475,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
   - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
   - {fileID: 11400000, guid: 997d1d04e5856454d9f94ff86d90c884, type: 2}
+  initialDrawCount: 3
   hiddenY: -150
   visibleY: 100
   slideSpeed: 10
@@ -8297,6 +8313,12 @@ MonoBehaviour:
     spawnX: 1
     isTopSide: 1
   - enemyName: "\uAFC0\uAEBD\uAD6C\uB9AC"
+    spawnX: 1
+    isTopSide: 1
+  - enemyName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
+    spawnX: 1
+    isTopSide: 1
+  - enemyName: "\uAC70\uC778"
     spawnX: 1
     isTopSide: 1
 --- !u!4 &1674884035

@@ -84,12 +84,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5610692919833445164, guid: b8db2729a71b5fb4585265453e7b619d, type: 3}
+  m_Sprite: {fileID: -4878674912663111080, guid: 55aeac6736e6bc14a910d588ead0913b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 12.65, y: 7.98}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -126,6 +126,8 @@ MonoBehaviour:
   damage: 0
   isGroggy: 0
   wetStacks: 0
+  burnStacks: 0
+  manaStacks: 0
   hasSwiftnessBuff: 0
   hasSpreadBuff: 0
 --- !u!114 &-8590659896914120605
@@ -161,3 +163,4 @@ MonoBehaviour:
   skillData: []
   skillSlots: []
   skillSequenceIndex: 0
+  buffedSprite: {fileID: 0}
