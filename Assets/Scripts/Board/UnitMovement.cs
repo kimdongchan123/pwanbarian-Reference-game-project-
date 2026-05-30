@@ -133,6 +133,7 @@ public class UnitMovement : MonoBehaviour
 
                 int finalDamage = myUnit.GetAttackDamageAgainst(enemy);
                 enemy.TakeDamage(finalDamage);
+                HitEffectSpawner.SpawnImpact(enemy.transform.position);
                 myUnit.OnAttackHit(enemy);
 
                 MapManager.Instance.ClearHighlights();

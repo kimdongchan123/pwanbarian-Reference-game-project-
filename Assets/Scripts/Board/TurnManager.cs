@@ -349,6 +349,7 @@ public class TurnManager : MonoBehaviour
         // 데미지 + 로그
         int prevHp = ally.currentHp;
         ally.TakeDamage(dmg, enemy);
+        HitEffectSpawner.SpawnImpact(ally.transform.position);
         Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} | HP: {prevHp} → {ally.currentHp}/{ally.maxHp} (-{dmg})");
 
         if (ally.currentHp <= 0)
