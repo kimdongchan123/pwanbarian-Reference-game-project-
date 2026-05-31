@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gulpfrog
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uAFC0\uAEBD\uAD6C\uB9AC"
-  portraitSprite: {fileID: -4878674912663111080, guid: 55aeac6736e6bc14a910d588ead0913b, type: 3}
+  portraitSprite: {fileID: 4206952837834208606, guid: e59c8bb7f2fad254580ccae454b939d5, type: 3}
   maxHp: 80
   maxSt: 30
   minSp: 4
@@ -38,7 +38,7 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: 46bac13e2fbed524aba8540833b16d2b, type: 2}
   traits:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 4b34374dc5dbffd42ab2bd104b13cc85, type: 2}
   - {fileID: 11400000, guid: 42d6fff48cbd7194a84e886055a5f18b, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b80e000000000000000000000000008a, type: 2}
   deck: []

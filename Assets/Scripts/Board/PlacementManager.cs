@@ -288,7 +288,7 @@ public class PlacementManager : MonoBehaviour
         BattleData.placedUnits.Clear();
 
         // 2. 씬에 있는 모든 타일을 찾아서 기물이 있는지 검사합니다.
-        Tile[] allTiles = FindObjectsOfType<Tile>();
+        Tile[] allTiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         foreach (Tile tile in allTiles)
         {
             if (tile.isOccupied && tile.placedUnitIndex >= 0)

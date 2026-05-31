@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43466e5fee5a2ee4d84b6688890a0003, type: 3}
-  m_Name: EnemyData 2
+  m_Name: "\uBC14\uB2E4\uBBFC\uC871\uAC70\uC778"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uBC14\uB2E4\uBBFC\uC871 \uAC70\uC778"
+  portraitSprite: {fileID: 4554441241064814531, guid: 2675d75914c7fa3449329f9c7043b7f9, type: 3}
   maxHp: 100
   maxSt: 25
   minSp: 5
@@ -40,10 +41,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d2464a4255f37174da840c41a00275df, type: 2}
   - {fileID: 11400000, guid: 1701470cc77573d448c0f4d8cc92fbaa, type: 2}
   traits:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b30e000000000000000000000000003a, type: 2}
+  - {fileID: 11400000, guid: b40e000000000000000000000000004a, type: 2}
+  - {fileID: 11400000, guid: b10e000000000000000000000000001a, type: 2}
+  - {fileID: 11400000, guid: b50e000000000000000000000000005a, type: 2}
+  - {fileID: 11400000, guid: ac731b6e2d6ca27439d2ff0b1d4388a4, type: 2}
+  - {fileID: 11400000, guid: b60e000000000000000000000000006a, type: 2}
   deck: []

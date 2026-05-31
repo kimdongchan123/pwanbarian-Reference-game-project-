@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d041d66741920e4bb6bb835af595b02, type: 3}
+  m_Name: "패마"
+  m_EditorClassIdentifier: Assembly-CSharp::TraitData
+  traitName: "패마"
+  triggerType: 5
+  traitEffect: 25
+  description: "방어 특성. 자신보다 ATK와 DEF의 합이 낙은 상대의 공격으로 피해를 받지 않는다. 이 특성으로 피해를 받지 않을 경우 상대로의 ATK와 DEF의 합의 차이만큼 ST 피해를 준다."
+  stAmount: 0
+  affiliationTarget:

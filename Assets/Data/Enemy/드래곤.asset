@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "\uB4DC\uB798\uACE4"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uB4DC\uB798\uACE4"
+  portraitSprite: {fileID: -3590687374350796130, guid: 78e9466744008f14a954f18ef8e19af4, type: 3}
   maxHp: 200
   maxSt: 100
   minSp: 7
@@ -42,5 +43,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 13eef4beea36c5f4293e1d2ddd97dedd, type: 2}
   - {fileID: 11400000, guid: ccfdd7b74ad31c14d93c7f4dfe1a56f8, type: 2}
   - {fileID: 11400000, guid: c46d63a3563489d488082f9b4638afd2, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b60e000000000000000000000000006a, type: 2}
   deck: []

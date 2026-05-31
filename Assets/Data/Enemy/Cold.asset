@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cold
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
-  portraitSprite: {fileID: 2385022514588423005, guid: 53aa554e3311330419f4ddf095bef020, type: 3}
+  portraitSprite: {fileID: -4259560685143864022, guid: ad4d125bda09bba4f85caabe11d23b2d, type: 3}
   maxHp: 12
   maxSt: 13
   minSp: 1
@@ -39,6 +39,6 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: 1701470cc77573d448c0f4d8cc92fbaa, type: 2}
   traits:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 4b34374dc5dbffd42ab2bd104b13cc85, type: 2}
+  - {fileID: 11400000, guid: b50e000000000000000000000000005a, type: 2}
   deck: []
