@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9d505d9931af342bbb69c462a3f9d0, type: 3}
+  m_Name: Stage1_2
+  m_EditorClassIdentifier: Assembly-CSharp::StageData
+  stageName: 1 - 2
+  enemyEntries:
+  - prefab: {fileID: 1791170850446319284, guid: c87ce9840d6bbfc4f8d5be29930cc789, type: 3}
+    rank: 8
+    file: 3
+  - prefab: {fileID: 1791170850446319284, guid: c87ce9840d6bbfc4f8d5be29930cc789, type: 3}
+    rank: 8
+    file: 5
+  - prefab: {fileID: 1791170850446319284, guid: c87ce9840d6bbfc4f8d5be29930cc789, type: 3}
+    rank: 8
+    file: 7
+  - prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
+    rank: 7
+    file: 1
+  - prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
+    rank: 7
+    file: 3
+  - prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
+    rank: 7
+    file: 5
+  - prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
+    rank: 7
+    file: 7
+  - prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
+    rank: 7
+    file: 2
+  - prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
+    rank: 7
+    file: 4
+  - prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
+    rank: 7
+    file: 6
+  - prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
+    rank: 7
+    file: 8
+  battleType: 0
