@@ -100,6 +100,51 @@ public class EnemySpawnManager : MonoBehaviour
         return spawned;
     }
 
+    // 적 진영 빈 타일 중 무작위 한 칸에 소환
+    public Enemy SpawnEnemyAtRandom(string enemyName)
+    {
+        EnemySpawnEntry entry = spawnEntries?.Find(e => e.enemyName == enemyName);
+        if (entry == null || entry.prefab == null)
+        {
+            Debug.LogWarning($"[EnemySpawnManager] '{enemyName}' 프리팹이 등록되지 않음");
+            return null;
+        }
+
+        if (MapManager.Instance == null) return null;
+
+        // 빈 타일 목록 수집 (y >= 4 = 적 진영)
+        var freeTiles = new System.Collections.Generic.List<Tile>();
+        foreach (var kv in MapManager.Instance.tiles)
+        {
+            if (kv.Key.y >= 4 && !kv.Value.isOccupied)
+                freeTiles.Add(kv.Value);
+        }
+        if (freeTiles.Count == 0) return null;
+
+        Tile spawnTile = freeTiles[Random.Range(0, freeTiles.Count)];
+        Vector2Int spawnPos = new Vector2Int(spawnTile.x, spawnTile.y);
+        Vector3 worldPos = spawnTile.transform.position;
+        worldPos.z = 0f;
+
+        Enemy spawned = Instantiate(entry.prefab);
+        EnemyUnit unit = spawned.GetComponent<EnemyUnit>();
+        if (unit != null)
+        {
+            unit.gridPosition = spawnPos;
+            unit.transform.position = worldPos;
+            unit.hasMoved = true;
+        }
+        else
+        {
+            spawned.transform.position = worldPos;
+        }
+        spawnTile.isOccupied = true;
+        spawnTile.currentUnit = spawned.gameObject;
+
+        Debug.Log($"[EnemySpawnManager] {enemyName} 랜덤 소환 @ ({spawnPos.x}, {spawnPos.y})");
+        return spawned;
+    }
+
     // MapManager.tiles에서 지정 x열의 빈 타일을 찾아 반환
     private Tile FindFreeTileInColumn(bool topSide, int col)
     {

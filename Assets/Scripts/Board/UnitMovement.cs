@@ -155,7 +155,12 @@ public class UnitMovement : MonoBehaviour
         }
         else
         {
-            Debug.Log($"?�� {defenderName} ?�백 불�? (�??�는 ?�닛??막힘)");
+            Debug.Log($"🧱 {defenderName} 넉백 불가 (벽 또는 유닛에 막힘)");
+            // 넉백 불가 시 짧은 돌진 애니메이션
+            Vector3 origin = transform.position;
+            Vector3 lungeTarget = Vector3.Lerp(origin, targetTile.transform.position, 0.4f);
+            yield return StartCoroutine(AnimateMove(transform, lungeTarget, MoveDuration * 0.25f));
+            yield return StartCoroutine(AnimateMove(transform, origin, MoveDuration * 0.25f));
         }
 
         int finalDamage = myUnit.GetAttackDamageAgainst(enemy);

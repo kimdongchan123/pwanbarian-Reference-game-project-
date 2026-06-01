@@ -4269,30 +4269,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnManager
   spawnEntries:
+  - enemyName: "\uC790\uBC14\uBB38\uC5B4\uC758 \uB2E4\uB9AC"
+    prefab: {fileID: 5220267620408639080, guid: 6f191f53efdc00241baac852c145ef4a, type: 3}
+    isTopSide: 0
+    spawnOnStart: 0
+    spawnCount: 0
+    spawnX: 0
+  - enemyName: "\uAC81\uC7C1\uC774 \uBC14\uB2E4\uBBFC\uC871"
+    prefab: {fileID: 1791170850446319284, guid: c87ce9840d6bbfc4f8d5be29930cc789, type: 3}
+    isTopSide: 0
+    spawnOnStart: 0
+    spawnCount: 0
+    spawnX: 0
   - enemyName: "\uC57C\uB9CC\uC801\uC778 \uBC14\uB2E4\uBBFC\uC871"
     prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
-    isTopSide: 1
+    isTopSide: 0
     spawnOnStart: 0
-    spawnCount: 1
-    spawnX: 1
-  - enemyName: "\uAFC0\uAEBD\uAD6C\uB9AC"
-    prefab: {fileID: 6223548905357297895, guid: 43e935d3fd3266e438893be3f09b68be, type: 3}
-    isTopSide: 1
-    spawnOnStart: 0
-    spawnCount: 1
-    spawnX: 3
+    spawnCount: 0
+    spawnX: 0
   - enemyName: "\uB0C9\uC815\uD55C \uBC14\uB2E4\uBBFC\uC871"
     prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
-    isTopSide: 1
+    isTopSide: 0
     spawnOnStart: 0
-    spawnCount: 1
-    spawnX: 7
-  - enemyName: "\uAC70\uC778"
-    prefab: {fileID: 9101881790073909912, guid: 5cc70d501c41fe048b19df6d251a31e2, type: 3}
-    isTopSide: 1
+    spawnCount: 0
+    spawnX: 0
+  - enemyName: "\uC6B0\uC559\uAC1C\uBBF8"
+    prefab: {fileID: 557751832619913569, guid: 6c56884301716fc458c0ba64b23672be, type: 3}
+    isTopSide: 0
     spawnOnStart: 0
-    spawnCount: 1
-    spawnX: 5
+    spawnCount: 0
+    spawnX: 0
 --- !u!4 &846833976
 Transform:
   m_ObjectHideFlags: 0

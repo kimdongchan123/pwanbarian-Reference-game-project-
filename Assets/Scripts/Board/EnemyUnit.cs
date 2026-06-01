@@ -233,7 +233,7 @@ public class EnemyUnit : MonoBehaviour
                     for (int i = 0; i < spawnCount; i++)
                     {
                         if (EnemySpawnManager.Instance != null &&
-                            EnemySpawnManager.Instance.SpawnEnemy("우앙개미") != null)
+                            EnemySpawnManager.Instance.SpawnEnemyAtRandom("우앙개미") != null)
                             spawned++;
                     }
                     Debug.Log($"[지원 요청] {gameObject.name} — 우앙개미 {spawned}마리 소환");
