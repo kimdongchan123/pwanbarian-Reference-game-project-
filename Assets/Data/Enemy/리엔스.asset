@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "\uB9AC\uC5D4\uC2A4"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uB9AC\uC5D4\uC2A4"
+  portraitSprite: {fileID: 5966431851115968160, guid: 599e615c2ec3c9949bb55bad95e2779b, type: 3}
   maxHp: 550
   maxSt: 450
   minSp: 11
@@ -40,7 +41,8 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: 546002f390a04854f9381b9ca82f6d03, type: 2}
   traits:
+  - {fileID: 11400000, guid: 513726e1130e2d744945ade65612c2d2, type: 2}
   - {fileID: 11400000, guid: 0d98406df886a7548bf63428fe400289, type: 2}
   - {fileID: 11400000, guid: 6ad173610fac8794cb184b3c1695178e, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b60e000000000000000000000000006a, type: 2}
   deck: []

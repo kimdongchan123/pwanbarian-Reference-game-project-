@@ -105,15 +105,15 @@ public class EnemyUnit : MonoBehaviour
         skillSlots[index].currentCT = skill.coolTime;
     }
 
-    // 행마할 때마다 호출 — 순서대로 스킬 자동 발동
-    public void UseNextSkillInSequence()
+    // 행마할 때마다 호출 — 순서대로 스킬 자동 발동, 발동 시 true 반환
+    public bool UseNextSkillInSequence()
     {
-        if (skillData == null || skillData.Length == 0) return;
+        if (skillData == null || skillData.Length == 0) return false;
 
         int currentIndex = skillSequenceIndex;
 
         // 쿨타임 중이면 건너뜀
-        if (!IsSkillReady(currentIndex)) return;
+        if (!IsSkillReady(currentIndex)) return false;
 
         SkillData skill = skillData[currentIndex];
         skillSequenceIndex = (skillSequenceIndex + 1) % skillData.Length;
@@ -122,6 +122,7 @@ public class EnemyUnit : MonoBehaviour
         lastFiredSkillIndex = currentIndex;
 
         ApplySkillEffect(skill);
+        return true;
     }
 
     // 턴 종료 시 호출: 버프 만료 + 이번 턴에 발동한 스킬의 CT를 설정
@@ -245,6 +246,15 @@ public class EnemyUnit : MonoBehaviour
                 {
                     enemy.manaStacks++;
                     Debug.Log($"[용의 마력] {gameObject.name} — 마나 {enemy.manaStacks}스택 (거센 불길 발동 조건: 10스택)");
+                }
+                break;
+
+            // ── 혓바닥휘두르기: 이번 턴 공격 적중 시 부식(10) 부여 ─────────
+            case SkillEffect.tongueWhip:
+                if (enemy != null)
+                {
+                    enemy.hasCorrosionBuff = true;
+                    Debug.Log($"[혓바닥휘두르기] {gameObject.name} — 이번 턴 공격 적중 시 부식(10) 발동");
                 }
                 break;
 

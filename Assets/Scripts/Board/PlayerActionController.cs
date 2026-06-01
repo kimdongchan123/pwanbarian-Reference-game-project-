@@ -100,11 +100,13 @@ public class PlayerActionController : MonoBehaviour
             if (selectedCard.targetType == CardTargetType.Enemy && targetUnit != null && !targetUnit.isAlly)
             {
                 targetUnit.TakeDamage(selectedCard.power);
+                HitEffectSpawner.SpawnForCard(selectedCard, targetUnit.transform.position);
                 Debug.Log("카드 데미지 적용: " + selectedCard.power);
             }
             else if (selectedCard.targetType == CardTargetType.Self)
             {
                 currentUnit.TakeDamage(selectedCard.power);
+                HitEffectSpawner.SpawnForCard(selectedCard, currentUnit.transform.position);
             }
         }
 

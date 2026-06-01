@@ -247,7 +247,7 @@ public class UnitInspector : MonoBehaviour
         skillText.fontSize = SPText.fontSize;
         skillText.color = SPText.color;
         skillText.alignment = TextAlignmentOptions.Left;
-        skillText.enableWordWrapping = true;
+        skillText.textWrappingMode = TMPro.TextWrappingModes.Normal;
         skillText.overflowMode = TextOverflowModes.Overflow;
         skillText.raycastTarget = false;
 

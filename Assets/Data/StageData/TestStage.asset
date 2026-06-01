@@ -16,7 +16,13 @@ MonoBehaviour:
   enemyEntries:
   - prefab: {fileID: 7899334692885814727, guid: ea00a4cd2bbc22d498ea5e769e65dbd2, type: 3}
     rank: 8
-    file: 3
+    file: 1
   - prefab: {fileID: 6223548905357297895, guid: 43e935d3fd3266e438893be3f09b68be, type: 3}
+    rank: 8
+    file: 3
+  - prefab: {fileID: 6852061824364144163, guid: 4132927b9753d4d4ebb24e8c57806754, type: 3}
+    rank: 8
+    file: 8
+  - prefab: {fileID: 9101881790073909912, guid: 5cc70d501c41fe048b19df6d251a31e2, type: 3}
     rank: 8
     file: 6

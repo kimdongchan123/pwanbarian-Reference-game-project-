@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Giant
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uAC70\uC778"
+  portraitSprite: {fileID: 3410912952505449165, guid: b720936128098d54f8615ad5c7d02e60, type: 3}
   maxHp: 300
   maxSt: 150
   minSp: 1
@@ -40,6 +41,6 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: 546002f390a04854f9381b9ca82f6d03, type: 2}
   traits:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b70e000000000000000000000000007a, type: 2}
+  - {fileID: 11400000, guid: b80e000000000000000000000000008a, type: 2}
   deck: []

@@ -11,6 +11,7 @@ public enum SkillEffect
     brainwash,   // 용언세뇌: St 소모 후 세뇌 부여
     callForAid,  // 지원 요청: 우앙개미 소환
     dragonMana,  // 용의 마력: 마나 축적
+    tongueWhip,  // 혓바닥휘두르기: 이번 턴 공격 적중 시 부식(10) 부여
 }
 
 public enum SkillTargetType

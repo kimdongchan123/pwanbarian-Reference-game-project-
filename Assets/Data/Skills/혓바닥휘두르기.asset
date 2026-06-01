@@ -18,6 +18,6 @@ MonoBehaviour:
     \uD134 \uB3D9\uC548 \uACF5\uACA9 \uC801\uC911 \uC2DC {\uBD80\uC2DD}(10)\uC744
     \uBD80\uC5EC\uD55C\uB2E4.\n+ CT3"
   coolTime: 3
-  skillEffect: 0
+  skillEffect: 9
   effectValue: 0
   duration: 0

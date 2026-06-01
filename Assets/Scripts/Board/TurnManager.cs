@@ -128,6 +128,20 @@ public class TurnManager : MonoBehaviour
             Enemy enemy = eu.GetComponent<Enemy>();
             if (enemy?.EnemyData == null) continue;
             int speed = Random.Range(enemy.EnemyData.minSp, enemy.EnemyData.maxSp + 1);
+            // 개미군세: 아군 개미왕국 기물 수만큼 Sp 증가
+            if (enemy.HasTrait(TraitEffect.antArmy))
+            {
+                int antCount = 0;
+                foreach (var otherEu in FindObjectsByType<EnemyUnit>(FindObjectsSortMode.None))
+                {
+                    Enemy otherEnemy = otherEu.GetComponent<Enemy>();
+                    if (otherEnemy != null && otherEnemy != enemy && otherEnemy.EnemyData?.affiliation == "개미왕국")
+                        antCount++;
+                }
+                speed += antCount;
+                if (antCount > 0)
+                    Debug.Log($"[개미군세] {enemy.EnemyData.unitName} Sp+{antCount} (아군 개미왕국 {antCount}마리)");
+            }
             enemies.Add(new TurnActor { enemyUnit = eu, speed = speed });
         }
         enemies = enemies.OrderByDescending(a => a.speed).ToList();
@@ -247,6 +261,7 @@ public class TurnManager : MonoBehaviour
 
     private IEnumerator MoveEnemyTowardAlly(EnemyUnit enemyUnit)
     {
+        Enemy enemy = enemyUnit.GetComponent<Enemy>();
         Unit nearestAlly = FindNearestAlly(enemyUnit.gridPosition);
         if (nearestAlly == null) yield break;
 
@@ -257,12 +272,13 @@ public class TurnManager : MonoBehaviour
         // 이미 인접해 있으면 이동 없이 바로 공격
         if (IsAdjacent(enemyUnit.gridPosition, allyPos))
         {
-            enemyUnit.UseNextSkillInSequence();
-            AttackAlly(enemyUnit, nearestAlly);
+            bool sf = enemyUnit.UseNextSkillInSequence();
+            yield return StartCoroutine(AttackAlly(enemyUnit, nearestAlly, sf));
             yield break;
         }
 
-        Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, nearestAlly);
+        bool canFly = enemy?.HasTrait(TraitEffect.flight) ?? false;
+        Tile targetTile = FindStepTowardAlly(enemyUnit.gridPosition, nearestAlly, canFly);
         if (targetTile == null) yield break;
 
         if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile oldTile))
@@ -273,18 +289,18 @@ public class TurnManager : MonoBehaviour
 
         Vector2Int newPos = new Vector2Int(targetTile.x, targetTile.y);
         enemyUnit.gridPosition = newPos;
-        enemyUnit.transform.position = targetTile.transform.position;
         targetTile.isOccupied = true;
         targetTile.currentUnit = enemyUnit.gameObject;
 
-        enemyUnit.UseNextSkillInSequence();
+        // 애니메이션으로 이동
+        yield return StartCoroutine(AnimateMove(enemyUnit.transform, targetTile.transform.position, 1f));
+
+        bool skillFired = enemyUnit.UseNextSkillInSequence();
         Debug.Log($"👹 {enemyUnit.name} → ({newPos.x}, {newPos.y}) 이동");
 
         // 이동 후 인접하게 됐으면 공격
         if (IsAdjacent(newPos, allyPos))
-            AttackAlly(enemyUnit, nearestAlly);
-
-        yield return null;
+            yield return StartCoroutine(AttackAlly(enemyUnit, nearestAlly, skillFired));
     }
 
     private bool IsAdjacent(Vector2Int a, Vector2Int b)
@@ -292,13 +308,38 @@ public class TurnManager : MonoBehaviour
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
     }
 
-    private void AttackAlly(EnemyUnit enemyUnit, Unit ally)
+    private IEnumerator AttackAlly(EnemyUnit enemyUnit, Unit ally, bool skillFired = false)
     {
         Enemy enemy = enemyUnit.GetComponent<Enemy>();
         int dmg = enemy != null ? enemy.damage : 1;
         bool hitIgnored = ally.ShouldIgnoreIncomingHit(dmg);
 
         UnitMovement allyMovement = ally.movement;
+
+        // 섭취: 대상 HP가 최대 HP의 20% 이하면 즉사 처리
+        if (enemy != null && enemy.HasTrait(TraitEffect.absorption)
+            && ally.currentHp <= Mathf.Max(1, Mathf.RoundToInt(ally.maxHp * 0.2f)))
+        {
+            Debug.Log($"[섭취] {enemy.EnemyData?.unitName} → {ally.unitName} 즉사");
+            Tile allyTile = allyMovement?.currentTile;
+            if (allyTile != null)
+            {
+                if (MapManager.Instance.tiles.TryGetValue(enemyUnit.gridPosition, out Tile oldTile))
+                {
+                    oldTile.isOccupied = false;
+                    oldTile.currentUnit = null;
+                }
+                enemyUnit.gridPosition = new Vector2Int(allyTile.x, allyTile.y);
+                yield return StartCoroutine(AnimateMove(enemyUnit.transform, allyTile.transform.position, 0.5f));
+                allyTile.currentUnit = enemyUnit.gameObject;
+            }
+            enemy.CurrentHp = Mathf.Min(enemy.CurrentHp + 40, enemy.EnemyData?.maxHp ?? enemy.CurrentHp + 40);
+            enemy.RecoverSt(30);
+            allUnits.Remove(ally);
+            Destroy(ally.gameObject);
+            yield break;
+        }
+
         if (!hitIgnored && allyMovement != null && allyMovement.currentTile != null)
         {
             Tile allyTile = allyMovement.currentTile;
@@ -319,26 +360,28 @@ public class TurnManager : MonoBehaviour
 
             if (canKnockBack)
             {
-                // 아군 → 넉백 위치
+                // 논리적 타일 상태 즉시 업데이트
                 allyTile.isOccupied = false;
                 allyTile.currentUnit = null;
-                ally.transform.position = knockBackTile.transform.position;
                 knockBackTile.isOccupied = true;
                 knockBackTile.currentUnit = ally.gameObject;
                 allyMovement.currentTile = knockBackTile;
 
-                // 적 → 아군의 원래 위치
                 if (MapManager.Instance.tiles.TryGetValue(enemyGridPos, out Tile enemyOldTile))
                 {
                     enemyOldTile.isOccupied = false;
                     enemyOldTile.currentUnit = null;
                 }
-                enemyUnit.transform.position = allyTile.transform.position;
                 enemyUnit.gridPosition = allyGridPos;
                 allyTile.isOccupied = true;
                 allyTile.currentUnit = enemyUnit.gameObject;
 
+                // 아군 넉백 애니메이션
+                yield return StartCoroutine(AnimateMove(ally.transform, knockBackTile.transform.position, 0.5f));
                 Debug.Log($"💨 {ally.unitName} 넉백 → ({knockBackGridPos.x}, {knockBackGridPos.y})");
+
+                // 적 전진 애니메이션
+                yield return StartCoroutine(AnimateMove(enemyUnit.transform, allyTile.transform.position, 1f));
             }
             else
             {
@@ -349,7 +392,89 @@ public class TurnManager : MonoBehaviour
         // 데미지 + 로그
         int prevHp = ally.currentHp;
         ally.TakeDamage(dmg, enemy);
+        HitEffectSpawner.SpawnImpact(ally.transform.position);
         Debug.Log($"👹 {enemyUnit.name} → {ally.unitName} | HP: {prevHp} → {ally.currentHp}/{ally.maxHp} (-{dmg})");
+
+        // 공격 후 특성 발동
+        if (enemy != null && ally != null && ally.currentHp > 0)
+        {
+            // 어린 용: 20% 확률로 화상(1) 부여
+            if (enemy.HasTrait(TraitEffect.youngDragon) && Random.value < 0.2f)
+            {
+                ally.AddStatus(StatusEffectType.Burn, 1);
+                Debug.Log($"[어린 용] {enemy.EnemyData?.unitName} → {ally.unitName} 화상(1)");
+            }
+
+            // 와이번 브레스: 스킬(원거리) 발동 시 화상 1스택 소모 → 화상 스택 수 × 5 추가 피해
+            if (enemy.HasTrait(TraitEffect.wyvernBreath) && skillFired)
+            {
+                int burnCount = ally.GetStatusAmount(StatusEffectType.Burn);
+                if (burnCount > 0)
+                {
+                    ally.RemoveStatus(StatusEffectType.Burn, 1);
+                    int extraDmg = burnCount * 5;
+                    ally.TakeDamage(extraDmg);
+                    Debug.Log($"[와이번 브레스] 화상 소모 → 추가 피해 {extraDmg}");
+                }
+            }
+
+            // 드래곤 브레스: 스킬(원거리) 발동 시 화상 전부 소모 → 스택 수 × 15 추가 피해
+            if (enemy.HasTrait(TraitEffect.dragonBreath) && skillFired)
+            {
+                int burnCount = ally.GetStatusAmount(StatusEffectType.Burn);
+                if (burnCount > 0)
+                {
+                    ally.RemoveStatus(StatusEffectType.Burn, burnCount);
+                    int extraDmg = burnCount * 15;
+                    ally.TakeDamage(extraDmg);
+                    Debug.Log($"[드래곤 브레스] 화상 {burnCount}스택 소모 → 추가 피해 {extraDmg}");
+                }
+            }
+
+            // 스텔스 무너: 전체 독 + 확률적 상태이상
+            if (enemy.HasTrait(TraitEffect.stealthTentacle))
+            {
+                foreach (var unit in FindObjectsByType<Unit>(FindObjectsSortMode.None))
+                    unit.AddStatus(StatusEffectType.Poison, 1);
+                if (Random.value < 0.15f) ally.AddStatus(StatusEffectType.Poison, 1);
+                if (Random.value < 0.03f) ally.AddStatus(StatusEffectType.DamageDown, 1);
+                if (Random.value < 0.10f) ally.TakeDamage(Mathf.Max(1, Mathf.RoundToInt(ally.maxHp * 0.05f)));
+                Debug.Log($"[스텔스 무너] {enemy.EnemyData?.unitName} → 독 상태이상 적용");
+            }
+
+            // 혓바닥휘두르기: 부식(10) 부여
+            if (enemy != null && enemy.hasCorrosionBuff)
+            {
+                ally.AddStatus(StatusEffectType.Corrosion, 10);
+                Debug.Log($"[혓바닥휘두르기] {enemy.EnemyData?.unitName} → {ally.unitName} 부식(10)");
+            }
+
+            // 바다의 재앙: 50% 확률 젖음(1) 부여
+            if (enemy.HasTrait(TraitEffect.seaDisaster) && Random.value < 0.5f)
+            {
+                ally.AddStatus(StatusEffectType.Wet, 1);
+                Debug.Log($"[바다의 재앙] {enemy.EnemyData?.unitName} → {ally.unitName} 젖음(1)");
+            }
+
+            // 바다의 재앙 확산: 바다 포인트 체류 시 인접 아군에게 스플래시 피해
+            if (enemy.hasSpreadBuff)
+            {
+                int splashDmg = Mathf.Max(1, dmg / 2);
+                int allyGx = Mathf.RoundToInt(ally.transform.position.x + 3.5f);
+                int allyGy = Mathf.RoundToInt(ally.transform.position.y + 3.5f);
+                foreach (var otherAlly in allUnits.ToList())
+                {
+                    if (otherAlly == null || otherAlly == ally) continue;
+                    int ox = Mathf.RoundToInt(otherAlly.transform.position.x + 3.5f);
+                    int oy = Mathf.RoundToInt(otherAlly.transform.position.y + 3.5f);
+                    if (Mathf.Abs(ox - allyGx) + Mathf.Abs(oy - allyGy) == 1)
+                    {
+                        otherAlly.TakeDamage(splashDmg, enemy);
+                        Debug.Log($"[바다의 재앙 확산] → {otherAlly.unitName} 스플래시 {splashDmg}");
+                    }
+                }
+            }
+        }
 
         if (ally.currentHp <= 0)
         {
@@ -362,6 +487,22 @@ public class TurnManager : MonoBehaviour
             allUnits.Remove(ally);
             Destroy(ally.gameObject);
         }
+    }
+
+    private IEnumerator AnimateMove(Transform target, Vector3 destination, float duration)
+    {
+        Vector3 start = target.position;
+        destination.z = 0f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            t = t * t * (3f - 2f * t); // smoothstep easing
+            target.position = Vector3.Lerp(start, destination, t);
+            yield return null;
+        }
+        target.position = destination;
     }
 
     public void KnockBack(GameObject target, Vector2Int attackerGridPos)
@@ -414,7 +555,7 @@ public class TurnManager : MonoBehaviour
         return nearest;
     }
 
-    private Tile FindStepTowardAlly(Vector2Int enemyPos, Unit ally)
+    private Tile FindStepTowardAlly(Vector2Int enemyPos, Unit ally, bool canFly = false)
     {
         int ax = Mathf.RoundToInt(ally.transform.position.x + 3.5f);
         int ay = Mathf.RoundToInt(ally.transform.position.y + 3.5f);
@@ -428,7 +569,7 @@ public class TurnManager : MonoBehaviour
         {
             Vector2Int candidate = enemyPos + dir;
             if (!MapManager.Instance.tiles.TryGetValue(candidate, out Tile tile)) continue;
-            if (tile.isOccupied) continue;
+            if (!canFly && tile.isOccupied) continue;  // 비행: 점유 타일 통과 가능
             float dist = Vector2Int.Distance(candidate, allyPos);
             if (dist < bestDist) { bestDist = dist; bestTile = tile; }
         }

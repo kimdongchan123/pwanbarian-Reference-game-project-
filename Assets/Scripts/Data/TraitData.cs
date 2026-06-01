@@ -39,6 +39,7 @@ public enum TraitEffect
     antArmy,               // 개미군세: 아군 개미왕국 수만큼 Sp 증가
     giantKing,             // 거인왕: 아군 거인 ATK 증가, 생존 거인×3 ATK
     floodingSeaDisaster,   // 범람하는 바다의 재앙: 젖음 면역, 바다 포인트 확장
+    parry,                 // 패마: 자신보다 ATK+DEF 합이 낮은 공격 무효화, 차이만큼 ST 반격
 }
 
 [CreateAssetMenu(menuName = "Game/Trait Data")]
