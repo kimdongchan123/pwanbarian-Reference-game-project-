@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EnemySlot : MonoBehaviour
 {
     [SerializeField]
     private Enemy enemyPrefab;
+
+    [SerializeField]
+    private TextMeshProUGUI enemyCount;
 
     private Image enemyImage;
     private RectTransform rectTransform;
@@ -27,9 +31,10 @@ public class EnemySlot : MonoBehaviour
         UnitInspector.Instance.HideInfo();
     }
 
-    public void SetEnemyPrefab(Enemy prefab)
+    public void SetEnemyPrefab(Enemy prefab, int count = 1)
     {
         enemyPrefab = prefab;
+        enemyCount.text = count > 1 ? $"x{count}" : "";
         if (enemyPrefab != null)
         {
             SpriteRenderer spriteRenderer = enemyPrefab.GetComponent<SpriteRenderer>();

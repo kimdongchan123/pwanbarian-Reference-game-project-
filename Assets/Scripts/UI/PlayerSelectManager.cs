@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -72,14 +73,41 @@ public class PlayerSelectManager : MonoBehaviour
 
     private void SetupEnemySlots()
     {
+        Dictionary<Enemy, int> enemyCounts = new Dictionary<Enemy, int>();
+        List<Enemy> enemyOrder = new List<Enemy>();
+
         foreach (EnemyEntry enemyData in StageManager.SelectedStage.enemyEntries)
+        {
+            if (enemyData.prefab == null)
+            {
+                continue;
+            }
+
+            if (!enemyCounts.ContainsKey(enemyData.prefab))
+            {
+                enemyCounts[enemyData.prefab] = 0;
+                enemyOrder.Add(enemyData.prefab);
+            }
+
+            enemyCounts[enemyData.prefab]++;
+        }
+
+        foreach (Enemy enemyPrefab in enemyOrder)
         {
             EnemySlot newSlot = Instantiate(enemySlotPrefab, enemyInfoPanel.transform)
                 .GetComponent<EnemySlot>();
-            newSlot.SetEnemyPrefab(enemyData.prefab);
-            newSlot.gameObject.GetComponent<Image>().sprite = enemyData
-                .prefab.GetComponent<SpriteRenderer>()
+            newSlot.SetEnemyPrefab(enemyPrefab, enemyCounts[enemyPrefab]);
+            newSlot.gameObject.GetComponent<Image>().sprite = enemyPrefab
+                .GetComponent<SpriteRenderer>()
                 .sprite;
+        }
+
+        foreach (EnemyEntry enemyData in StageManager.SelectedStage.enemyEntries)
+        {
+            if (enemyData.prefab == null)
+            {
+                continue;
+            }
 
             Transform tile = board.GetChild((8 - enemyData.rank) * 8 + (int)enemyData.file - 1);
             GameObject instantiatedEnemy = Instantiate(enemy, tile);
