@@ -13,6 +13,12 @@ public enum File
     h = 8,
 }
 
+public enum BattleType
+{
+    Normal,
+    Boss,
+}
+
 [System.Serializable]
 public class EnemyEntry
 {
@@ -28,4 +34,5 @@ public class StageData : ScriptableObject
 {
     public string stageName;
     public List<EnemyEntry> enemyEntries;
+    public BattleType battleType;
 }
