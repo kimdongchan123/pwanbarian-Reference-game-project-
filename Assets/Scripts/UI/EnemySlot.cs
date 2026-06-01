@@ -22,13 +22,13 @@ public class EnemySlot : MonoBehaviour
     public void OnPointerEnter()
     {
         rectTransform.localScale = Vector3.one * 1.1f;
-        UnitInspector.Instance.ShowEnemyInfo(enemyPrefab);
+        UnitInspector.Instance?.ShowEnemyInfo(enemyPrefab);
     }
 
     public void OnPointerExit()
     {
         rectTransform.localScale = Vector3.one;
-        UnitInspector.Instance.HideInfo();
+        UnitInspector.Instance?.HideInfo();
     }
 
     public void SetEnemyPrefab(Enemy prefab, int count = 1)

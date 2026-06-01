@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: b85dd5fbb6462b849b2f76a8646a6caf
+guid: ccf2d49d45ba23d42a6d299ab73c3c8b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7446640072344035755
-    second: "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_0"
+      213: -8077687222358840721
+    second: warrior_nobg_0
   - first:
-      213: 473884119606421764
-    second: "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_1"
+      213: 3638704287194838943
+    second: warrior_nobg_1
   - first:
-      213: 923644352778367517
-    second: "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_2"
+      213: 4250246816651249383
+    second: warrior_nobg_2
+  - first:
+      213: 6041493803959065066
+    second: warrior_nobg_3
+  - first:
+      213: 8625691428023274717
+    second: warrior_nobg_4
+  - first:
+      213: -2583507989105616742
+    second: warrior_nobg_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,13 +128,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_0"
+      name: warrior_nobg_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 8
-        width: 1022
-        height: 1470
+        x: 8
+        y: 232
+        width: 1009
+        height: 1192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 55e9eb5ee4838a890800000000000000
-      internalID: -7446640072344035755
+      spriteID: f6ae698c44a46ef80800000000000000
+      internalID: -8077687222358840721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_1"
+      name: warrior_nobg_1
       rect:
         serializedVersion: 2
-        x: 822
-        y: 1033
-        width: 138
-        height: 173
+        x: 23
+        y: 764
+        width: 19
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,20 +165,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 409e6d59813939600800000000000000
-      internalID: 473884119606421764
+      spriteID: f9770f045464f7230800000000000000
+      internalID: 3638704287194838943
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_2"
+      name: warrior_nobg_2
       rect:
         serializedVersion: 2
-        x: 865
-        y: 1007
-        width: 98
-        height: 64
+        x: 22
+        y: 704
+        width: 18
+        height: 49
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,8 +187,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d12762a25a171dc00800000000000000
-      internalID: 923644352778367517
+      spriteID: 7e68b3206f8ebfa30800000000000000
+      internalID: 4250246816651249383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: warrior_nobg_3
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 240
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae914b10b92b7d350800000000000000
+      internalID: 6041493803959065066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: warrior_nobg_4
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 236
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddc857527ac94b770800000000000000
+      internalID: 8625691428023274717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: warrior_nobg_5
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 238
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a98d9f20c29852cd0800000000000000
+      internalID: -2583507989105616742
       vertices: []
       indices: 
       edges: []
@@ -198,9 +273,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_0": -7446640072344035755
-      "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_1": 473884119606421764
-      "ChatGPT Image 2026\uB144 5\uC6D4 5\uC77C \uC624\uD6C4 02_39_02_2": 923644352778367517
+      warrior_nobg_0: -8077687222358840721
+      warrior_nobg_1: 3638704287194838943
+      warrior_nobg_2: 4250246816651249383
+      warrior_nobg_3: 6041493803959065066
+      warrior_nobg_4: 8625691428023274717
+      warrior_nobg_5: -2583507989105616742
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

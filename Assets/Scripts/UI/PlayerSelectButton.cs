@@ -31,13 +31,13 @@ public class PlayerSelectButton : MonoBehaviour
     {
         if (unitData == null) return;
         rectTransform.localScale = Vector3.one * 1.1f;
-        UnitInspector.Instance.ShowUnitInfo(unitData);
+        UnitInspector.Instance?.ShowUnitInfo(unitData);
     }
 
     public void OnPointerExit()
     {
         rectTransform.localScale = Vector3.one;
-        UnitInspector.Instance.HideInfo();
+        UnitInspector.Instance?.HideInfo();
     }
 
     public void AddToParty()

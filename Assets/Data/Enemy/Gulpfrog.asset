@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Gulpfrog
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uAFC0\uAEBD\uAD6C\uB9AC"
-  portraitSprite: {fileID: 4206952837834208606, guid: e59c8bb7f2fad254580ccae454b939d5, type: 3}
-  maxHp: 80
+  portraitSprite: {fileID: -1552119645527603095, guid: 6cbe442592abaf140a76c98691e67cdd, type: 3}
+  maxHp: 75
   maxSt: 30
   minSp: 4
   maxSp: 6
