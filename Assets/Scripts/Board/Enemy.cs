@@ -47,7 +47,12 @@ public class Enemy : MonoBehaviour
     {
         if (EnemyData != null)
         {
-            if (persistentBossHp.TryGetValue(EnemyData.unitName, out int savedHp))
+            if (StageManager.SelectedStage.battleType == BattleType.Normal)
+            {
+                CurrentHp = 1;
+                shieldHp = 0;
+            }
+            else if (persistentBossHp.TryGetValue(EnemyData.unitName, out int savedHp))
                 CurrentHp = savedHp;
             else if (HasTrait(TraitEffect.elite))
                 CurrentHp = Mathf.Max(1, Mathf.RoundToInt(EnemyData.maxHp * 0.5f));
