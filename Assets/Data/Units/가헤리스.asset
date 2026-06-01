@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -58,3 +58,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8515d9aa92914d3fbe64e5c28f642ef4, type: 2}
   - {fileID: 11400000, guid: 9e6e63b7bb9d4d51b76e1b1f1ff76f6a, type: 2}
   - {fileID: 11400000, guid: cd48c5bb638a4b95b779dfa8049840e2, type: 2}
+  hitSounds:
+  - {fileID: 8300000, guid: fbce9f807d47a1e4eaefcb935ed30e91, type: 3}
+  - {fileID: 8300000, guid: af7a824b3a8403141bb34543a80f0550, type: 3}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+
 public class UnitMovement : MonoBehaviour
 {
     private Unit myUnit;
@@ -12,20 +13,11 @@ public class UnitMovement : MonoBehaviour
         myUnit = GetComponent<Unit>();
     }
 
-    // void Start() ?�??IEnumerator Start()�??�용?�니??
     IEnumerator Start()
     {
-        // ???�른 매니?�?�이 준비될 ?�까지 ??1?�레?�만 기다?�줍?�다.
         yield return null;
+        if (MapManager.Instance == null) yield break;
 
-        // ?�� [?�심] �?매니?�가 ?�다�? (?? ?�팅 ?�일 경우)
-        if (MapManager.Instance == null)
-        {
-            // ?�러�??�우지 ?�고, 그냥 조용?????�수�??�내버립?�다. (?�팅 ???�화 ?��?)
-            yield break;
-        }
-
-        // ?? �?매니?�가 ?�다�? (?? ?�투 ?�일 경우) ?�상?�으�??�?�을 찾습?�다.
         int myX = Mathf.RoundToInt(transform.position.x + 3.5f);
         int myY = Mathf.RoundToInt(transform.position.y + 3.5f);
         Vector2Int myPos = new Vector2Int(myX, myY);
@@ -38,36 +30,27 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // ?�� 카드�??��??????�동 범위 ?�시
     public void ShowMoveRange(MovePattern pattern)
     {
-        // ???�재 ?�치(?�수 좌표) ?�시 ?�인
         int myX = Mathf.RoundToInt(transform.position.x + 3.5f);
         int myY = Mathf.RoundToInt(transform.position.y + 3.5f);
-
         Vector2Int myPos = new Vector2Int(myX, myY);
         Tile foundTile = null;
 
         if (MapManager.Instance.tiles.ContainsKey(myPos))
-        {
             foundTile = MapManager.Instance.tiles[myPos];
-        }
 
         if (foundTile != null)
         {
             currentTile = foundTile;
-
-            // ?�� 바로 ??부분입?�다! (?�러 ?�결)
-            // 매니?�?�게 '?��? ?�군?��? ?�군?��?(myUnit.isAlly)' 3번째 ?�료�??�겨줍니??
             MapManager.Instance.ShowMoveRange(currentTile, pattern, myUnit.isAlly);
         }
         else
         {
-            Debug.LogWarning($" {gameObject.name}??발밑({myX}, {myY})???�록???�?�이 ?�습?�다!");
+            Debug.LogWarning($" {gameObject.name}의 발밑({myX}, {myY})에 등록된 타일이 없습니다!");
         }
     }
 
-    // ?�� ?��????�?�을 ?�릭?�을 ???�동 ?�도
     public void TryMoveTo(Tile targetTile)
     {
         if (!targetTile.isOccupied)
@@ -80,13 +63,11 @@ public class UnitMovement : MonoBehaviour
         Enemy enemy = defenderGO.GetComponent<Enemy>();
         Unit targetUnit = defenderGO.GetComponent<Unit>();
 
-        // ???�닛?� Enemy 컴포?�트�??�별, ?�군?� Unit.isAlly�??�별
         bool isEnemy = myUnit.isAlly && enemy != null;
         bool isFriendlyBlocking = !isEnemy && targetUnit != null && targetUnit.isAlly == myUnit.isAlly;
 
         if (isEnemy)
         {
-            // 보스 특성: 다른 적이 살아있는 동안 타겟 불가
             if (enemy.HasTrait(TraitEffect.boss))
             {
                 bool otherAlive = false;
@@ -99,19 +80,27 @@ public class UnitMovement : MonoBehaviour
                 }
             }
             string defenderName = enemy.EnemyData != null ? enemy.EnemyData.unitName : defenderGO.name;
-            Debug.Log($"??{myUnit.unitName}??가) ?�군 {defenderName}??�? 공격?�니??");
+            Debug.Log($"⚔ {myUnit.unitName}이(가) 적군 {defenderName}을(를) 공격합니다!");
 
             EnemyUnit eu = defenderGO.GetComponent<EnemyUnit>();
 
-            // ?�백 방향 계산
             Vector2Int attackerGridPos = currentTile != null
                 ? new Vector2Int(currentTile.x, currentTile.y)
                 : new Vector2Int(Mathf.RoundToInt(transform.position.x + 3.5f), Mathf.RoundToInt(transform.position.y + 3.5f));
             Vector2Int defenderGridPos = new Vector2Int(targetTile.x, targetTile.y);
+
+            // 🌟 [핵심 보존] 완벽한 넉백 각도 계산 (유니티 버그 회피)
             Vector2Int diff = defenderGridPos - attackerGridPos;
-            Vector2Int pushDir = (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
-                ? new Vector2Int((int)Mathf.Sign(diff.x), 0)
-                : new Vector2Int(0, (int)Mathf.Sign(diff.y));
+            int absX = Mathf.Abs(diff.x);
+            int absY = Mathf.Abs(diff.y);
+            int dirX = diff.x == 0 ? 0 : (diff.x > 0 ? 1 : -1);
+            int dirY = diff.y == 0 ? 0 : (diff.y > 0 ? 1 : -1);
+
+            Vector2Int pushDir;
+            if (absX == absY) pushDir = new Vector2Int(dirX, dirY);
+            else if (absX > absY) pushDir = new Vector2Int(dirX, 0);
+            else pushDir = new Vector2Int(0, dirY);
+
             Vector2Int knockBackPos = defenderGridPos + pushDir;
 
             bool canKnockBack = MapManager.Instance.tiles.TryGetValue(knockBackPos, out Tile knockBackTile)
@@ -122,51 +111,81 @@ public class UnitMovement : MonoBehaviour
         else
         {
             string blockerName = targetUnit != null ? targetUnit.unitName : defenderGO.name;
-            Debug.Log($"?���?같�? ?�인 {blockerName}??가) 길을 막고 ?�습?�다!");
+            Debug.Log($"🛡️ 같은 편인 {blockerName}이(가) 길을 막고 있습니다!");
         }
     }
 
     private IEnumerator ExecuteAttack(Tile targetTile, GameObject defenderGO, EnemyUnit eu, Enemy enemy,
         string defenderName, Vector2Int knockBackPos, Tile knockBackTile, bool canKnockBack)
     {
-        if (canKnockBack)
+        int finalDamage = myUnit.GetAttackDamageAgainst(enemy);
+
+        // 🌟 [핵심 추가] 때리기 전에 적이 죽을 운명인지 미리 확인합니다!
+        bool willDie = (enemy.CurrentHp - finalDamage) <= 0;
+
+        if (willDie)
         {
-            // ?�리???�???�태 즉시 ?�데?�트
+            // 💀 1. 적이 죽을 운명이라면 무조건 빈자리가 되므로 내가 그 자리를 뺏습니다.
+            if (currentTile != null) { currentTile.isOccupied = false; currentTile.currentUnit = null; }
+
+            // 돌진 애니메이션 (적 앞까지)
+            Vector3 origin = transform.position;
+            Vector3 lungeTarget = Vector3.Lerp(origin, targetTile.transform.position, 0.6f);
+            yield return StartCoroutine(AnimateMove(transform, lungeTarget, MoveDuration * 0.25f));
+
+            // 타격 효과 및 사운드 발생
+            HitEffectSpawner.SpawnImpact(enemy.transform.position);
+            enemy.TakeDamage(finalDamage, myUnit);
+            myUnit.OnAttackHit(enemy);
+
+            // 적이 펑 터지는 것을 0.1초 기다려줌
+            yield return new WaitForSeconds(0.1f);
+
+            // 남은 거리 이동 후 적 타일 완벽 점거!
+            yield return StartCoroutine(AnimateMove(transform, targetTile.transform.position, MoveDuration * 0.25f));
+            currentTile = targetTile;
+            targetTile.isOccupied = true;
+            targetTile.currentUnit = this.gameObject;
+        }
+        else if (canKnockBack)
+        {
+            // 💨 2. 적이 살았고 넉백 가능할 때 (팀원 애니메이션 코루틴 병렬 처리 보존)
             targetTile.isOccupied = false;
             targetTile.currentUnit = null;
             knockBackTile.isOccupied = true;
             knockBackTile.currentUnit = defenderGO;
             if (eu != null) eu.gridPosition = knockBackPos;
 
-            // 방어???�백 ?�니메이??
-            yield return StartCoroutine(AnimateMove(defenderGO.transform, knockBackTile.transform.position, MoveDuration * 0.5f));
-            Debug.Log($"?�� {defenderName} ?�백 ??({knockBackPos.x}, {knockBackPos.y})");
+            // 방어자 넉백과 공격자 전진을 동시에 시작
+            Coroutine defAnim = StartCoroutine(AnimateMove(defenderGO.transform, knockBackTile.transform.position, MoveDuration * 0.5f));
 
-            // 공격???�진 ?�니메이??
-            if (currentTile != null)
-            {
-                currentTile.isOccupied = false;
-                currentTile.currentUnit = null;
-            }
-            yield return StartCoroutine(AnimateMove(transform, targetTile.transform.position, MoveDuration));
+            if (currentTile != null) { currentTile.isOccupied = false; currentTile.currentUnit = null; }
+            Coroutine atkAnim = StartCoroutine(AnimateMove(transform, targetTile.transform.position, MoveDuration * 0.5f));
+
+            yield return defAnim;
+            yield return atkAnim;
+
             currentTile = targetTile;
             targetTile.isOccupied = true;
             targetTile.currentUnit = this.gameObject;
+
+            HitEffectSpawner.SpawnImpact(defenderGO.transform.position);
+            enemy.TakeDamage(finalDamage, myUnit);
+            myUnit.OnAttackHit(enemy);
         }
         else
         {
-            Debug.Log($"🧱 {defenderName} 넉백 불가 (벽 또는 유닛에 막힘)");
-            // 넉백 불가 시 짧은 돌진 애니메이션
+            // 🧱 3. 벽에 막혀서 넉백 불가 시 짧은 돌진 타격 후 원위치
             Vector3 origin = transform.position;
             Vector3 lungeTarget = Vector3.Lerp(origin, targetTile.transform.position, 0.4f);
             yield return StartCoroutine(AnimateMove(transform, lungeTarget, MoveDuration * 0.25f));
+
+            HitEffectSpawner.SpawnImpact(defenderGO.transform.position);
+            enemy.TakeDamage(finalDamage, myUnit);
+            myUnit.OnAttackHit(enemy);
+
             yield return StartCoroutine(AnimateMove(transform, origin, MoveDuration * 0.25f));
         }
-
-        int finalDamage = myUnit.GetAttackDamageAgainst(enemy);
-        enemy.TakeDamage(finalDamage, myUnit);
-        HitEffectSpawner.SpawnImpact(enemy.transform.position);
-        myUnit.OnAttackHit(enemy);
 
         MapManager.Instance.ClearHighlights();
         if (!myUnit.ConsumeExtraMove())
@@ -175,32 +194,17 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    // ?�� ?�제 ?�동 �???종료 로직
     private IEnumerator ExecuteMove(Tile targetTile)
     {
-        // 1) ?�전 ?�??비우�?
-        if (currentTile != null)
-        {
-            currentTile.isOccupied = false;
-            currentTile.currentUnit = null;
-        }
-
-        // 2) ?�니메이?�으�??�동
+        if (currentTile != null) { currentTile.isOccupied = false; currentTile.currentUnit = null; }
         yield return StartCoroutine(AnimateMove(transform, targetTile.transform.position, MoveDuration));
-
-        // 3) ???�?�에 ???�보 ?�록?�기
         currentTile = targetTile;
         targetTile.isOccupied = true;
         targetTile.currentUnit = this.gameObject;
 
-        Debug.Log($" {myUnit.unitName} ?�동 ?�료!");
-
-        // 4) ?��? �??�고 ?�음 ?�람 ?�으�?
+        Debug.Log($" {myUnit.unitName} 이동 완료!");
         MapManager.Instance.ClearHighlights();
-        if (!myUnit.ConsumeExtraMove())
-        {
-            TurnManager.Instance.NextTurn();
-        }
+        if (!myUnit.ConsumeExtraMove()) TurnManager.Instance.NextTurn();
     }
 
     private IEnumerator AnimateMove(Transform target, Vector3 destination, float duration)
@@ -212,7 +216,7 @@ public class UnitMovement : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            t = t * t * (3f - 2f * t); // smoothstep easing
+            t = t * t * (3f - 2f * t);
             target.position = Vector3.Lerp(start, destination, t);
             yield return null;
         }

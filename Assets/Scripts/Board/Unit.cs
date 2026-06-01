@@ -186,6 +186,13 @@ public class Unit : MonoBehaviour
             return;
         }
 
+        // 🌟 [추가됨] 데미지를 실제로 입을 때 랜덤 피격음을 재생합니다!
+        if (data != null && data.hitSounds != null && data.hitSounds.Length > 0 && SoundManager.Instance != null)
+        {
+            AudioClip randomHit = data.hitSounds[Random.Range(0, data.hitSounds.Length)];
+            SoundManager.Instance.PlaySFX(randomHit);
+        }
+
         currentHp = Mathf.Max(0, currentHp - finalDamage);
         Debug.Log($"{name}이(가) {finalDamage} 피해를 받음. 남은 체력: {currentHp}");
 

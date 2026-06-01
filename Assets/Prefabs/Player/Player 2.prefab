@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 268162376373122874, guid: c06c5a82b6343a347834884f64d48828, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -109,6 +109,11 @@ MonoBehaviour:
   unitName: "\uD14C\uC2A4\uD2B8 \uC720\uB2DB"
   isAlly: 1
   formationIndex: 0
+  data: {fileID: 0}
+  maxHp: 20
+  currentHp: 0
+  maxSt: 0
+  currentSt: 0
   movement: {fileID: 6158015059643591148}
   stats: {fileID: 8070586511306718240}
 --- !u!114 &6158015059643591148
@@ -136,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f074c390ba8d3ab44b632152cc2bdad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitStats
+  baseAttack: 10
   minSpeed: 1
   maxSpeed: 5
   currentTurnSpeed: 0

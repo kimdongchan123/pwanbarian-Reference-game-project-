@@ -132,6 +132,9 @@ MonoBehaviour:
   hasSwiftnessBuff: 0
   hasSpreadBuff: 0
   hasCorrosionBuff: 0
+  hitSounds:
+  - {fileID: 8300000, guid: fbce9f807d47a1e4eaefcb935ed30e91, type: 3}
+  - {fileID: 8300000, guid: af7a824b3a8403141bb34543a80f0550, type: 3}
 --- !u!114 &8346777010903632076
 MonoBehaviour:
   m_ObjectHideFlags: 0

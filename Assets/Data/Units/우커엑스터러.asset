@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitName: "\uC6B0\uCEE4 \uC5D1\uC2A4 \uD130\uB7EC"
   panicType: 0
+  portraitSprite: {fileID: 0}
+  battleSprite: {fileID: 0}
   maxHp: 97
   maxSt: 53
   minSp: 1
@@ -50,3 +52,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ce5ca257048e48ada7fd7840aed5ee48, type: 2}
   - {fileID: 11400000, guid: 3e82cd0988d34e54a1ef9518cf138d7b, type: 2}
   - {fileID: 11400000, guid: 3bd7793aafbe4b519f477fdbb901b5a8, type: 2}
+  hitSounds:
+  - {fileID: 8300000, guid: f048ac088e20afe4ead6d8009d4a028f, type: 3}
+  - {fileID: 8300000, guid: 000d51037845bdd4fa3bcab044c0ad7e, type: 3}
+  - {fileID: 8300000, guid: 997ffd7b234b7a64cad72b23f2c82638, type: 3}
+  - {fileID: 8300000, guid: caefc8e57d28f1f48854fd1594a37b96, type: 3}
+  - {fileID: 8300000, guid: 70ca723581bcfc946a673e42509623c6, type: 3}
