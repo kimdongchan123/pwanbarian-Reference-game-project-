@@ -2,8 +2,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 
-// 👇 IPointerClickHandler 라는 '클릭 감지기'를 덧붙였습니다!
-public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+// 👇 매니저가 알아서 영역을 감시하므로, 여기서는 클릭(IPointerClickHandler)만 남깁니다!
+public class CardUI : MonoBehaviour, IPointerClickHandler
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI costText;
@@ -28,14 +28,14 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         patternText.text = data.pieceType.ToString();
     }
 
-    // 💡 [핵심] 기존의 OnCardClicked()는 지우고, 이 녀석이 대신 클릭을 받습니다!
+    // 💡 [핵심] 카드를 클릭했을 때의 로직은 그대로 유지!
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log($" [{myData.cardName}] 카드 찰칵! (스크립트 클릭 성공)");
 
         if (PlayerActionController.Instance != null)
         {
-            // 🚨 [수정됨] 카드 데이터와 함께, 이 UI 오브젝트(this.gameObject) 자체도 넘겨줍니다!
+            // 🚨 카드 데이터와 함께, 이 UI 오브젝트(this.gameObject) 자체도 넘겨줍니다!
             PlayerActionController.Instance.OnCardSelected(myData, this.gameObject);
         }
         else
@@ -44,14 +44,5 @@ public class CardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         }
     }
 
-    // 호버 감지 (기존과 동일)
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (HandUIManager.Instance != null) HandUIManager.Instance.OnPointerEnter(eventData);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (HandUIManager.Instance != null) HandUIManager.Instance.OnPointerExit(eventData);
-    }
+    // ✂️ (기존에 있던 OnPointerEnter, OnPointerExit는 삭제되었습니다. 매니저가 알아서 하니까요!)
 }
