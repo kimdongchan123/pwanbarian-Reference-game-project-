@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Giant
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uAC70\uC778"
-  portraitSprite: {fileID: 3410912952505449165, guid: b720936128098d54f8615ad5c7d02e60, type: 3}
+  portraitSprite: {fileID: -3287938109316494982, guid: c9142d034760c164c9317d15e9e1ab0b, type: 3}
   maxHp: 300
   maxSt: 150
   minSp: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uB4DC\uB798\uACE4"
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   unitName: "\uB4DC\uB798\uACE4"
-  portraitSprite: {fileID: 0}
+  portraitSprite: {fileID: 138902681875568277, guid: 8bdc19a87080de14892cb85f2cfdddb7, type: 3}
   maxHp: 200
   maxSt: 100
   minSp: 7
