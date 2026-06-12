@@ -25,11 +25,13 @@ public class Enemy : MonoBehaviour
     public bool hasSpreadBuff = false;
     public bool hasCorrosionBuff = false;
 
-    // 🌟 [추가됨] 디스코드에 올려주신 개별 피격음들을 넣을 주머니!
     [Header("사운드")]
     public AudioClip[] hitSounds;
 
     private static readonly Dictionary<string, int> persistentBossHp = new Dictionary<string, int>();
+
+    // 🌟 [추가됨] 무한 루프(연쇄 살인)를 막기 위한 사망 판정 스위치!
+    private bool isDead = false;
 
     private void Awake()
     {
@@ -94,10 +96,11 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int dmg, Unit attacker)
     {
+        if (isDead) return; // 🌟 이미 죽은 상태면 데미지 무시!
+
         dmg = ApplyEnemyDefenses(dmg, attacker);
         if (dmg <= 0) return;
 
-        // 🌟 [추가됨] 데미지를 입을 때 주머니에서 랜덤 소리를 뽑아 재생합니다!
         if (hitSounds != null && hitSounds.Length > 0 && SoundManager.Instance != null)
         {
             AudioClip randomHit = hitSounds[Random.Range(0, hitSounds.Length)];
@@ -106,10 +109,14 @@ public class Enemy : MonoBehaviour
 
         CurrentHp -= dmg;
         Debug.Log($"{EnemyData.unitName} HP: {CurrentHp}/{EnemyData.maxHp} (-{dmg})");
+
         if (CurrentHp <= 0)
         {
+            isDead = true; // 🌟 내가 죽었다고 스위치 켬! (무한 루프 방지)
+
             foreach (var e in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
-                if (e != this) e.OnAllyDied();
+                if (e != this && !e.isDead) e.OnAllyDied(); // 죽지 않은 동료에게만 전달
+
             Debug.Log($"{EnemyData.unitName} 사망");
             Destroy(gameObject);
         }
@@ -150,15 +157,20 @@ public class Enemy : MonoBehaviour
 
     public void OnAllyDied()
     {
-        if (!HasTrait(TraitEffect.struggling)) return;
+        if (isDead || !HasTrait(TraitEffect.struggling)) return; // 🌟 이미 죽었으면 무시!
+
         float resist = EnemyData != null ? EnemyData.mentalResist : 1f;
         int dmg = Mathf.Max(1, Mathf.RoundToInt(5f / resist));
         CurrentHp -= dmg;
         damage += 1;
+
         if (CurrentHp <= 0)
         {
+            isDead = true; // 🌟 내가 죽었다고 스위치 켬! (무한 루프 방지)
+
             foreach (var e in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
-                if (e != this) e.OnAllyDied();
+                if (e != this && !e.isDead) e.OnAllyDied(); // 죽지 않은 동료에게만 전달
+
             Destroy(gameObject);
         }
     }
