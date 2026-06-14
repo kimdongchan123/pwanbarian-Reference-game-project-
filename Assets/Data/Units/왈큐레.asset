@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitName: "\uC648\uD050\uB808"
   panicType: 0
-  portraitSprite: {fileID: 0}
-  battleSprite: {fileID: 0}
+  portraitSprite: {fileID: -2104733359803094476, guid: 8c384459bd87efb4590f1c46b39b3046, type: 3}
+  battleSprite: {fileID: -2104733359803094476, guid: 8c384459bd87efb4590f1c46b39b3046, type: 3}
   maxHp: 90
   maxSt: 30
   minSp: 2
